@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MemoDremo</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#fbe9dc;--card:#fff;--ink:#1f2330;--mute:#6b7080;--navy:#243049;--line:#e6e6ea;--chip:#d9d4d0;--ok:#2e9e6b;--bad:#d9534f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1613;--card:#262220;--ink:#f3ece6;--mute:#a89f98;--navy:#3a4a6b;--line:#3a3532;--chip:#3a3532}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif}
+#app{max-width:480px;height:100%;margin:0 auto;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;font-weight:600;font-size:20px;background:var(--card)}
+header span{font-size:22px;color:var(--mute)}
+.bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 0}
+.av{width:48px;height:48px;border-radius:50%;background:var(--chip);display:grid;place-items:center;font-size:24px}
+.deck{font-weight:600;font-size:18px}
+.plus{width:48px;height:48px;border-radius:50%;background:var(--navy);color:#fff;border:0;font-size:28px;line-height:1}
+.seg{display:flex;width:240px;margin:12px auto;background:var(--chip);border-radius:30px;padding:0}
+.seg button{flex:1;border:0;background:none;padding:12px;border-radius:30px;font-size:17px;font-weight:600;color:var(--mute)}
+.seg button.on{background:var(--navy);color:#fff}
+main{flex:1;min-height:0;padding:6px 12px;display:flex;flex-direction:column}
+.card{flex:1;min-height:0;border-radius:28px;overflow:hidden;position:relative;display:flex;flex-direction:column;cursor:pointer;background:var(--card)}
+.pic{background:linear-gradient(135deg,#f3c9a8,#e69a7a);display:grid;place-items:center;font-size:110px;background-size:cover;background-position:center}
+.front .pic{flex:1}
+.front .cap{background:var(--navy);color:#fff;text-align:center;font-weight:600;font-size:22px;line-height:1.35;padding:22px 20px 40px;white-space:pre-line}
+.back{align-items:center;padding:18px 22px 70px;justify-content:center;gap:18px}
+.back .pic{width:150px;height:150px;border-radius:20px;font-size:64px;flex:none}
+.en{font-weight:700;font-size:22px;text-align:center;line-height:1.4;white-space:pre-line}
+.ru{color:var(--mute);font-size:17px;text-align:center;line-height:1.4;border-top:1px solid var(--line);padding-top:16px;white-space:pre-line;width:100%}
+.fab{position:absolute;bottom:14px;width:52px;height:52px;border-radius:50%;border:0;background:rgba(120,120,130,.35);color:#fff;font-size:22px}
+.back .fab{background:var(--chip);color:var(--ink)}
+.l{left:14px}.r{right:14px}
+.count{text-align:center;color:var(--mute);padding:10px 0 4px;font-size:15px}
+.acts{display:flex;gap:10px;padding:0 12px 8px}
+.acts button{flex:1;border:0;border-radius:16px;padding:14px;font-size:17px;font-weight:600;color:#fff}
+.nok{background:var(--bad)}.ok{background:var(--ok)}.nav{background:var(--navy)}
+.empty{margin:auto;text-align:center;color:var(--mute);padding:30px;font-size:18px;line-height:1.5}
+nav{display:flex;background:var(--card);border-top:1px solid var(--line)}
+nav button{flex:1;border:0;background:none;padding:10px 0 12px;font-size:13px;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button i{font-style:normal;font-size:24px}
+nav button.on{color:#f2701d}
+.list{overflow:auto;flex:1;padding:6px 2px}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:10px;margin-bottom:8px}
+.row .pic{width:52px;height:52px;border-radius:12px;font-size:26px;flex:none}
+.row div.t{flex:1;min-width:0}.row b{display:block;font-size:15px}.row small{color:var(--mute)}
+.row button{border:0;background:none;font-size:20px;color:var(--mute)}
+dialog{border:0;border-radius:24px;padding:20px;width:min(92vw,420px);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog h3{margin:0 0 12px}
+dialog textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;font:inherit;background:var(--bg);color:var(--ink);margin-bottom:10px;resize:none}
+dialog .acts{padding:0}
+.stat{background:var(--card);border-radius:16px;padding:16px;margin-bottom:10px;line-height:1.5}
+.stat b{font-size:26px}
+</style>
+</head>
+<body>
+<div id="app">
+<header><span>✕</span>MemoDremo<span>⋮</span></header>
+<div id="view" style="flex:1;min-height:0;display:flex;flex-direction:column"></div>
+<nav id="nav"></nav>
+</div>
+<dialog id="dlg"><h3>Новая карточка</h3>
+<textarea id="fRu" rows="2" placeholder="По-русски: Можно я возьму эту чашку?"></textarea>
+<textarea id="fEn" rows="2" placeholder="English: Can I use this cup?"></textarea>
+<input type="file" id="fImg" accept="image/*" style="margin-bottom:12px;width:100%">
+<div class="acts"><button class="nav" style="background:var(--chip);color:var(--ink)" id="cancel">Отмена</button><button class="ok" id="save">Добавить</button></div>
+</dialog>
+<script>
+const DAY=864e5, GAPS=[0,1,3,7,16,35];
+const SEED=[
+{ru:"- Можно я возьму эту чашку?\n- Да, конечно. Похоже, это моя.",en:"- Can I use this cup?\n- Yes, of course. It looks like mine.",e:"☕"},
+{ru:"- Сколько это стоит?\n- Десять евро.",en:"- How much is this?\n- It’s ten euros.",e:"🛍️"},
+{ru:"- Вы не подскажете, где остановка?\n- Прямо и налево.",en:"- Could you tell me where the bus stop is?\n- Straight ahead, then left.",e:"🚌"},
+{ru:"- У вас есть столик на двоих?\n- Да, пройдите, пожалуйста.",en:"- Do you have a table for two?\n- Yes, please follow me.",e:"🍽️"},
+{ru:"- Извините, я опоздал.\n- Ничего страшного.",en:"- Sorry I’m late.\n- No worries.",e:"⏰"}];
+let S={cards:[],mode:"memo",tab:"train",i:0,flip:false};
+const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage&&TG.initData?TG.CloudStorage:null;
+if(TG){try{TG.ready();TG.expand();document.querySelector("header").style.display="none"}catch(e){}}
+const cget=k=>new Promise(r=>CS.getItem(k,(e,v)=>r(e?"":v)));
+const cset=o=>new Promise(r=>CS.setItems(o,()=>r()));
+async function load(){
+ let json="";
+ try{
+  if(CS){const n=+(await cget("md_n"))||0;for(let i=0;i<n;i++)json+=await cget("md_"+i)}
+  else json=localStorage.getItem("memodremo")||"";
+  if(json)S.cards=JSON.parse(json);
+ }catch(e){}
+ try{const im=JSON.parse(localStorage.getItem("md_imgs")||"{}");S.cards.forEach(c=>{if(im[c.id])c.img=im[c.id]})}catch(e){}
+ if(!S.cards.length)S.cards=SEED.map((c,k)=>({id:k+1,...c,box:0,due:0}));
+ render();
+}
+let saving=0;
+function save(){
+ try{localStorage.setItem("md_imgs",JSON.stringify(Object.fromEntries(S.cards.filter(c=>c.img).map(c=>[c.id,c.img]))))}catch(e){}
+ const json=JSON.stringify(S.cards.map(({img,...r})=>r));
+ if(!CS){try{localStorage.setItem("memodremo",json)}catch(e){}return}
+ const ch=json.match(/[\s\S]{1,3500}/g)||[],o={md_n:String(ch.length)};ch.forEach((c,i)=>o["md_"+i]=c);
+ const my=++saving;cset(o);
+}
+const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pic=(c,cls="")=>c.img?`<div class="pic ${cls}" style="background-image:url(${c.img})"></div>`:`<div class="pic ${cls}">${c.e||"💬"}</div>`;
+const queue=()=>S.mode==="memo"?S.cards.filter(c=>c.due<=Date.now()):S.cards;
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/^\s*-\s*/gm,""));u.lang="en-US";u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
+function head(){return`<div class="bar"><div class="av">🧑</div><div class="deck">#01 ENG | ${S.cards.length} ситуаций ▾</div><button class="plus" id="add">+</button></div>
+<div class="seg"><button data-m="memo" class="${S.mode==="memo"?"on":""}">Memo</button><button data-m="dremo" class="${S.mode==="dremo"?"on":""}">Dremo</button></div>`}
+function render(){
+const v=document.getElementById("view");
+document.getElementById("nav").innerHTML=[["train","⚡","Тренировка"],["decks","🗂️","Колоды"],["lib","📖","Библиотека"],["more","⋯","Ещё"]].map(([k,i,t])=>`<button data-t="${k}" class="${S.tab===k?"on":""}"><i>${i}</i>${t}</button>`).join("");
+if(S.tab==="train"){
+ const q=queue();if(S.i>=q.length)S.i=0;const c=q[S.i];let h=head();
+ if(!c){h+=`<main><div class="empty">${S.mode==="memo"?"На сегодня всё повторено 🎉<br>Загляните завтра или переключитесь на Dremo.":"Колода пуста. Нажмите «+»."}</div></main>`}
+ else{
+  h+=`<main><div class="card ${S.flip?"back":"front"}" id="card">`+(S.flip?`${pic(c)}<div class="en">${esc(c.en)}</div><div class="ru">${esc(c.ru)}</div><button class="fab l" id="del">⋯</button><button class="fab r" id="snd">🔊</button>`:`${pic(c)}<div class="cap">${esc(c.ru)}</div><button class="fab l" id="del">⋯</button><button class="fab r" id="snd">🔊</button>`)+`</div></main>
+  <div class="count">${S.i+1} из ${q.length}</div>`;
+  if(S.mode==="memo"&&S.flip)h+=`<div class="acts"><button class="nok" data-r="0">Не помню</button><button class="ok" data-r="1">Помню</button></div>`;
+  else if(S.mode==="dremo")h+=`<div class="acts"><button class="nav" data-n="-1">←</button><button class="nav" data-n="1">→</button></div>`;
+  else h+=`<div class="acts" style="color:var(--mute);justify-content:center;padding-bottom:12px">Вспомните английский вариант и нажмите на карточку</div>`;
+ }
+ v.innerHTML=h;
+}else if(S.tab==="decks"){
+ v.innerHTML=head()+`<main class="list">`+S.cards.map(c=>`<div class="row">${pic(c)}<div class="t"><b>${esc(c.en.split("\n")[0])}</b><small>${esc(c.ru.split("\n")[0])}</small></div><button data-d="${c.id}">🗑</button></div>`).join("")+`</main>`;
+}else if(S.tab==="lib"){
+ const due=S.cards.filter(c=>c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
+ v.innerHTML=`<main class="list" style="padding:14px"><div class="stat"><b>${S.cards.length}</b><br>карточек в колоде</div><div class="stat"><b>${due}</b><br>ждут повторения сегодня</div><div class="stat"><b>${learned}</b><br>выучено надолго</div><div class="stat">Memo — вспоминаете английскую фразу по русской и проверяете себя. Dremo — пассивное просмотр и прослушивание в своём темпе.</div></main>`;
+}else{
+ v.innerHTML=`<main class="list" style="padding:14px"><div class="stat">Данные хранятся в этом браузере.</div><div class="acts" style="padding:0"><button class="nok" id="reset">Сбросить прогресс</button></div></main>`;
+}
+bind();}
+function bind(){
+const $=s=>document.querySelector(s);
+document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;S.i=0;S.flip=false;render()});
+document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.tab="train";S.i=0;S.flip=false;render()});
+const a=$("#add");if(a)a.onclick=()=>$("#dlg").showModal();
+const card=$("#card");if(card)card.onclick=e=>{if(e.target.closest(".fab"))return;S.flip=!S.flip;if(S.flip)speak(queue()[S.i].en);render()};
+const snd=$("#snd");if(snd)snd.onclick=()=>speak(queue()[S.i].en);
+const del=$("#del");if(del)del.onclick=()=>{if(confirm("Удалить карточку?")){const c=queue()[S.i];S.cards=S.cards.filter(x=>x.id!==c.id);save();S.flip=false;render()}};
+document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const c=queue()[S.i];if(b.dataset.r==="1"){c.box=Math.min(c.box+1,5)}else c.box=0;c.due=Date.now()+GAPS[c.box]*DAY;if(c.box===0)c.due=Date.now()+6e4;save();S.flip=false;render()});
+document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{const n=queue().length;S.i=(S.i+ +b.dataset.n+n)%n;S.flip=false;render()});
+document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{S.cards=S.cards.filter(x=>x.id!==+b.dataset.d);save();render()});
+const rs=$("#reset");if(rs)rs.onclick=()=>{if(confirm("Сбросить весь прогресс?")){S.cards.forEach(c=>{c.box=0;c.due=0});save();S.tab="train";render()}};
+}
+const dlg=document.getElementById("dlg");let imgData="";
+document.getElementById("cancel").onclick=()=>dlg.close();
+document.getElementById("fImg").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,600/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=im.width*k;cv.height=im.height*k;cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);imgData=cv.toDataURL("image/jpeg",.75)};im.src=r.result};r.readAsDataURL(f)};
+document.getElementById("save").onclick=()=>{const ru=fRu.value.trim(),en=fEn.value.trim();if(!ru||!en)return;S.cards.push({id:Date.now(),ru,en,img:imgData,box:0,due:0});save();fRu.value=fEn.value=fImg.value="";imgData="";dlg.close();S.tab="train";render()};
+load();
+</script>
+</body>
+</html>
