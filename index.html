@@ -54,6 +54,45 @@ dialog textarea{width:100%;border:1px solid var(--line);border-radius:12px;paddi
 dialog .acts{padding:0}
 .stat{background:var(--card);border-radius:16px;padding:16px;margin-bottom:10px;line-height:1.5}
 .stat b{font-size:26px}
+
+:root{--bg:#fbeadf;--soft:0 8px 24px rgba(120,70,40,.12),0 2px 6px rgba(120,70,40,.08)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--soft:0 8px 24px rgba(0,0,0,.45)}}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;background:var(--bg);overscroll-behavior:none}
+button{font-family:inherit;transition:transform .18s cubic-bezier(.3,1.4,.5,1),filter .18s,box-shadow .18s;cursor:pointer}
+button:active,.row:active{transform:scale(.93);filter:brightness(.93)}
+.card{border-radius:34px;box-shadow:var(--soft);transition:transform .2s cubic-bezier(.3,1.4,.5,1)}
+.card:active{transform:scale(.985)}
+.card.front{animation:pop .38s cubic-bezier(.2,.9,.3,1.1)}
+.card.back{animation:flipin .42s cubic-bezier(.2,.9,.3,1)}
+@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes flipin{from{opacity:.2;transform:perspective(900px) rotateY(-80deg) scale(.96)}to{opacity:1;transform:none}}
+.front .cap{background:linear-gradient(180deg,rgba(36,48,73,.92),#1b2438);backdrop-filter:blur(10px);font-size:21px;letter-spacing:-.2px}
+.pic{box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.back .pic{box-shadow:0 8px 20px rgba(0,0,0,.15);animation:pop .5s .1s both}
+.en{font-size:23px;letter-spacing:-.3px}
+.bar{padding:12px 16px 0}
+.av{box-shadow:var(--soft);font-size:26px}
+.deck{letter-spacing:-.2px}
+.plus{width:46px;height:46px;border-radius:50%;background:linear-gradient(145deg,#33446a,#1f2a44);box-shadow:var(--soft);font-weight:300}
+.seg{position:relative;width:250px;padding:4px;background:rgba(120,120,130,.18);backdrop-filter:blur(12px);border-radius:999px}
+.seg button{position:relative;z-index:1;padding:10px;transition:color .25s,background .25s,transform .18s}
+.seg button.on{background:linear-gradient(145deg,#33446a,#1f2a44);box-shadow:0 4px 12px rgba(36,48,73,.35)}
+.fab{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.22);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.back .fab{background:var(--chip)}
+.acts button{border-radius:20px;padding:16px;font-size:17px;box-shadow:var(--soft)}
+.nok{background:linear-gradient(145deg,#ee7b74,#d9534f)}
+.ok{background:linear-gradient(145deg,#4cc58d,#2e9e6b)}
+.nav{background:linear-gradient(145deg,#33446a,#1f2a44)}
+.prog{height:5px;margin:8px 36px 0;border-radius:9px;background:rgba(120,120,130,.2);overflow:hidden}
+.prog i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#f2701d,#f5a65b);transition:width .4s cubic-bezier(.3,1,.4,1)}
+.count{padding:8px 0 6px}
+nav{background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:.5px solid var(--line)}
+nav button i{transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+nav button.on i{transform:translateY(-2px) scale(1.15)}
+.row{border-radius:20px;box-shadow:var(--soft);transition:transform .18s cubic-bezier(.3,1.4,.5,1);animation:pop .35s both}
+.stat{border-radius:22px;box-shadow:var(--soft);animation:pop .35s both}
+dialog{border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:pop .3s}
+dialog textarea{border-radius:16px}
 </style>
 </head>
 <body>
@@ -73,12 +112,7 @@ function showErr(m){try{const v=document.getElementById("view");v.textContent="�
 window.addEventListener("error",e=>showErr(e.message+" (строка "+e.lineno+")"));
 window.addEventListener("unhandledrejection",e=>showErr(String(e.reason)));
 const DAY=864e5, GAPS=[0,1,3,7,16,35];
-const SEED=[
-{ru:"- Можно я возьму эту чашку?\n- Да, конечно. Похоже, это моя.",en:"- Can I use this cup?\n- Yes, of course. It looks like mine.",e:"☕"},
-{ru:"- Сколько это стоит?\n- Десять евро.",en:"- How much is this?\n- It’s ten euros.",e:"🛍️"},
-{ru:"- Вы не подскажете, где остановка?\n- Прямо и налево.",en:"- Could you tell me where the bus stop is?\n- Straight ahead, then left.",e:"🚌"},
-{ru:"- У вас есть столик на двоих?\n- Да, пройдите, пожалуйста.",en:"- Do you have a table for two?\n- Yes, please follow me.",e:"🍽️"},
-{ru:"- Извините, я опоздал.\n- Ничего страшного.",en:"- Sorry I’m late.\n- No worries.",e:"⏰"}];
+const SEED=[{"ru": "- Можно я возьму эту чашку?\n- Да, конечно. Похоже, это моя.", "en": "- Can I use this cup?\n- Yes, of course. It looks like mine.", "e": "☕"}, {"ru": "- Сколько это стоит?\n- Десять евро.", "en": "- How much is this?\n- It’s ten euros.", "e": "🛍️"}, {"ru": "- Вы не подскажете, где остановка?\n- Прямо и налево.", "en": "- Could you tell me where the bus stop is?\n- Straight ahead, then left.", "e": "🚌"}, {"ru": "- У вас есть столик на двоих?\n- Да, пройдите, пожалуйста.", "en": "- Do you have a table for two?\n- Yes, please follow me.", "e": "🍽️"}, {"ru": "- Извините, я опоздал.\n- Ничего страшного.", "en": "- Sorry I’m late.\n- No worries.", "e": "⏰"}, {"ru": "- Вам помочь?\n- Нет, спасибо, я просто смотрю.", "en": "- Can I help you?\n- No, thanks, I’m just looking.", "e": "👀"}, {"ru": "- Можно счёт, пожалуйста?\n- Конечно, сейчас принесу.", "en": "- Could I have the bill, please?\n- Sure, I’ll bring it right away.", "e": "🧾"}, {"ru": "- Как добраться до вокзала?\n- Сядьте на седьмой автобус.", "en": "- How do I get to the station?\n- Take bus number seven.", "e": "🚉"}, {"ru": "- Вы говорите по-английски?\n- Немного.", "en": "- Do you speak English?\n- A little.", "e": "🗣️"}, {"ru": "- Я забронировал номер на имя Иванов.\n- Одну минуту, проверю.", "en": "- I have a reservation under Ivanov.\n- One moment, let me check.", "e": "🏨"}, {"ru": "- Какая сегодня погода?\n- Солнечно, но ветрено.", "en": "- What’s the weather like today?\n- Sunny, but windy.", "e": "🌤️"}, {"ru": "- Что вы закажете?\n- Мне, пожалуйста, чай с лимоном.", "en": "- What would you like?\n- Tea with lemon, please.", "e": "🍵"}, {"ru": "- Вы не могли бы повторить?\n- Конечно, я скажу медленнее.", "en": "- Could you repeat that?\n- Sure, I’ll say it more slowly.", "e": "🔁"}, {"ru": "- Где здесь туалет?\n- В конце коридора.", "en": "- Where is the restroom?\n- At the end of the hall.", "e": "🚻"}, {"ru": "- Во сколько отправляется поезд?\n- В половине девятого.", "en": "- What time does the train leave?\n- At half past eight.", "e": "🚆"}, {"ru": "- Мне нужен врач.\n- Присаживайтесь, он скоро придёт.", "en": "- I need a doctor.\n- Please sit down, he’ll be here soon.", "e": "🩺"}, {"ru": "- Можно оплатить картой?\n- Да, вот терминал.", "en": "- Can I pay by card?\n- Yes, here’s the terminal.", "e": "💳"}, {"ru": "- Это место свободно?\n- Да, садитесь.", "en": "- Is this seat taken?\n- No, go ahead.", "e": "💺"}, {"ru": "- Как вас зовут?\n- Меня зовут Анна, приятно познакомиться.", "en": "- What’s your name?\n- My name is Anna, nice to meet you.", "e": "🤝"}, {"ru": "- Вы давно здесь живёте?\n- Уже три года.", "en": "- Have you lived here long?\n- For three years now.", "e": "🏠"}, {"ru": "- Можно мне ещё воды?\n- Конечно, сейчас налью.", "en": "- Could I have some more water?\n- Of course, I’ll pour it now.", "e": "💧"}, {"ru": "- Я потерял ключи.\n- Давайте поищем вместе.", "en": "- I’ve lost my keys.\n- Let’s look for them together.", "e": "🔑"}, {"ru": "- Какой у вас размер?\n- Средний, пожалуйста.", "en": "- What size are you?\n- Medium, please.", "e": "👕"}, {"ru": "- Что вы делаете по выходным?\n- Обычно гуляю в парке.", "en": "- What do you do at weekends?\n- I usually walk in the park.", "e": "🌳"}, {"ru": "- Спасибо за помощь!\n- Не за что.", "en": "- Thanks for your help!\n- You’re welcome.", "e": "🙏"}];
 let S={cards:[],mode:"memo",tab:"train",i:0,flip:false};
 const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage&&TG.initData?TG.CloudStorage:null;
 if(TG){try{TG.ready();TG.expand();document.querySelector("header").style.display="none"}catch(e){}}
@@ -92,7 +126,8 @@ async function load(){
   if(json)S.cards=JSON.parse(json);
  }catch(e){}
  try{const im=JSON.parse(localStorage.getItem("md_imgs")||"{}");S.cards.forEach(c=>{if(im[c.id])c.img=im[c.id]})}catch(e){}
- if(!S.cards.length)S.cards=SEED.map((c,k)=>({id:k+1,...c,box:0,due:0}));
+ let sv="";try{sv=localStorage.getItem("md_seedv")||""}catch(e){}
+ if(!S.cards.length||sv!=="2"){const have=new Set(S.cards.map(c=>c.id));SEED.forEach((c,k)=>{if(!have.has(k+1))S.cards.push({id:k+1,...c,box:0,due:0})});S.cards.sort((a,b)=>a.id-b.id);try{localStorage.setItem("md_seedv","2")}catch(e){}save()}
  try{render()}catch(e){showErr(e.message)}
 }
 let saving=0;
@@ -104,27 +139,28 @@ function save(){
  const my=++saving;cset(o);
 }
 const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const pic=(c,cls="")=>c.img?`<div class="pic ${cls}" style="background-image:url(${c.img})"></div>`:`<div class="pic ${cls}">${c.e||"💬"}</div>`;
+const GR=["#f6c7a4,#ec8f74","#bfe3d0,#6fbf9b","#c9d6ff,#8aa4f0","#ffd9a8,#f5a65b","#e5c8f2,#b58be0","#bde6f0,#5fb4cf"];
+const pic=(c,cls="")=>c.img?`<div class="pic ${cls}" style="background-image:url(${c.img})"></div>`:`<div class="pic ${cls}" style="background-image:linear-gradient(145deg,${GR[(+c.id||0)%GR.length]})">${c.e||"💬"}</div>`;
 const queue=()=>S.mode==="memo"?S.cards.filter(c=>c.due<=Date.now()):S.cards;
 function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/^\s*-\s*/gm,""));u.lang="en-US";u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
-function head(){return`<div class="bar"><div class="av">🧑</div><div class="deck">#01 ENG | ${S.cards.length} ситуаций ▾</div><button class="plus" id="add">+</button></div>
+function topBar(){return`<div class="bar"><div class="av">🧑</div><div class="deck">#01 ENG | ${S.cards.length} ситуаций ▾</div><button class="plus" id="add">+</button></div>
 <div class="seg"><button data-m="memo" class="${S.mode==="memo"?"on":""}">Memo</button><button data-m="dremo" class="${S.mode==="dremo"?"on":""}">Dremo</button></div>`}
 function render(){
 const v=document.getElementById("view");
 document.getElementById("nav").innerHTML=[["train","⚡","Тренировка"],["decks","🗂️","Колоды"],["lib","📖","Библиотека"],["more","⋯","Ещё"]].map(([k,i,t])=>`<button data-t="${k}" class="${S.tab===k?"on":""}"><i>${i}</i>${t}</button>`).join("");
 if(S.tab==="train"){
- const q=queue();if(S.i>=q.length)S.i=0;const c=q[S.i];let h=head();
+ const q=queue();if(S.i>=q.length)S.i=0;const c=q[S.i];let h=topBar();
  if(!c){h+=`<main><div class="empty">${S.mode==="memo"?"На сегодня всё повторено 🎉<br>Загляните завтра или переключитесь на Dremo.":"Колода пуста. Нажмите «+»."}</div></main>`}
  else{
   h+=`<main><div class="card ${S.flip?"back":"front"}" id="card">`+(S.flip?`${pic(c)}<div class="en">${esc(c.en)}</div><div class="ru">${esc(c.ru)}</div><button class="fab l" id="del">⋯</button><button class="fab r" id="snd">🔊</button>`:`${pic(c)}<div class="cap">${esc(c.ru)}</div><button class="fab l" id="del">⋯</button><button class="fab r" id="snd">🔊</button>`)+`</div></main>
-  <div class="count">${S.i+1} из ${q.length}</div>`;
+  <div class="prog"><i style="width:${(S.i+1)/q.length*100}%"></i></div><div class="count">${S.i+1} из ${q.length}</div>`;
   if(S.mode==="memo"&&S.flip)h+=`<div class="acts"><button class="nok" data-r="0">Не помню</button><button class="ok" data-r="1">Помню</button></div>`;
   else if(S.mode==="dremo")h+=`<div class="acts"><button class="nav" data-n="-1">←</button><button class="nav" data-n="1">→</button></div>`;
   else h+=`<div class="acts" style="color:var(--mute);justify-content:center;padding-bottom:12px">Вспомните английский вариант и нажмите на карточку</div>`;
  }
  v.innerHTML=h;
 }else if(S.tab==="decks"){
- v.innerHTML=head()+`<main class="list">`+S.cards.map(c=>`<div class="row">${pic(c)}<div class="t"><b>${esc(c.en.split("\n")[0])}</b><small>${esc(c.ru.split("\n")[0])}</small></div><button data-d="${c.id}">🗑</button></div>`).join("")+`</main>`;
+ v.innerHTML=topBar()+`<main class="list">`+S.cards.map(c=>`<div class="row">${pic(c)}<div class="t"><b>${esc(c.en.split("\n")[0])}</b><small>${esc(c.ru.split("\n")[0])}</small></div><button data-d="${c.id}">🗑</button></div>`).join("")+`</main>`;
 }else if(S.tab==="lib"){
  const due=S.cards.filter(c=>c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
  v.innerHTML=`<main class="list" style="padding:14px"><div class="stat"><b>${S.cards.length}</b><br>карточек в колоде</div><div class="stat"><b>${due}</b><br>ждут повторения сегодня</div><div class="stat"><b>${learned}</b><br>выучено надолго</div><div class="stat">Memo — вспоминаете английскую фразу по русской и проверяете себя. Dremo — пассивное просмотр и прослушивание в своём темпе.</div></main>`;
@@ -149,6 +185,7 @@ const dlg=document.getElementById("dlg");let imgData="";
 document.getElementById("cancel").onclick=()=>dlg.close();
 document.getElementById("fImg").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,600/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=im.width*k;cv.height=im.height*k;cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);imgData=cv.toDataURL("image/jpeg",.75)};im.src=r.result};r.readAsDataURL(f)};
 document.getElementById("save").onclick=()=>{const ru=fRu.value.trim(),en=fEn.value.trim();if(!ru||!en)return;S.cards.push({id:Date.now(),ru,en,img:imgData,box:0,due:0});save();fRu.value=fEn.value=fImg.value="";imgData="";dlg.close();S.tab="train";render()};
+document.addEventListener("pointerdown",e=>{if(e.target.closest("button,.card,.row")){try{TG.HapticFeedback.impactOccurred("light")}catch(_){}}});
 load();
 </script>
 </body>
