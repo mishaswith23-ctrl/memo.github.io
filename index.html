@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MemoDremo</title>
+<title>Чайхана Английский</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{--bg:#fbe9dc;--card:#fff;--ink:#1f2330;--mute:#6b7080;--navy:#243049;--line:#e6e6ea;--chip:#d9d4d0;--ok:#2e9e6b;--bad:#d9534f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -58,7 +58,7 @@ dialog .acts{padding:0}
 </head>
 <body>
 <div id="app">
-<header><span>✕</span>MemoDremo<span>⋮</span></header>
+<header><span>✕</span>Чайхана Английский<span>⋮</span></header>
 <div id="view" style="flex:1;min-height:0;display:flex;flex-direction:column"></div>
 <nav id="nav"></nav>
 </div>
@@ -69,6 +69,9 @@ dialog .acts{padding:0}
 <div class="acts"><button class="nav" style="background:var(--chip);color:var(--ink)" id="cancel">Отмена</button><button class="ok" id="save">Добавить</button></div>
 </dialog>
 <script>
+function showErr(m){try{const v=document.getElementById("view");v.textContent="Ошибка: "+m;v.style.cssText="padding:20px;color:#d9534f;word-break:break-word"}catch(_){}}
+window.addEventListener("error",e=>showErr(e.message+" (строка "+e.lineno+")"));
+window.addEventListener("unhandledrejection",e=>showErr(String(e.reason)));
 const DAY=864e5, GAPS=[0,1,3,7,16,35];
 const SEED=[
 {ru:"- Можно я возьму эту чашку?\n- Да, конечно. Похоже, это моя.",en:"- Can I use this cup?\n- Yes, of course. It looks like mine.",e:"☕"},
@@ -79,7 +82,7 @@ const SEED=[
 let S={cards:[],mode:"memo",tab:"train",i:0,flip:false};
 const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage&&TG.initData?TG.CloudStorage:null;
 if(TG){try{TG.ready();TG.expand();document.querySelector("header").style.display="none"}catch(e){}}
-const cget=k=>new Promise(r=>CS.getItem(k,(e,v)=>r(e?"":v)));
+const cget=k=>Promise.race([new Promise(r=>CS.getItem(k,(e,v)=>r(e?"":v||""))),new Promise(r=>setTimeout(()=>r(""),3000))]);
 const cset=o=>new Promise(r=>CS.setItems(o,()=>r()));
 async function load(){
  let json="";
@@ -90,7 +93,7 @@ async function load(){
  }catch(e){}
  try{const im=JSON.parse(localStorage.getItem("md_imgs")||"{}");S.cards.forEach(c=>{if(im[c.id])c.img=im[c.id]})}catch(e){}
  if(!S.cards.length)S.cards=SEED.map((c,k)=>({id:k+1,...c,box:0,due:0}));
- render();
+ try{render()}catch(e){showErr(e.message)}
 }
 let saving=0;
 function save(){
