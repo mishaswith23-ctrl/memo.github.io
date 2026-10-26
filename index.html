@@ -63,6 +63,12 @@ main{flex:1;min-height:0;padding:4px 14px 8px;display:flex;flex-direction:column
 nav{display:flex;flex:none;padding:8px 8px calc(8px + var(--safe-bottom));background:var(--surface);border-top:1px solid var(--line);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
 nav button{flex:1;border:0;background:transparent;border-radius:15px;padding:7px 0 5px;font-size:10px;font-weight:650;letter-spacing:.1px;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:4px;transition:color .2s,background .2s,transform .2s cubic-bezier(.2,.8,.2,1)}
 nav button i{font-style:normal;font-size:22px;line-height:1.1;transition:transform .24s cubic-bezier(.2,.8,.2,1)}nav button.on{color:#f0783d;background:rgba(250,139,75,.09)}nav button.on i{transform:translateY(-2px) scale(1.1)}
+.music-panel{margin:8px 14px 18px;padding:20px;border-radius:28px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--soft);animation:rise .3s both;overflow:auto}
+.music-hero{display:flex;align-items:center;gap:14px;margin-bottom:18px}.music-art{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;flex:none;font-size:31px;background:linear-gradient(145deg,#bfcaff,#7d91df);box-shadow:0 9px 22px rgba(95,112,190,.2)}
+.music-title{font-size:17px;font-weight:780;letter-spacing:-.3px}.music-sub{font-size:12px;color:var(--mute);margin-top:4px;line-height:1.4}
+.music-file{display:block;width:100%;font:inherit;font-size:12px;color:var(--mute);padding:12px;border-radius:15px;background:var(--chip);margin:10px 0 15px}
+.music-control{margin:18px 0}.music-control-head{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:13px;font-weight:700;margin-bottom:10px}.music-control output{color:var(--mute);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:#f0783d;height:24px;cursor:pointer}.music-actions{display:flex;gap:10px;margin-top:14px}.music-actions button{flex:1;border:0;border-radius:17px;padding:14px 10px;font:inherit;font-weight:750;color:white;background:linear-gradient(145deg,#344463,#222d47);transition:transform .18s}.music-actions button:active{transform:scale(.96)}.music-actions .secondary{background:var(--chip);color:var(--ink)}.music-note{font-size:11px;line-height:1.5;color:var(--mute);margin:15px 2px 0}
 .list{overflow:auto;flex:1;min-height:0;padding:8px 14px 18px;overscroll-behavior:contain;scrollbar-width:thin}
 .row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:11px;margin-bottom:9px;box-shadow:0 4px 15px rgba(36,43,61,.035);transition:transform .2s cubic-bezier(.2,.8,.2,1),background .2s;animation:rise .3s both}
 .row .pic{width:54px;height:54px;border-radius:16px;font-size:27px;flex:none}.row div.t{flex:1;min-width:0}.row b{display:block;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row small{display:block;color:var(--mute);font-size:12px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -93,7 +99,7 @@ button:focus-visible{outline:3px solid rgba(250,139,75,.45);outline-offset:3px}
 </dialog>
 <script>
 function showErr(m){try{const v=document.getElementById("view");v.textContent="Ошибка: "+m;v.style.cssText="padding:20px;color:#d9534f;word-break:break-word"}catch(_){}}
-window.addEventListener("error",e=>showErr(e.message+" (строка "+e.lineno+")"));
+window.addEventListener("error",e=>{console.error("App/resource error:",e.message,"line",e.lineno);});
 window.addEventListener("unhandledrejection",e=>showErr(String(e.reason)));
 const DAY=864e5, GAPS=[0,1,3,7,16,35];
 const SEED=[{"ru": "- Можно я возьму эту чашку?\n- Да, конечно. Похоже, это моя.", "en": "- Can I use this cup?\n- Yes, of course. It looks like mine.", "e": "☕"}, {"ru": "- Сколько это стоит?\n- Десять евро.", "en": "- How much is this?\n- It’s ten euros.", "e": "🛍️"}, {"ru": "- Вы не подскажете, где остановка?\n- Прямо и налево.", "en": "- Could you tell me where the bus stop is?\n- Straight ahead, then left.", "e": "🚌"}, {"ru": "- У вас есть столик на двоих?\n- Да, пройдите, пожалуйста.", "en": "- Do you have a table for two?\n- Yes, please follow me.", "e": "🍽️"}, {"ru": "- Извините, я опоздал.\n- Ничего страшного.", "en": "- Sorry I’m late.\n- No worries.", "e": "⏰"}, {"ru": "- Вам помочь?\n- Нет, спасибо, я просто смотрю.", "en": "- Can I help you?\n- No, thanks, I’m just looking.", "e": "👀"}, {"ru": "- Можно счёт, пожалуйста?\n- Конечно, сейчас принесу.", "en": "- Could I have the bill, please?\n- Sure, I’ll bring it right away.", "e": "🧾"}, {"ru": "- Как добраться до вокзала?\n- Сядьте на седьмой автобус.", "en": "- How do I get to the station?\n- Take bus number seven.", "e": "🚉"}, {"ru": "- Вы говорите по-английски?\n- Немного.", "en": "- Do you speak English?\n- A little.", "e": "🗣️"}, {"ru": "- Я забронировал номер на имя Иванов.\n- Одну минуту, проверю.", "en": "- I have a reservation under Ivanov.\n- One moment, let me check.", "e": "🏨"}, {"ru": "- Какая сегодня погода?\n- Солнечно, но ветрено.", "en": "- What’s the weather like today?\n- Sunny, but windy.", "e": "🌤️"}, {"ru": "- Что вы закажете?\n- Мне, пожалуйста, чай с лимоном.", "en": "- What would you like?\n- Tea with lemon, please.", "e": "🍵"}, {"ru": "- Вы не могли бы повторить?\n- Конечно, я скажу медленнее.", "en": "- Could you repeat that?\n- Sure, I’ll say it more slowly.", "e": "🔁"}, {"ru": "- Где здесь туалет?\n- В конце коридора.", "en": "- Where is the restroom?\n- At the end of the hall.", "e": "🚻"}, {"ru": "- Во сколько отправляется поезд?\n- В половине девятого.", "en": "- What time does the train leave?\n- At half past eight.", "e": "🚆"}, {"ru": "- Мне нужен врач.\n- Присаживайтесь, он скоро придёт.", "en": "- I need a doctor.\n- Please sit down, he’ll be here soon.", "e": "🩺"}, {"ru": "- Можно оплатить картой?\n- Да, вот терминал.", "en": "- Can I pay by card?\n- Yes, here’s the terminal.", "e": "💳"}, {"ru": "- Это место свободно?\n- Да, садитесь.", "en": "- Is this seat taken?\n- No, go ahead.", "e": "💺"}, {"ru": "- Как вас зовут?\n- Меня зовут Анна, приятно познакомиться.", "en": "- What’s your name?\n- My name is Anna, nice to meet you.", "e": "🤝"}, {"ru": "- Вы давно здесь живёте?\n- Уже три года.", "en": "- Have you lived here long?\n- For three years now.", "e": "🏠"}, {"ru": "- Можно мне ещё воды?\n- Конечно, сейчас налью.", "en": "- Could I have some more water?\n- Of course, I’ll pour it now.", "e": "💧"}, {"ru": "- Я потерял ключи.\n- Давайте поищем вместе.", "en": "- I’ve lost my keys.\n- Let’s look for them together.", "e": "🔑"}, {"ru": "- Какой у вас размер?\n- Средний, пожалуйста.", "en": "- What size are you?\n- Medium, please.", "e": "👕"}, {"ru": "- Что вы делаете по выходным?\n- Обычно гуляю в парке.", "en": "- What do you do at weekends?\n- I usually walk in the park.", "e": "🌳"}, {"ru": "- Спасибо за помощь!\n- Не за что.", "en": "- Thanks for your help!\n- You’re welcome.", "e": "🙏"}];
@@ -713,14 +719,25 @@ const cset=async o=>{
 async function load(){
  let json="";
  try{
-  if(CS){const n=+(await cget("md_n"))||0;for(let i=0;i<n;i++)json+=await cget("md_"+i)}
-  else json=localStorage.getItem("memodremo")||"";
-  if(json)S.cards=JSON.parse(json);
- }catch(e){}
+  if(CS && typeof CS.getItem==="function"){
+   const n=+(await cget("md_n"))||0;
+   // Read chunks concurrently so a slow Telegram storage callback cannot leave the app blank.
+   if(n>0){const chunks=await Promise.all(Array.from({length:Math.min(n,100)},(_,i)=>cget("md_"+i)));json=chunks.join("")}
+  } else {
+   try{json=localStorage.getItem("memodremo")||""}catch(_){}
+  }
+  if(json){const parsed=JSON.parse(json);if(Array.isArray(parsed))S.cards=parsed}
+ }catch(e){console.warn("Could not load saved cards; starting with default deck",e)}
  try{const im=JSON.parse(localStorage.getItem("md_imgs")||"{}");S.cards.forEach(c=>{if(im[c.id])c.img=im[c.id]})}catch(e){}
  let sv="";try{sv=localStorage.getItem("md_seedv")||""}catch(e){}
- if(!S.cards.length||sv!=="3"){const have=new Set(S.cards.map(c=>c.id));SEED.forEach((c,k)=>{if(!have.has(k+1))S.cards.push({id:k+1,...c,box:0,due:0})});S.cards.sort((a,b)=>a.id-b.id);try{localStorage.setItem("md_seedv","3")}catch(e){}save()}
- try{render()}catch(e){showErr(e.message)}
+ if(!S.cards.length||sv!=="3"){
+  const have=new Set(S.cards.map(c=>c.id));
+  SEED.forEach((c,k)=>{if(!have.has(k+1))S.cards.push({id:k+1,...c,box:0,due:0})});
+  S.cards.sort((a,b)=>Number(a.id)-Number(b.id));
+  try{localStorage.setItem("md_seedv","3")}catch(e){}
+  save();
+ }
+ try{render()}catch(e){console.error(e);showErr("Не удалось отобразить приложение: "+(e&&e.message?e.message:String(e)))}
 }
 let saving=0;
 function save(){
@@ -761,7 +778,7 @@ function topBar(){const due=S.cards.filter(c=>c.due<=Date.now()).length;return`<
 <div class="seg"><button data-m="memo" class="${S.mode==="memo"?"on":""}">Повторение</button><button data-m="dremo" class="${S.mode==="dremo"?"on":""}">Все карточки</button></div>`}
 function render(){
 const v=document.getElementById("view");
-document.getElementById("nav").innerHTML=[["train","⚡","Тренировка"],["decks","🗂️","Колоды"],["lib","📖","Библиотека"],["more","⋯","Ещё"]].map(([k,i,t])=>`<button data-t="${k}" class="${S.tab===k?"on":""}"><i>${i}</i>${t}</button>`).join("");
+document.getElementById("nav").innerHTML=[["train","⚡","Тренировка"],["decks","🗂️","Колоды"],["lib","📖","Библиотека"],["music","🎵","Музыка"],["more","⋯","Ещё"]].map(([k,i,t])=>`<button data-t="${k}" class="${S.tab===k?"on":""}"><i>${i}</i>${t}</button>`).join("");
 if(S.tab==="train"){
  const q=queue();if(S.i>=q.length)S.i=0;const c=q[S.i];let h=topBar();
  if(!c){h+=`<main><div class="empty">${S.mode==="memo"?"<strong>На сегодня всё! 🎉</strong>Вы повторили все карточки, которые были запланированы. Переключитесь на «Все карточки», чтобы продолжить.":"<strong>Начнём учиться?</strong>Добавьте свою первую карточку кнопкой +."}</div></main>`}
@@ -778,10 +795,28 @@ if(S.tab==="train"){
 }else if(S.tab==="lib"){
  const due=S.cards.filter(c=>c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
  v.innerHTML=`<main class="list" style="padding-top:14px"><div style="padding:4px 3px 14px"><div class="deck" style="font-size:24px">Ваш прогресс</div><div class="subdeck">Маленькие шаги каждый день</div></div><div class="stat"><b>${S.cards.length}</b><br>карточек в колоде</div><div class="stat"><b>${due}</b><br>ждут повторения сегодня</div><div class="stat"><b>${learned}</b><br>выучено надолго</div><div class="stat"><strong>Как заниматься</strong><br><span class="muted">«Повторение» показывает карточки по расписанию. «Все карточки» позволяет просматривать и слушать весь набор в своём темпе.</span></div></main>`;
+}else if(S.tab==="music"){
+ const mv=musicPrefs.volume, cutoff=musicPrefs.cutoff;
+ v.innerHTML=`<main class="list" style="padding-top:14px"><div style="padding:4px 3px 10px"><div class="deck" style="font-size:24px">Фоновая музыка</div><div class="subdeck">Музыка во время изучения карточек</div></div><section class="music-panel"><div class="music-hero"><div class="music-art">🎧</div><div><div class="music-title" id="musicTrackName">Твой саундтрек</div><div class="music-sub" id="musicTrackStatus">Выбери аудиофайл, чтобы начать</div></div></div><label for="musicFile" class="subdeck">Выбрать музыку с устройства</label><input class="music-file" type="file" id="musicFile" accept="audio/*"><div class="music-control"><div class="music-control-head"><label for="musicVolume">Громкость</label><output id="volumeOut">${Math.round(mv*100)}%</output></div><input id="musicVolume" type="range" min="0" max="100" step="1" value="${Math.round(mv*100)}"></div><div class="music-control"><div class="music-control-head"><label for="musicCutoff">Лоупасс · срез высоких частот</label><output id="cutoffOut">${cutoff>=20000?'Выкл.':cutoff>=1000?(cutoff/1000).toFixed(1)+' кГц':Math.round(cutoff)+' Гц'}</output></div><input id="musicCutoff" type="range" min="200" max="20000" step="100" value="${cutoff}"><div class="music-sub">Меньше значение — более глухой, басовый звук.</div></div><div class="music-actions"><button id="musicPlay">▶︎ Воспроизвести</button><button id="musicStop" class="secondary">■ Стоп</button></div><p class="music-note">Для трека «Hate Bein’ Sober» выбери аудиофайл, который у тебя есть и который ты вправе использовать. Музыка не встроена в сайт. После перезагрузки страницы файл нужно выбрать снова; громкость и лоупасс сохраняются.</p></section></main>`;
 }else{
  v.innerHTML=`<main class="list" style="padding-top:14px"><div style="padding:4px 3px 14px"><div class="deck" style="font-size:24px">Настройки</div><div class="subdeck">Ваши данные и прогресс</div></div><div class="stat">Прогресс хранится в этом браузере или в Telegram Cloud Storage.</div><div class="acts" style="padding:0"><button class="nok" id="reset">Сбросить прогресс</button></div></main>`;
 }
 bind();}
+const musicPrefs=(()=>{try{return {volume:Math.max(0,Math.min(1,Number(localStorage.getItem('music_volume')??0.22))),cutoff:Math.max(200,Math.min(20000,Number(localStorage.getItem('music_cutoff')??8500)))}}catch(_){return {volume:.22,cutoff:8500}}})();
+let musicAudio=null,musicUrl=null,audioCtx=null,lowpassNode=null,mediaSource=null,musicReady=false;
+function ensureMusicAudio(){
+ if(!musicAudio){musicAudio=new Audio();musicAudio.loop=true;musicAudio.preload='metadata';musicAudio.volume=musicPrefs.volume;musicAudio.addEventListener('play',()=>{const st=document.getElementById('musicTrackStatus');if(st)st.textContent='Сейчас играет · фоновый режим';const b=document.getElementById('musicPlay');if(b)b.textContent='Ⅱ Пауза'});musicAudio.addEventListener('pause',()=>{const b=document.getElementById('musicPlay');if(b)b.textContent='▶︎ Воспроизвести'});musicAudio.addEventListener('ended',()=>{const b=document.getElementById('musicPlay');if(b)b.textContent='▶︎ Воспроизвести'});}
+ return musicAudio;
+}
+function setupMusicFilter(){
+ const a=ensureMusicAudio();
+ try{
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  if(!audioCtx){audioCtx=new AC();mediaSource=audioCtx.createMediaElementSource(a);lowpassNode=audioCtx.createBiquadFilter();lowpassNode.type='lowpass';mediaSource.connect(lowpassNode);lowpassNode.connect(audioCtx.destination)}
+  lowpassNode.frequency.value=musicPrefs.cutoff;
+  if(audioCtx.state==='suspended')audioCtx.resume();musicReady=true;
+ }catch(e){console.warn('Low-pass unavailable',e)}
+}
 function bind(){
 const $=s=>document.querySelector(s);
 document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;S.i=0;S.flip=false;render()});
@@ -794,6 +829,11 @@ document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const c=queue()[
 document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{const n=queue().length;S.i=(S.i+ +b.dataset.n+n)%n;S.flip=false;render()});
 document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{S.cards=S.cards.filter(x=>x.id!==+b.dataset.d);save();render()});
 const rs=$("#reset");if(rs)rs.onclick=()=>{if(confirm("Сбросить весь прогресс?")){S.cards.forEach(c=>{c.box=0;c.due=0});save();S.tab="train";render()}};
+const mf=$("#musicFile");if(mf)mf.onchange=()=>{const file=mf.files&&mf.files[0];if(!file)return;const a=ensureMusicAudio();if(musicUrl)URL.revokeObjectURL(musicUrl);musicUrl=URL.createObjectURL(file);a.src=musicUrl;a.load();const name=$("#musicTrackName"),status=$("#musicTrackStatus");if(name)name.textContent=file.name.replace(/\.[^.]+$/,'');if(status)status.textContent='Файл загружен · нажми «Воспроизвести»';};
+const vol=$("#musicVolume");if(vol)vol.oninput=()=>{musicPrefs.volume=Number(vol.value)/100;ensureMusicAudio().volume=musicPrefs.volume;try{localStorage.setItem('music_volume',String(musicPrefs.volume))}catch(_){}const out=$("#volumeOut");if(out)out.textContent=vol.value+'%'};
+const cut=$("#musicCutoff");if(cut)cut.oninput=()=>{musicPrefs.cutoff=Number(cut.value);if(lowpassNode)lowpassNode.frequency.setTargetAtTime(musicPrefs.cutoff,audioCtx.currentTime,.03);try{localStorage.setItem('music_cutoff',String(musicPrefs.cutoff))}catch(_){}const out=$("#cutoffOut");if(out)out.textContent=musicPrefs.cutoff>=20000?'Выкл.':musicPrefs.cutoff>=1000?(musicPrefs.cutoff/1000).toFixed(1)+' кГц':Math.round(musicPrefs.cutoff)+' Гц'};
+const play=$("#musicPlay");if(play)play.onclick=async()=>{const a=ensureMusicAudio();if(!a.src){const st=$("#musicTrackStatus");if(st)st.textContent='Сначала выбери аудиофайл выше';return}setupMusicFilter();try{if(!a.paused){a.pause();return}if(audioCtx&&audioCtx.state==='suspended')await audioCtx.resume();await a.play()}catch(e){const st=$("#musicTrackStatus");if(st)st.textContent='Не удалось запустить файл. Выбери другой аудиофайл.'}};
+const stop=$("#musicStop");if(stop)stop.onclick=()=>{if(musicAudio){musicAudio.pause();musicAudio.currentTime=0}const st=$("#musicTrackStatus");if(st)st.textContent='Остановлено';const b=$("#musicPlay");if(b)b.textContent='▶︎ Воспроизвести'};
 }
 // Swipe support: swipe left/right in the all-cards mode to move smoothly between cards.
 let touchStartX=0,touchStartY=0;
