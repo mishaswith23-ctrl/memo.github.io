@@ -764,7 +764,7 @@ function save(){
 const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const GR=["#1d3a6b,#0b1c3a","#14503f,#0a2a22","#3b2a6b,#1a1236","#6b3b1d,#2e180a","#1d5a6b,#0a2a33","#6b1d3f,#2e0a1a"];
 const pad=n=>String(n).padStart(2,"0");
-const pic=(c,cls="")=>{const src=c.img||(c.id<=SEED.length?`img/${pad(c.id)}.jpg`:"");return `<div class="pic ${cls}" style="background-image:linear-gradient(145deg,${GR[(+c.id||0)%GR.length]})"><span>${c.e||"💬"}</span>${src?`<img src="${src}" alt="" onerror="this.remove()">`:""}</div>`};
+const pic=(c,cls="")=>{const src=c.img||(c.id<=SEED.length?`img/${pad(c.id)}.webp`:"");return `<div class="pic ${cls}" style="background-image:linear-gradient(145deg,${GR[(+c.id||0)%GR.length]})"><span>${c.e||"💬"}</span>${src?`<img src="${src}" alt="" onerror="this.remove()">`:""}</div>`};
 const CH=12;
 const chCount=()=>Math.max(1,Math.ceil(S.cards.length/CH));
 const chCards=k=>[...S.cards].sort((a,b)=>a.id-b.id).slice(k*CH,k*CH+CH);
