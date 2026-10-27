@@ -3,103 +3,110 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Английский каждый день</title>
+<title>Чайхана Английский</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{
-  color-scheme:light dark;
-  --bg:#f7f5f1;--surface:rgba(255,255,255,.82);--card:#fff;--ink:#202431;--mute:#858894;
-  --navy:#27334f;--line:rgba(70,74,88,.11);--chip:#eeedf0;--ok:#28a879;--bad:#e96d70;
-  --accent:#fa8b4b;--soft:0 16px 42px rgba(36,43,61,.09),0 3px 9px rgba(36,43,61,.05);
-  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  color-scheme:dark;--bg:#111318;--surface:rgba(31,33,41,.88);--card:#20222a;--ink:#f5f5f8;--mute:#a4a7b3;
-  --navy:#dce4ff;--line:rgba(255,255,255,.09);--chip:#30323c;--soft:0 18px 42px rgba(0,0,0,.28),0 3px 9px rgba(0,0,0,.18)
-}}
+:root{--bg:#000;--card:#0d0d0f;--line:rgba(255,255,255,.09);--ink:#fff;--mute:#8b8d96;--chip:#1b1b1f;--ok:#2fbf84;--bad:#e5534b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 15% 0%,rgba(255,190,153,.22),transparent 38%),radial-gradient(ellipse at 95% 35%,rgba(188,201,255,.18),transparent 34%)}
-#app{position:relative;z-index:1;max-width:520px;width:100%;height:100vh;height:100dvh;max-height:100dvh;margin:0 auto;padding-top:var(--safe-top);display:flex;flex-direction:column;overflow:hidden}
-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;font-weight:750;font-size:18px;letter-spacing:-.35px;background:var(--surface);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
-header span{font-size:21px;color:var(--mute)}
-#view{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
-.bar{display:flex;align-items:center;gap:12px;padding:16px 20px 0}
-.av{width:48px;height:48px;flex:none;border-radius:17px;background:linear-gradient(145deg,#ffd8bd,#f59b76);display:grid;place-items:center;font-size:25px;box-shadow:0 7px 18px rgba(229,131,86,.18)}
-.deck-wrap{flex:1;min-width:0}.deck{font-weight:750;font-size:17px;letter-spacing:-.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.subdeck{display:block;margin-top:3px;font-size:12px;color:var(--mute);font-weight:500}
-.plus{width:46px;height:46px;flex:none;border:0;border-radius:16px;background:linear-gradient(145deg,#344463,#222d47);color:#fff;font-size:29px;line-height:1;font-weight:300;box-shadow:0 7px 17px rgba(39,51,79,.18)}
-.seg{display:flex;width:calc(100% - 40px);max-width:330px;margin:17px auto 12px;padding:4px;gap:4px;background:rgba(126,128,139,.13);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-.seg button{flex:1;min-width:0;border:0;background:transparent;padding:11px 8px;border-radius:14px;font-size:14px;font-weight:650;color:var(--mute);transition:background .24s,color .24s,transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .24s}
-.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 3px 10px rgba(25,30,45,.09)}
-main{flex:1;min-height:0;padding:4px 14px 8px;display:flex;flex-direction:column}
-.card{flex:1;min-height:0;border-radius:32px;overflow:hidden;position:relative;display:flex;flex-direction:column;cursor:pointer;background:var(--card);box-shadow:var(--soft);border:1px solid rgba(255,255,255,.62);isolation:isolate;transform-origin:center;transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s}
-.card:active{transform:scale(.987);box-shadow:0 10px 25px rgba(36,43,61,.07)}
-.pic{position:relative;background:linear-gradient(145deg,#f7c6a6,#ee987d);display:grid;place-items:center;font-size:clamp(76px,16vh,132px);background-size:cover;background-position:center;overflow:hidden;text-shadow:0 8px 17px rgba(80,55,44,.11)}
-.pic:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.14),transparent 55%,rgba(255,255,255,.08))}
-.front .pic{flex:1;min-height:100px}
-.front .pic:not([style*="background-image:url"]){background-image:radial-gradient(circle at 50% 45%,rgba(255,255,255,.2),transparent 42%),linear-gradient(145deg,#f6c7a4,#ec8f74)}
-.front .cap{position:relative;background:linear-gradient(180deg,#2d3a5b,#202b44);color:#fff;text-align:center;font-weight:670;font-size:clamp(18px,2.8vh,23px);letter-spacing:-.35px;line-height:1.4;padding:27px 22px 38px;white-space:pre-line;min-height:140px;display:flex;align-items:center;justify-content:center}
-.front .cap:before{content:"ПЕРЕВЕДИТЕ НА АНГЛИЙСКИЙ";position:absolute;top:13px;left:0;right:0;font-size:9px;font-weight:750;letter-spacing:1.35px;color:rgba(255,255,255,.58)}
-.back{align-items:center;padding:25px 23px 76px;justify-content:center;gap:18px;background:linear-gradient(180deg,var(--card),color-mix(in srgb,var(--card) 93%,#dfe7ff))}
-.back .pic{width:clamp(104px,19vh,154px);height:clamp(104px,19vh,154px);border-radius:28px;font-size:clamp(48px,8vh,68px);flex:none;box-shadow:0 12px 25px rgba(30,35,50,.12)}
-.en{font-weight:760;font-size:clamp(20px,3vh,25px);text-align:center;letter-spacing:-.45px;line-height:1.42;white-space:pre-line;max-width:100%;overflow:auto}
-.ru{color:var(--mute);font-size:15px;text-align:center;line-height:1.5;border-top:1px solid var(--line);padding-top:15px;white-space:pre-line;width:100%;max-height:25%;overflow:auto}
-.answer-wrap{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:7px;width:100%;min-height:0;flex:0 1 auto;position:relative;z-index:1;color:var(--ink)!important;text-align:center}
-.answer-label,.ru-label{display:block!important;font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--mute)!important;opacity:1!important}
-.back .en{display:block!important;visibility:visible!important;opacity:1!important;color:var(--ink)!important;font-weight:780;white-space:pre-line;overflow:visible;flex:none;width:100%}
-.back .ru{display:block!important;visibility:visible!important;opacity:1!important;color:var(--mute)!important;max-height:24%;overflow:auto;flex:none;margin-top:3px}
-.back{gap:12px;padding:18px 22px 78px}.back .pic{width:clamp(88px,15vh,126px);height:clamp(88px,15vh,126px);flex:none}
-@media(max-height:700px){.back{gap:8px;padding:12px 18px 68px}.back .pic{width:82px;height:82px}.back .en{font-size:18px}.back .ru{font-size:12px;padding-top:8px}}
-.fab{position:absolute;bottom:14px;z-index:3;width:46px;height:46px;border-radius:16px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.22);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);color:#fff;font-size:19px;box-shadow:0 4px 12px rgba(0,0,0,.12)}
-.back .fab{background:var(--chip);border-color:var(--line);color:var(--ink)}.l{left:14px}.r{right:14px}
-.prog{height:5px;margin:12px 36px 0;border-radius:99px;background:rgba(126,128,139,.16);overflow:hidden;flex:none}.prog i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#ff9d64,#f27548);transition:width .45s cubic-bezier(.2,.8,.2,1)}
-.count{text-align:center;color:var(--mute);padding:8px 0 8px;font-size:12px;font-weight:650;letter-spacing:.2px;flex:none}
-.acts{display:flex;gap:10px;padding:0 14px calc(10px + var(--safe-bottom));flex:none}
-.acts button{flex:1;min-height:52px;border:0;border-radius:18px;padding:14px 12px;font-size:15px;font-weight:720;letter-spacing:-.15px;color:#fff;box-shadow:0 7px 17px rgba(36,43,61,.09)}
-.nok{background:linear-gradient(145deg,#f08785,#df5e66)}.ok{background:linear-gradient(145deg,#43c99a,#229d75)}.nav{background:linear-gradient(145deg,#344463,#222d47)}
-.hint{color:var(--mute);font-size:12px;font-weight:550;text-align:center;padding:2px 14px calc(14px + var(--safe-bottom));flex:none}
-.empty{margin:auto;text-align:center;color:var(--mute);padding:30px;font-size:16px;line-height:1.6}.empty strong{display:block;color:var(--ink);font-size:22px;margin-bottom:7px}
-nav{display:flex;flex:none;padding:8px 8px calc(8px + var(--safe-bottom));background:var(--surface);border-top:1px solid var(--line);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
-nav button{flex:1;border:0;background:transparent;border-radius:15px;padding:7px 0 5px;font-size:10px;font-weight:650;letter-spacing:.1px;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:4px;transition:color .2s,background .2s,transform .2s cubic-bezier(.2,.8,.2,1)}
-nav button i{font-style:normal;font-size:22px;line-height:1.1;transition:transform .24s cubic-bezier(.2,.8,.2,1)}nav button.on{color:#f0783d;background:rgba(250,139,75,.09)}nav button.on i{transform:translateY(-2px) scale(1.1)}
-.music-panel{margin:8px 14px 18px;padding:20px;border-radius:28px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--soft);animation:rise .3s both;overflow:auto}
-.music-hero{display:flex;align-items:center;gap:14px;margin-bottom:18px}.music-art{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;flex:none;font-size:31px;background:linear-gradient(145deg,#bfcaff,#7d91df);box-shadow:0 9px 22px rgba(95,112,190,.2)}
-.music-title{font-size:17px;font-weight:780;letter-spacing:-.3px}.music-sub{font-size:12px;color:var(--mute);margin-top:4px;line-height:1.4}
-.music-file{display:block;width:100%;font:inherit;font-size:12px;color:var(--mute);padding:12px;border-radius:15px;background:var(--chip);margin:10px 0 15px}
-.music-control{margin:18px 0}.music-control-head{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:13px;font-weight:700;margin-bottom:10px}.music-control output{color:var(--mute);font-variant-numeric:tabular-nums}
-input[type=range]{width:100%;accent-color:#f0783d;height:24px;cursor:pointer}.music-actions{display:flex;gap:10px;margin-top:14px}.music-actions button{flex:1;border:0;border-radius:17px;padding:14px 10px;font:inherit;font-weight:750;color:white;background:linear-gradient(145deg,#344463,#222d47);transition:transform .18s}.music-actions button:active{transform:scale(.96)}.music-actions .secondary{background:var(--chip);color:var(--ink)}.music-note{font-size:11px;line-height:1.5;color:var(--mute);margin:15px 2px 0}
-.list{overflow:auto;flex:1;min-height:0;padding:8px 14px 18px;overscroll-behavior:contain;scrollbar-width:thin}
-.row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:11px;margin-bottom:9px;box-shadow:0 4px 15px rgba(36,43,61,.035);transition:transform .2s cubic-bezier(.2,.8,.2,1),background .2s;animation:rise .3s both}
-.row .pic{width:54px;height:54px;border-radius:16px;font-size:27px;flex:none}.row div.t{flex:1;min-width:0}.row b{display:block;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row small{display:block;color:var(--mute);font-size:12px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row button{border:0;border-radius:12px;width:37px;height:37px;background:var(--chip);font-size:16px;color:var(--mute);flex:none}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:23px;padding:18px;margin-bottom:11px;line-height:1.5;box-shadow:0 5px 18px rgba(36,43,61,.04);animation:rise .3s both}.stat b{font-size:29px;line-height:1.2;letter-spacing:-.7px}.stat .muted{font-size:13px;color:var(--mute)}
-dialog{border:1px solid var(--line);border-radius:28px;padding:22px;width:min(92vw,420px);background:var(--card);color:var(--ink);box-shadow:0 24px 80px rgba(0,0,0,.28);animation:modalIn .26s cubic-bezier(.2,.8,.2,1)}dialog::backdrop{background:rgba(16,19,28,.42);backdrop-filter:blur(5px)}dialog h3{margin:0 0 7px;font-size:22px;letter-spacing:-.5px}dialog .sub{margin:0 0 18px;color:var(--mute);font-size:13px}dialog textarea{width:100%;border:1px solid var(--line);border-radius:15px;padding:13px;font:inherit;font-size:14px;background:var(--bg);color:var(--ink);margin-bottom:10px;resize:vertical;outline:none}dialog textarea:focus{border-color:#f49b70;box-shadow:0 0 0 3px rgba(250,139,75,.12)}dialog input[type=file]{margin:2px 0 14px;width:100%;font-size:12px;color:var(--mute)}dialog .acts{padding:0}dialog .acts button{min-height:46px;font-size:14px}
-button:focus-visible{outline:3px solid rgba(250,139,75,.45);outline-offset:3px}
-@keyframes rise{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes flipin{0%{opacity:.3;transform:perspective(900px) rotateY(-15deg) scale(.975)}100%{opacity:1;transform:none}}
-@keyframes modalIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.card.front{animation:pop .32s cubic-bezier(.2,.8,.2,1)}.card.back{animation:flipin .34s cubic-bezier(.2,.8,.2,1)}
-@media(max-height:700px){.bar{padding-top:9px}.av{width:42px;height:42px;border-radius:14px}.seg{margin:10px auto 8px}.front .cap{min-height:116px;padding-top:25px;padding-bottom:25px}.back{gap:12px;padding-top:14px}.back .pic{width:100px;height:100px;border-radius:22px}.acts button{min-height:46px;padding:12px}.prog{margin-top:8px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+#app{max-width:480px;height:100%;margin:0 auto;display:flex;flex-direction:column}
+#view{flex:1;min-height:0;display:flex;flex-direction:column;padding:0 16px}
+.scroll{flex:1;overflow:auto;padding-bottom:12px}
+.ttl{padding:12px 4px 14px}.ttl h1{font-size:38px;letter-spacing:-1px;margin:0;line-height:1.05}.ttl p{margin:6px 0 0;color:var(--mute);font-size:17px}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;transition:transform .22s cubic-bezier(.3,1.5,.5,1),filter .2s,background .25s,color .25s}
+button:active,.row:active{transform:scale(.95);filter:brightness(1.25)}
+.glow{position:relative;overflow:hidden;background:#060608;border:1px solid var(--line);border-radius:34px;text-align:center;padding:34px 20px 22px;margin-bottom:12px}
+.glow::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 50% 25%,#35b6ff 0,#0b63e0 40%,transparent 75%);-webkit-mask:radial-gradient(circle,#000 42%,transparent 48%) 0 0/9px 9px;mask:radial-gradient(circle,#000 42%,transparent 48%) 0 0/9px 9px;animation:breathe 4s ease-in-out infinite}
+@keyframes breathe{50%{opacity:.5}}
+.glow>*{position:relative}
+.num{font-size:84px;font-weight:700;letter-spacing:-3px;line-height:1}
+.lbl{color:#b8c4d8;margin:6px 0 22px;font-size:17px}
+.pill{width:100%;padding:17px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);font-weight:600;font-size:17px;backdrop-filter:blur(8px)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.tile,.wide,.stat,.row{background:var(--card);border:1px solid var(--line);border-radius:28px;text-align:left}
+.tile{padding:20px;min-height:120px;display:flex;flex-direction:column;justify-content:space-between}
+.tile b{font-size:34px;letter-spacing:-1px}.tile span{color:var(--mute)}
+.wide{display:flex;gap:14px;align-items:center;padding:16px;width:100%;margin-bottom:12px}
+.wide i{width:48px;height:48px;border-radius:16px;background:var(--chip);display:grid;place-items:center;font-style:normal;font-size:26px;flex:none}
+.wide b{display:block;font-size:18px}.wide small{color:var(--mute);font-size:15px}
+.top{display:flex;align-items:center;gap:10px;padding:8px 0}
+.seg{display:flex;flex:1;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.seg button{flex:1;padding:11px;border-radius:999px;font-weight:600;color:var(--mute)}
+.seg button.on{background:#fff;color:#000}
+.plus{width:50px;height:50px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:26px;flex:none}
+main{flex:1;min-height:0;display:flex;flex-direction:column;padding:6px 0}
+.card{flex:1;min-height:0;border-radius:34px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);cursor:pointer}
+.card.front{animation:pop .4s cubic-bezier(.2,.9,.3,1.1)}
+.card.back{animation:flipin .45s cubic-bezier(.2,.9,.3,1)}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes flipin{from{opacity:.2;transform:perspective(900px) rotateY(-80deg)}to{opacity:1;transform:none}}
+.pic{position:relative;overflow:hidden;display:grid;place-items:center;font-size:100px}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.front .pic{flex:1}
+.front .cap{position:absolute;left:0;right:0;bottom:0;padding:70px 20px 26px;text-align:center;font-weight:600;font-size:21px;line-height:1.35;white-space:pre-line;background:linear-gradient(transparent,rgba(0,0,0,.9) 60%)}
+.back{padding:14px 16px 76px;gap:16px}
+.back .pic{height:38%;min-height:130px;border-radius:24px;flex:none;font-size:64px}
+.en{font-weight:700;font-size:23px;line-height:1.4;text-align:center;white-space:pre-line;letter-spacing:-.3px}
+.ru{color:var(--mute);font-size:17px;text-align:center;line-height:1.4;border-top:1px solid var(--line);padding-top:14px;white-space:pre-line}
+.fab{position:absolute;bottom:14px;width:48px;height:48px;border-radius:50%;background:rgba(30,30,34,.75);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:20px;color:#fff}
+.l{left:14px}.r{right:14px}
+.prog{height:5px;margin:8px 30px 0;border-radius:9px;background:var(--chip);overflow:hidden}
+.prog i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#2a8cff,#35b6ff);transition:width .4s}
+.count{text-align:center;color:var(--mute);padding:8px 0 6px;font-size:15px}
+.acts{display:flex;gap:10px;padding:0 0 10px}
+.acts button{flex:1;padding:17px;border-radius:999px;font-weight:600;font-size:17px}
+.nok{background:var(--bad)}.ok{background:var(--ok)}.nav{background:var(--chip);border:1px solid var(--line)}
+.empty{margin:auto;text-align:center;color:var(--mute);padding:30px;font-size:18px;line-height:1.5}
+nav{display:flex;gap:4px;margin:6px 16px 12px;padding:8px;border-radius:999px;background:#101012;border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+nav button{flex:1;height:54px;border-radius:999px;color:#6f717a;display:grid;place-items:center}
+nav button.on{background:#1f1f23;color:#fff}
+nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.row{display:flex;align-items:center;gap:12px;padding:10px;margin-bottom:10px;border-radius:24px;animation:pop .35s both}
+.row .pic{width:60px;height:60px;border-radius:16px;font-size:28px;flex:none}
+.row .t{flex:1;min-width:0}.row b{display:block;font-size:15px}.row small{color:var(--mute)}
+.row button{font-size:20px;padding:8px}
+.stat{padding:18px;margin-bottom:12px;line-height:1.5;color:var(--mute)}
+.av{width:60px;height:60px;border-radius:20px;background:var(--chip);display:grid;place-items:center;font-size:28px;font-weight:700;color:#fff}
+dialog{border-radius:28px;padding:20px;width:min(92vw,420px);background:#111114;color:#fff;border:1px solid var(--line)}
+dialog::backdrop{background:rgba(0,0,0,.7)}
+dialog h3{margin:0 0 12px}
+dialog textarea{width:100%;border:1px solid var(--line);border-radius:16px;padding:12px;font:inherit;background:#000;color:#fff;margin-bottom:10px;resize:none}
+dialog .acts{padding:0}
+
+.glow::before{background:radial-gradient(ellipse 55% 60% at 50% 30%,#ffc14d 0,#f2701d 42%,transparent 76%) no-repeat;animation:drift 11s ease-in-out infinite}
+@keyframes drift{0%,100%{background-size:100% 100%;background-position:0 0}35%{background-size:68% 68%;background-position:85% 8%}70%{background-size:84% 84%;background-position:10% 45%}}
+.glow .chip{display:inline-block;padding:6px 14px;border-radius:999px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.15);font-size:14px;margin-bottom:12px}
+.prog i{background:linear-gradient(90deg,#f2701d,#ffb347)}
+.back{padding:14px 16px 76px;gap:14px;justify-content:flex-start}
+.back .pic{height:auto;flex:1;min-height:180px}
+.back .en{padding:6px 4px 28px}
+.chap{width:100%;color:var(--ink);font:inherit}.chap .go{color:var(--mute);font-size:26px;padding-right:6px}
+.mini{height:4px;border-radius:9px;background:var(--chip);margin-top:8px;overflow:hidden}.mini i{display:block;height:100%;background:#f2701d}
+.music-panel{padding:20px;border-radius:28px;background:var(--card);border:1px solid var(--line)}
+.music-hero{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.music-art{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;font-size:31px;background:linear-gradient(145deg,#ffb347,#e0561a)}
+.music-title{font-size:17px;font-weight:700}.music-sub{font-size:13px;color:var(--mute);margin-top:4px}
+.music-control{margin:18px 0}.music-control-head{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:10px}.music-control output{color:var(--mute)}
+.music-control input{width:100%;accent-color:#f2701d}
+.music-actions{display:flex;gap:10px}.music-actions button{flex:1;border-radius:999px;padding:15px;font-weight:600;background:#f2701d;color:#000}.music-actions .secondary{background:var(--chip);color:#fff}
+.music-note{font-size:12px;color:var(--mute);line-height:1.5}
 </style>
 </head>
 <body>
 <div id="app">
-<header><span>📚</span>Английский каждый день<span>✨</span></header>
 <div id="view" style="flex:1;min-height:0;display:flex;flex-direction:column"></div>
 <nav id="nav"></nav>
 </div>
-<dialog id="dlg"><h3>Новая карточка</h3><p class="sub">Добавьте фразу, которую хотите запомнить</p>
-<textarea id="fRu" rows="2" placeholder="Фраза на русском"></textarea>
-<textarea id="fEn" rows="2" placeholder="Фраза на английском"></textarea>
+<dialog id="dlg"><h3>Новая карточка</h3>
+<textarea id="fRu" rows="2" placeholder="По-русски: Можно я возьму эту чашку?"></textarea>
+<textarea id="fEn" rows="2" placeholder="English: Can I use this cup?"></textarea>
 <input type="file" id="fImg" accept="image/*" style="margin-bottom:12px;width:100%">
 <div class="acts"><button class="nav" style="background:var(--chip);color:var(--ink)" id="cancel">Отмена</button><button class="ok" id="save">Добавить</button></div>
 </dialog>
 <script>
 function showErr(m){try{const v=document.getElementById("view");v.textContent="Ошибка: "+m;v.style.cssText="padding:20px;color:#d9534f;word-break:break-word"}catch(_){}}
-window.addEventListener("error",e=>{console.error("App/resource error:",e.message,"line",e.lineno);});
+window.addEventListener("error",e=>showErr(e.message+" (строка "+e.lineno+")"));
 window.addEventListener("unhandledrejection",e=>showErr(String(e.reason)));
 const DAY=864e5, GAPS=[0,1,3,7,16,35];
 const SEED=[{"ru": "- Можно я возьму эту чашку?\n- Да, конечно. Похоже, это моя.", "en": "- Can I use this cup?\n- Yes, of course. It looks like mine.", "e": "☕"}, {"ru": "- Сколько это стоит?\n- Десять евро.", "en": "- How much is this?\n- It’s ten euros.", "e": "🛍️"}, {"ru": "- Вы не подскажете, где остановка?\n- Прямо и налево.", "en": "- Could you tell me where the bus stop is?\n- Straight ahead, then left.", "e": "🚌"}, {"ru": "- У вас есть столик на двоих?\n- Да, пройдите, пожалуйста.", "en": "- Do you have a table for two?\n- Yes, please follow me.", "e": "🍽️"}, {"ru": "- Извините, я опоздал.\n- Ничего страшного.", "en": "- Sorry I’m late.\n- No worries.", "e": "⏰"}, {"ru": "- Вам помочь?\n- Нет, спасибо, я просто смотрю.", "en": "- Can I help you?\n- No, thanks, I’m just looking.", "e": "👀"}, {"ru": "- Можно счёт, пожалуйста?\n- Конечно, сейчас принесу.", "en": "- Could I have the bill, please?\n- Sure, I’ll bring it right away.", "e": "🧾"}, {"ru": "- Как добраться до вокзала?\n- Сядьте на седьмой автобус.", "en": "- How do I get to the station?\n- Take bus number seven.", "e": "🚉"}, {"ru": "- Вы говорите по-английски?\n- Немного.", "en": "- Do you speak English?\n- A little.", "e": "🗣️"}, {"ru": "- Я забронировал номер на имя Иванов.\n- Одну минуту, проверю.", "en": "- I have a reservation under Ivanov.\n- One moment, let me check.", "e": "🏨"}, {"ru": "- Какая сегодня погода?\n- Солнечно, но ветрено.", "en": "- What’s the weather like today?\n- Sunny, but windy.", "e": "🌤️"}, {"ru": "- Что вы закажете?\n- Мне, пожалуйста, чай с лимоном.", "en": "- What would you like?\n- Tea with lemon, please.", "e": "🍵"}, {"ru": "- Вы не могли бы повторить?\n- Конечно, я скажу медленнее.", "en": "- Could you repeat that?\n- Sure, I’ll say it more slowly.", "e": "🔁"}, {"ru": "- Где здесь туалет?\n- В конце коридора.", "en": "- Where is the restroom?\n- At the end of the hall.", "e": "🚻"}, {"ru": "- Во сколько отправляется поезд?\n- В половине девятого.", "en": "- What time does the train leave?\n- At half past eight.", "e": "🚆"}, {"ru": "- Мне нужен врач.\n- Присаживайтесь, он скоро придёт.", "en": "- I need a doctor.\n- Please sit down, he’ll be here soon.", "e": "🩺"}, {"ru": "- Можно оплатить картой?\n- Да, вот терминал.", "en": "- Can I pay by card?\n- Yes, here’s the terminal.", "e": "💳"}, {"ru": "- Это место свободно?\n- Да, садитесь.", "en": "- Is this seat taken?\n- No, go ahead.", "e": "💺"}, {"ru": "- Как вас зовут?\n- Меня зовут Анна, приятно познакомиться.", "en": "- What’s your name?\n- My name is Anna, nice to meet you.", "e": "🤝"}, {"ru": "- Вы давно здесь живёте?\n- Уже три года.", "en": "- Have you lived here long?\n- For three years now.", "e": "🏠"}, {"ru": "- Можно мне ещё воды?\n- Конечно, сейчас налью.", "en": "- Could I have some more water?\n- Of course, I’ll pour it now.", "e": "💧"}, {"ru": "- Я потерял ключи.\n- Давайте поищем вместе.", "en": "- I’ve lost my keys.\n- Let’s look for them together.", "e": "🔑"}, {"ru": "- Какой у вас размер?\n- Средний, пожалуйста.", "en": "- What size are you?\n- Medium, please.", "e": "👕"}, {"ru": "- Что вы делаете по выходным?\n- Обычно гуляю в парке.", "en": "- What do you do at weekends?\n- I usually walk in the park.", "e": "🌳"}, {"ru": "- Спасибо за помощь!\n- Не за что.", "en": "- Thanks for your help!\n- You’re welcome.", "e": "🙏"}];
@@ -702,9 +709,9 @@ const MORE_SEED = [
   }
 ];
 SEED.push(...MORE_SEED);
-let S={cards:[],mode:"memo",tab:"train",i:0,flip:false};
+let S={ch:0,ord:null,cards:[],mode:"memo",tab:"home",i:0,flip:false};
 const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage&&TG.initData?TG.CloudStorage:null;
-if(TG){try{TG.ready();TG.expand();document.querySelector("header").style.display="none"}catch(e){}}
+if(TG){try{TG.ready();TG.expand();TG.setHeaderColor&&TG.setHeaderColor("#000000");TG.setBackgroundColor&&TG.setBackgroundColor("#000000")}catch(e){}}
 const cget=k=>Promise.race([new Promise(r=>CS.getItem(k,(e,v)=>r(e?"":v||""))),new Promise(r=>setTimeout(()=>r(""),3000))]);
 // Telegram WebApp CloudStorage has setItem, not setItems.
 const cset=async o=>{
@@ -735,11 +742,11 @@ async function load(){
  }catch(e){console.warn("Could not load saved cards; starting with default deck",e)}
  try{const im=JSON.parse(localStorage.getItem("md_imgs")||"{}");S.cards.forEach(c=>{if(im[c.id])c.img=im[c.id]})}catch(e){}
  let sv="";try{sv=localStorage.getItem("md_seedv")||""}catch(e){}
- if(!S.cards.length||sv!=="3"){
+ if(!S.cards.length||sv!=="4"){
   const have=new Set(S.cards.map(c=>c.id));
   SEED.forEach((c,k)=>{if(!have.has(k+1))S.cards.push({id:k+1,...c,box:0,due:0})});
   S.cards.sort((a,b)=>Number(a.id)-Number(b.id));
-  try{localStorage.setItem("md_seedv","3")}catch(e){}
+  try{localStorage.setItem("md_seedv","4")}catch(e){}
   save();
  }
  try{render()}catch(e){console.error(e);showErr("Не удалось отобразить приложение: "+(e&&e.message?e.message:String(e)))}
@@ -755,35 +762,43 @@ function save(){
  saveTimer=setTimeout(()=>{if(my===saving)cset(o)},120);
 }
 const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const GR=["#f6c7a4,#ec8f74","#bfe3d0,#6fbf9b","#c9d6ff,#8aa4f0","#ffd9a8,#f5a65b","#e5c8f2,#b58be0","#bde6f0,#5fb4cf"];
-const pic=(c,cls="")=>c.img?`<div class="pic ${cls}" style="background-image:url(${c.img})"></div>`:`<div class="pic ${cls}" style="background-image:linear-gradient(145deg,${GR[(+c.id||0)%GR.length]})">${c.e||"💬"}</div>`;
-const queue=()=>S.mode==="memo"?S.cards.filter(c=>c.due<=Date.now()):S.cards;
-function topBar(){const due=S.cards.filter(c=>c.due<=Date.now()).length;return`<div class="bar"><div class="av">📚</div><div class="deck-wrap"><div class="deck">Английский каждый день</div><span class="subdeck">${S.cards.length} карточек · ${due} к повторению</span></div><button class="plus" id="add" aria-label="Добавить карточку">+</button></div>
-<div class="seg"><button data-m="memo" class="${S.mode==="memo"?"on":""}">Повторение</button><button data-m="dremo" class="${S.mode==="dremo"?"on":""}">Все карточки</button></div>`}
+const GR=["#1d3a6b,#0b1c3a","#14503f,#0a2a22","#3b2a6b,#1a1236","#6b3b1d,#2e180a","#1d5a6b,#0a2a33","#6b1d3f,#2e0a1a"];
+const pad=n=>String(n).padStart(2,"0");
+const pic=(c,cls="")=>{const src=c.img||(c.id<=SEED.length?`img/${pad(c.id)}.jpg`:"");return `<div class="pic ${cls}" style="background-image:linear-gradient(145deg,${GR[(+c.id||0)%GR.length]})"><span>${c.e||"💬"}</span>${src?`<img src="${src}" alt="" onerror="this.remove()">`:""}</div>`};
+const CH=12;
+const chCount=()=>Math.max(1,Math.ceil(S.cards.length/CH));
+const chCards=k=>[...S.cards].sort((a,b)=>a.id-b.id).slice(k*CH,k*CH+CH);
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const queue=()=>{if(S.ch>=chCount())S.ch=0;const ids=chCards(S.ch).map(c=>c.id);if(!S.ord||S.ordCh!==S.ch||S.ord.length!==ids.length){S.ord=shuffle(ids);S.ordCh=S.ch}const m=new Map(S.cards.map(c=>[c.id,c]));return S.ord.map(id=>m.get(id)).filter(c=>c&&(S.mode==="dremo"||c.due<=Date.now()))};
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/^\s*-\s*/gm,""));u.lang="en-US";u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
+function topBar(){return`<div class="top"><div class="seg"><button data-m="memo" class="${S.mode==="memo"?"on":""}">Memo</button><button data-m="dremo" class="${S.mode==="dremo"?"on":""}">Dremo</button></div><button class="plus" id="add">+</button></div>`}
+const IC={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',train:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',decks:'<path d="M12 3l9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/>',music:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',me:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6z"/>'};
 function render(){
 const v=document.getElementById("view");
-document.getElementById("nav").innerHTML=[["train","⚡","Тренировка"],["decks","🗂️","Колоды"],["lib","📖","Библиотека"],["music","🎵","Музыка"],["more","⋯","Ещё"]].map(([k,i,t])=>`<button data-t="${k}" class="${S.tab===k?"on":""}"><i>${i}</i>${t}</button>`).join("");
-if(S.tab==="train"){
+document.getElementById("nav").innerHTML=["home","train","decks","music","me"].map(k=>`<button data-t="${k}" class="${S.tab===k?"on":""}"><svg viewBox="0 0 24 24">${IC[k]}</svg></button>`).join("");
+if(S.tab==="home"){
+ const n=chCount(),due=chCards(S.ch).filter(c=>c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
+ v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Чайхана</h1><p>Английский по ситуациям</p></div><div class="glow"><div class="chip">Глава ${S.ch+1} из ${n}</div><div class="num">${due}</div><div class="lbl">карточек к повторению</div><button class="pill" data-c="${S.ch}">Начать тренировку</button></div><div class="tiles"><button class="tile" data-t="decks"><b>${n}</b><span>Глав по ${CH} карточек</span></button><button class="tile" data-t="me"><b>${learned}</b><span>Выучено</span></button></div><button class="wide" id="add"><i>＋</i><div><b>Добавить карточку</b><small>Своя фраза и фото</small></div></button></div>`;
+}else if(S.tab==="train"){
  const q=queue();if(S.i>=q.length)S.i=0;const c=q[S.i];let h=topBar();
- if(!c){h+=`<main><div class="empty">${S.mode==="memo"?"<strong>На сегодня всё! 🎉</strong>Вы повторили все карточки, которые были запланированы. Переключитесь на «Все карточки», чтобы продолжить.":"<strong>Начнём учиться?</strong>Добавьте свою первую карточку кнопкой +."}</div></main>`}
+ if(!c){h+=`<main><div class="empty">${S.mode==="memo"?"Глава на сегодня пройдена 🎉<br><br><button class=\"pill\" data-c=\""+((S.ch+1)%chCount())+"\">Следующая глава →</button>":"Колода пуста. Нажмите «+»."}</div></main>`}
  else{
-  h+=`<main><div class="card ${S.flip?"back":"front"}" id="card">`+(S.flip?`${pic(c)}<div class="answer-wrap"><div class="answer-label">ENGLISH</div><div class="en">${esc(c.en||"Translation not available")}</div><div class="ru-label">РУССКИЙ</div><div class="ru">${esc(c.ru||"")}</div></div><button class="fab l" id="del" aria-label="Действия">⋯</button>`:`${pic(c)}<div class="cap">${esc(c.ru||"")}</div><button class="fab l" id="del" aria-label="Действия">⋯</button>`)+`</div></main>
-  <div class="prog"><i style="width:${(S.i+1)/q.length*100}%"></i></div><div class="count">${S.i+1} из ${q.length}</div>`;
+  h+=`<main><div class="card ${S.flip?"back":"front"}" id="card">`+(S.flip?`${pic(c)}<div class="en">${esc(c.en)}</div><button class="fab l" id="del">⋯</button>`:`${pic(c)}<div class="cap">${esc(c.ru)}</div><button class="fab l" id="del">⋯</button>`)+`</div></main>
+  <div class="prog"><i style="width:${(S.i+1)/q.length*100}%"></i></div><div class="count">Глава ${S.ch+1} · ${S.i+1} из ${q.length}</div>`;
   if(S.mode==="memo"&&S.flip)h+=`<div class="acts"><button class="nok" data-r="0">Не помню</button><button class="ok" data-r="1">Помню</button></div>`;
   else if(S.mode==="dremo")h+=`<div class="acts"><button class="nav" data-n="-1">←</button><button class="nav" data-n="1">→</button></div>`;
-  else h+=`<div class="acts" style="color:var(--mute);justify-content:center;padding-bottom:12px">Вспомните фразу на английском и коснитесь карточки</div>`;
+  else h+=`<div class="acts" style="color:var(--mute);justify-content:center;padding-bottom:12px">Вспомните английский вариант и нажмите на карточку</div>`;
  }
  v.innerHTML=h;
 }else if(S.tab==="decks"){
- v.innerHTML=topBar()+`<main class="list">`+S.cards.map(c=>`<div class="row">${pic(c)}<div class="t"><b>${esc(c.en.split("\n")[0])}</b><small>${esc(c.ru.split("\n")[0])}</small></div><button data-d="${c.id}">🗑</button></div>`).join("")+`</main>`;
-}else if(S.tab==="lib"){
- const due=S.cards.filter(c=>c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
- v.innerHTML=`<main class="list" style="padding-top:14px"><div style="padding:4px 3px 14px"><div class="deck" style="font-size:24px">Ваш прогресс</div><div class="subdeck">Маленькие шаги каждый день</div></div><div class="stat"><b>${S.cards.length}</b><br>карточек в колоде</div><div class="stat"><b>${due}</b><br>ждут повторения сегодня</div><div class="stat"><b>${learned}</b><br>выучено надолго</div><div class="stat"><strong>Как заниматься</strong><br><span class="muted">«Повторение» показывает карточки по расписанию. «Все карточки» позволяет просматривать весь набор в своём темпе.</span></div></main>`;
+ const n=chCount();
+ v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Главы</h1><p>${S.cards.length} ситуаций · по ${CH} в главе</p></div>`+Array.from({length:n},(_,k)=>{const cs=chCards(k),L=cs.filter(c=>c.box>=4).length;return `<button class="row chap" data-c="${k}">${cs[0]?pic(cs[0]):""}<div class="t"><b>Глава ${k+1}${k===S.ch?" · текущая":""}</b><small>${cs.length} карточек · выучено ${L}</small><div class="mini"><i style="width:${cs.length?L/cs.length*100:0}%"></i></div></div><span class="go">›</span></button>`}).join("")+`</div>`;
 }else if(S.tab==="music"){
  const mv=musicPrefs.volume, cutoff=musicPrefs.cutoff;
- v.innerHTML=`<main class="list" style="padding-top:14px"><div style="padding:4px 3px 10px"><div class="deck" style="font-size:24px">Фоновая музыка</div><div class="subdeck">Музыка во время изучения карточек</div></div><section class="music-panel"><div class="music-hero"><div class="music-art">🎧</div><div><div class="music-title" id="musicTrackName">Твой саундтрек</div><div class="music-sub" id="musicTrackStatus">Фоновый трек · background.mp3</div></div></div><div class="music-sub">Трек загружается с сайта автоматически</div><div class="music-control"><div class="music-control-head"><label for="musicVolume">Громкость</label><output id="volumeOut">${Math.round(mv*100)}%</output></div><input id="musicVolume" type="range" min="0" max="100" step="1" value="${Math.round(mv*100)}"></div><div class="music-control"><div class="music-control-head"><label for="musicCutoff">Лоупасс · срез высоких частот</label><output id="cutoffOut">${cutoff>=20000?'Выкл.':cutoff>=1000?(cutoff/1000).toFixed(1)+' кГц':Math.round(cutoff)+' Гц'}</output></div><input id="musicCutoff" type="range" min="200" max="20000" step="100" value="${cutoff}"><div class="music-sub">Меньше значение — более глухой, басовый звук.</div></div><div class="music-actions"><button id="musicPlay">▶︎ Воспроизвести</button><button id="musicStop" class="secondary">■ Стоп</button></div><p class="music-note">Музыка загружается с сайта. Нажми «Воспроизвести»; громкость и лоупасс сохраняются. Автовоспроизведение может блокироваться браузером до нажатия кнопки.</p></section></main>`;
+ v.innerHTML=`<div class="scroll"><div style="padding:4px 3px 10px"><div class="deck" style="font-size:24px">Фоновая музыка</div><div class="subdeck">Музыка во время изучения карточек</div></div><section class="music-panel"><div class="music-hero"><div class="music-art">🎧</div><div><div class="music-title" id="musicTrackName">Твой саундтрек</div><div class="music-sub" id="musicTrackStatus">Фоновый трек · background.mp3</div></div></div><div class="music-sub">Трек загружается с сайта автоматически</div><div class="music-control"><div class="music-control-head"><label for="musicVolume">Громкость</label><output id="volumeOut">${Math.round(mv*100)}%</output></div><input id="musicVolume" type="range" min="0" max="100" step="1" value="${Math.round(mv*100)}"></div><div class="music-control"><div class="music-control-head"><label for="musicCutoff">Лоупасс · срез высоких частот</label><output id="cutoffOut">${cutoff>=20000?'Выкл.':cutoff>=1000?(cutoff/1000).toFixed(1)+' кГц':Math.round(cutoff)+' Гц'}</output></div><input id="musicCutoff" type="range" min="200" max="20000" step="100" value="${cutoff}"><div class="music-sub">Меньше значение — более глухой, басовый звук.</div></div><div class="music-actions"><button id="musicPlay">▶︎ Воспроизвести</button><button id="musicStop" class="secondary">■ Стоп</button></div><p class="music-note">Музыка загружается с сайта. Нажми «Воспроизвести»; громкость и лоупасс сохраняются. Автовоспроизведение может блокироваться браузером до нажатия кнопки.</p></section></div>`;
 }else{
- v.innerHTML=`<main class="list" style="padding-top:14px"><div style="padding:4px 3px 14px"><div class="deck" style="font-size:24px">Настройки</div><div class="subdeck">Ваши данные и прогресс</div></div><div class="stat">Прогресс хранится в этом браузере или в Telegram Cloud Storage.</div><div class="acts" style="padding:0"><button class="nok" id="reset">Сбросить прогресс</button></div></main>`;
+ const u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user,nm=(u&&u.first_name)||"Гость",due=S.cards.filter(c=>c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
+ v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Профиль</h1></div><div class="wide"><div class="av">${esc(nm[0].toUpperCase())}</div><div><b>${esc(nm)}</b><small>Прогресс сохраняется в Telegram</small></div></div><div class="tiles"><div class="tile"><b>${learned}</b><span>Выучено</span></div><div class="tile"><b>${due}</b><span>К повторению</span></div></div><div class="stat">Memo — вспоминаете фразу и проверяете себя. Dremo — просмотр и прослушивание в своём темпе.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div></div>`;
 }
 bind();}
 const musicPrefs=(()=>{try{return {volume:Math.max(0,Math.min(1,Number(localStorage.getItem('music_volume')??0.22))),cutoff:Math.max(200,Math.min(20000,Number(localStorage.getItem('music_cutoff')??8500)))}}catch(_){return {volume:.22,cutoff:8500}}})();
@@ -803,11 +818,12 @@ function setupMusicFilter(){
 }
 function bind(){
 const $=s=>document.querySelector(s);
-document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;S.i=0;S.flip=false;render()});
-document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.tab="train";S.i=0;S.flip=false;render()});
+document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;if(S.tab==="train")S.ord=null;S.i=0;S.flip=false;render()});
+document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.ord=null;S.tab="train";S.i=0;S.flip=false;render()});
+document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{S.ch=+b.dataset.c;S.ord=null;S.tab="train";S.i=0;S.flip=false;render()});
 const a=$("#add");if(a)a.onclick=()=>$("#dlg").showModal();
 const card=$("#card");if(card)card.onclick=e=>{if(e.target.closest(".fab"))return;S.flip=!S.flip;render()};
-
+const snd=$("#snd");if(snd)snd.onclick=()=>speak(queue()[S.i].en);
 const del=$("#del");if(del)del.onclick=()=>{if(confirm("Удалить карточку?")){const c=queue()[S.i];S.cards=S.cards.filter(x=>x.id!==c.id);save();S.flip=false;render()}};
 document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const c=queue()[S.i];if(b.dataset.r==="1"){c.box=Math.min(c.box+1,5)}else c.box=0;c.due=Date.now()+GAPS[c.box]*DAY;if(c.box===0)c.due=Date.now()+6e4;save();S.flip=false;render()});
 document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{const n=queue().length;S.i=(S.i+ +b.dataset.n+n)%n;S.flip=false;render()});
@@ -819,14 +835,10 @@ const cut=$("#musicCutoff");if(cut)cut.oninput=()=>{musicPrefs.cutoff=Number(cut
 const play=$("#musicPlay");if(play)play.onclick=async()=>{const a=ensureMusicAudio();if(!a.src){a.src='./background.mp3';a.load()}setupMusicFilter();try{if(!a.paused){a.pause();return}if(audioCtx&&audioCtx.state==='suspended')await audioCtx.resume();await a.play()}catch(e){const st=$("#musicTrackStatus");if(st)st.textContent='Не удалось запустить файл. Выбери другой аудиофайл.'}};
 const stop=$("#musicStop");if(stop)stop.onclick=()=>{if(musicAudio){musicAudio.pause();musicAudio.currentTime=0}const st=$("#musicTrackStatus");if(st)st.textContent='Остановлено';const b=$("#musicPlay");if(b)b.textContent='▶︎ Воспроизвести'};
 }
-// Swipe support: swipe left/right in the all-cards mode to move smoothly between cards.
-let touchStartX=0,touchStartY=0;
-document.addEventListener("touchstart",e=>{const card=e.target.closest("#card");if(!card)return;touchStartX=e.changedTouches[0].clientX;touchStartY=e.changedTouches[0].clientY},{passive:true});
-document.addEventListener("touchend",e=>{const card=e.target.closest("#card");if(!card||S.tab!=="train"||S.mode!=="dremo")return;const dx=e.changedTouches[0].clientX-touchStartX,dy=e.changedTouches[0].clientY-touchStartY;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)){const n=queue().length;if(n){S.i=(S.i+(dx<0?1:-1)+n)%n;S.flip=false;render()}}},{passive:true});
 const dlg=document.getElementById("dlg");let imgData="";
 document.getElementById("cancel").onclick=()=>dlg.close();
 document.getElementById("fImg").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,600/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=im.width*k;cv.height=im.height*k;cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);imgData=cv.toDataURL("image/jpeg",.75)};im.src=r.result};r.readAsDataURL(f)};
-document.getElementById("save").onclick=()=>{const ru=fRu.value.trim(),en=fEn.value.trim();if(!ru||!en)return;S.cards.push({id:Date.now(),ru,en,img:imgData,box:0,due:0});save();fRu.value=fEn.value=fImg.value="";imgData="";dlg.close();S.tab="train";render()};
+document.getElementById("save").onclick=()=>{const ru=fRu.value.trim(),en=fEn.value.trim();if(!ru||!en)return;S.cards.push({id:Date.now(),ru,en,img:imgData,box:0,due:0});save();fRu.value=fEn.value=fImg.value="";imgData="";dlg.close();S.ch=chCount()-1;S.ord=null;S.tab="train";render()};
 document.addEventListener("pointerdown",e=>{if(e.target.closest("button,.card,.row")){try{TG.HapticFeedback.impactOccurred("light")}catch(_){}}});
 load();
 </script>
