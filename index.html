@@ -34,8 +34,7 @@ button:active,.row:active{transform:scale(.95);filter:brightness(1.25)}
 .seg{display:flex;flex:1;padding:4px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
 .seg button{flex:1;padding:11px;border-radius:999px;font-weight:600;color:var(--mute)}
 .seg button.on{background:#fff;color:#000}
-.plus{width:50px;height:50px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:26px;flex:none}
-main{flex:1;min-height:0;display:flex;flex-direction:column;padding:6px 0}
+main{flex:1;min-height:0;display:flex;flex-direction:column;padding:6px 0;position:relative}
 .card{flex:1;min-height:0;border-radius:34px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);cursor:pointer}
 .card.front{animation:pop .4s cubic-bezier(.2,.9,.3,1.1)}
 .card.back{animation:flipin .45s cubic-bezier(.2,.9,.3,1)}
@@ -68,11 +67,6 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 .row button{font-size:20px;padding:8px}
 .stat{padding:18px;margin-bottom:12px;line-height:1.5;color:var(--mute)}
 .av{width:60px;height:60px;border-radius:20px;background:var(--chip);display:grid;place-items:center;font-size:28px;font-weight:700;color:#fff}
-dialog{border-radius:28px;padding:20px;width:min(92vw,420px);background:#111114;color:#fff;border:1px solid var(--line)}
-dialog::backdrop{background:rgba(0,0,0,.7)}
-dialog h3{margin:0 0 12px}
-dialog textarea{width:100%;border:1px solid var(--line);border-radius:16px;padding:12px;font:inherit;background:#000;color:#fff;margin-bottom:10px;resize:none}
-dialog .acts{padding:0}
 
 .glow::before{background:radial-gradient(ellipse 55% 60% at 50% 30%,#ffc14d 0,#f2701d 42%,transparent 76%) no-repeat;animation:drift 11s ease-in-out infinite}
 @keyframes drift{0%,100%{background-size:100% 100%;background-position:0 0}35%{background-size:68% 68%;background-position:85% 8%}70%{background-size:84% 84%;background-position:10% 45%}}
@@ -91,6 +85,57 @@ dialog .acts{padding:0}
 .music-control input{width:100%;accent-color:#f2701d}
 .music-actions{display:flex;gap:10px}.music-actions button{flex:1;border-radius:999px;padding:15px;font-weight:600;background:#f2701d;color:#000}.music-actions .secondary{background:var(--chip);color:#fff}
 .music-note{font-size:12px;color:var(--mute);line-height:1.5}
+
+/* Игровые элементы: уровень, комбо, награды */
+.lv{width:50px;height:50px;border-radius:50%;flex:none;display:grid;place-items:center;position:relative;font-weight:800;font-size:17px;background:conic-gradient(#ffb347 calc(var(--p)*1%),#26262b 0)}
+.lv::before{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--card)}
+.lv span{position:relative}
+.lv.up{animation:lvup .8s cubic-bezier(.3,1.6,.5,1)}
+@keyframes lvup{40%{transform:scale(1.3);box-shadow:0 0 30px #ffb347}}
+.hud{display:flex;gap:8px;margin-bottom:12px}
+.hchip{flex:1;padding:12px 6px;border-radius:20px;background:var(--card);border:1px solid var(--line);text-align:center;font-size:13px;color:var(--mute)}
+.hchip b{display:block;font-size:21px;color:#fff;margin-bottom:2px;white-space:nowrap}
+.hchip.hot b{color:#ffb347}
+.nudge{margin:-2px 4px 12px;color:#ffb347;font-size:14px;animation:breathe 2.4s ease-in-out infinite}
+.bar{height:8px;border-radius:9px;background:var(--chip);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#f2701d,#ffd166);transition:width .6s}
+.combo{position:absolute;top:18px;right:14px;z-index:3;padding:7px 13px;border-radius:999px;background:rgba(0,0,0,.6);border:1px solid rgba(255,179,71,.5);color:#ffb347;font-weight:800;font-size:16px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);pointer-events:none}
+.combo.bump{animation:bump .5s cubic-bezier(.3,1.8,.5,1)}
+.combo.big{background:linear-gradient(135deg,#f2701d,#ff3d6e);color:#fff;border-color:transparent;box-shadow:0 0 24px rgba(255,90,60,.6)}
+@keyframes bump{0%{transform:scale(.5)}50%{transform:scale(1.35)}}
+.ok{background:linear-gradient(180deg,#38d394,#24a873);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.acts .ok.hit{animation:okhit .45s ease-out;box-shadow:0 0 0 5px rgba(47,191,132,.3),0 0 44px rgba(56,211,148,.9);filter:brightness(1.2)}
+.acts .nok.hit{animation:shake .4s;filter:brightness(1.15)}
+@keyframes okhit{30%{transform:scale(1.07)}}
+.card::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s}
+.card.good{animation:goodout .45s ease-in forwards;border-color:var(--ok);box-shadow:0 0 0 2px var(--ok),0 0 50px rgba(47,191,132,.5)}
+.card.good::after{background:radial-gradient(circle at 50% 60%,rgba(47,191,132,.45),transparent 70%);opacity:1}
+.card.bad{animation:shake .45s;border-color:var(--bad);box-shadow:0 0 0 2px var(--bad)}
+.card.bad::after{background:radial-gradient(circle at 50% 60%,rgba(229,83,75,.4),transparent 70%);opacity:1}
+@keyframes goodout{35%{transform:scale(1.03)}100%{transform:translateY(-40px) scale(.94);opacity:0}}
+@keyframes shake{20%{transform:translateX(-10px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(3px)}}
+.fx{position:fixed;z-index:50;pointer-events:none;transform:translate(-50%,-50%);text-align:center;white-space:nowrap;animation:rise 1s ease-out forwards}
+.fx b{display:block;font-size:26px;font-weight:800;color:#5ef0b0;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+.fx small{font-size:15px;font-weight:700;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+.fx.neg b{color:#ff8a80}
+@keyframes rise{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}20%{opacity:1;transform:translate(-50%,-90%) scale(1.1)}100%{opacity:0;transform:translate(-50%,-260%)}}
+#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);z-index:60;transform:translate(-50%,-160%);display:flex;gap:12px;align-items:center;padding:12px 18px 12px 12px;border-radius:22px;background:rgba(24,24,28,.94);border:1px solid rgba(255,179,71,.4);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(0,0,0,.6);transition:transform .45s cubic-bezier(.3,1.4,.5,1);width:max-content;max-width:calc(100vw - 32px)}
+#toast.show{transform:translate(-50%,0)}
+#toast i{font-style:normal;font-size:28px;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex:none;background:linear-gradient(145deg,#ffb347,#e0561a)}
+#toast b{display:block}#toast small{color:var(--mute)}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:55}
+.win{margin:auto;text-align:center;padding:10px;width:100%}
+.win .big{font-size:76px;animation:bump .7s}
+.win h2{margin:8px 0 4px;font-size:28px}.win p{margin:0;color:var(--mute)}
+.wstats{display:flex;gap:8px;margin:20px 0}
+.win .pill,.empty .pill{background:linear-gradient(135deg,#ffb347,#f2701d);color:#000;border:0}
+.sec{margin:18px 4px 10px;font-size:20px;font-weight:700}
+.ach{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.ach div{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px 6px;text-align:center;font-size:12px;color:var(--mute);line-height:1.3}
+.ach i{display:block;font-style:normal;font-size:30px;margin-bottom:6px}
+.ach .off i{filter:grayscale(1);opacity:.3}
+.ach .on{border-color:rgba(255,179,71,.45);color:#fff}
+.seg.goal{margin-bottom:12px;flex:none}
 </style>
 </head>
 <body>
@@ -98,12 +143,6 @@ dialog .acts{padding:0}
 <div id="view" style="flex:1;min-height:0;display:flex;flex-direction:column"></div>
 <nav id="nav"></nav>
 </div>
-<dialog id="dlg"><h3>Новая карточка</h3>
-<textarea id="fRu" rows="2" placeholder="По-русски: Можно я возьму эту чашку?"></textarea>
-<textarea id="fEn" rows="2" placeholder="English: Can I use this cup?"></textarea>
-<input type="file" id="fImg" accept="image/*" style="margin-bottom:12px;width:100%">
-<div class="acts"><button class="nav" style="background:var(--chip);color:var(--ink)" id="cancel">Отмена</button><button class="ok" id="save">Добавить</button></div>
-</dialog>
 <script>
 function showErr(m){try{const v=document.getElementById("view");v.textContent="Ошибка: "+m;v.style.cssText="padding:20px;color:#d9534f;word-break:break-word"}catch(_){}}
 window.addEventListener("error",e=>showErr(e.message+" (строка "+e.lineno+")"));
@@ -710,6 +749,42 @@ const MORE_SEED = [
 ];
 SEED.push(...MORE_SEED);
 let S={ch:0,ord:null,cards:[],mode:"memo",tab:"home",i:0,flip:false};
+// Звуки синтезируются через Web Audio — никаких файлов грузить не нужно.
+const SFX=(()=>{
+ let ctx=null,out=null,nb=null,on=true;try{on=localStorage.getItem("md_sfx")!=="0"}catch(_){}
+ const ac=()=>{if(!on)return null;try{if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ctx=new AC();const comp=ctx.createDynamicsCompressor();out=ctx.createGain();out.gain.value=.8;out.connect(comp);comp.connect(ctx.destination)}if(ctx.state==="suspended")ctx.resume().catch(()=>{});return ctx}catch(_){return null}};
+ const tone=(f,at,dur,o={})=>{const c=ac();if(!c)return;const t=c.currentTime+at,os=c.createOscillator(),g=c.createGain();os.type=o.type||"sine";os.frequency.setValueAtTime(f,t);if(o.to)os.frequency.exponentialRampToValueAtTime(o.to,t+dur);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(o.vol||.15,t+(o.att||.005));g.gain.exponentialRampToValueAtTime(1e-4,t+dur);os.connect(g);g.connect(out);os.start(t);os.stop(t+dur+.05)};
+ const bell=(f,at,dur,vol=.14)=>{tone(f,at,dur,{vol});tone(f*2,at,dur*.6,{vol:vol*.35});tone(f*3,at,dur*.3,{vol:vol*.12,type:"triangle"})};
+ const noise=(at,dur,f1,f2,vol=.1)=>{const c=ac();if(!c)return;if(!nb){nb=c.createBuffer(1,c.sampleRate*.5,c.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}const t=c.currentTime+at,s=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain();s.buffer=nb;bp.type="bandpass";bp.Q.value=1.2;bp.frequency.setValueAtTime(f1,t);bp.frequency.exponentialRampToValueAtTime(f2,t+dur);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+dur*.3);g.gain.exponentialRampToValueAtTime(1e-4,t+dur);s.connect(bp);bp.connect(g);g.connect(out);s.start(t);s.stop(t+dur+.05)};
+ const STEP=[0,2,4,7,9,12]; // с каждым ответом подряд «тыдынк» звучит на ступень выше
+ return{
+  get on(){return on},
+  set on(v){on=!!v;try{localStorage.setItem("md_sfx",on?"1":"0")}catch(_){}},
+  unlock:ac,
+  tap(){tone(1500,0,.045,{type:"triangle",vol:.05,to:900})},
+  flip(){noise(0,.17,700,3200,.09);tone(620,.11,.07,{type:"triangle",vol:.06,to:1050})},
+  swish(){noise(0,.14,1800,600,.07)},
+  ok(n=1){const b=587.33*Math.pow(2,STEP[Math.min(n-1,STEP.length-1)]/12);bell(b,0,.3,.12);bell(b*1.5,.09,.7,.15)},
+  bad(){tone(330,0,.28,{vol:.16,to:165});tone(165,0,.2,{type:"triangle",vol:.08,to:110})},
+  combo(){[0,4,7,12].forEach((s,i)=>bell(1046.5*Math.pow(2,s/12),.22+i*.06,.25,.07))},
+  fanfare(){const N=[523.25,659.25,783.99,1046.5];N.forEach((f,i)=>{tone(f,i*.11,.35,{type:"triangle",vol:.12});bell(f,i*.11,.4,.06)});N.forEach(f=>tone(f,.5,1.1,{type:"triangle",vol:.07,att:.02}))},
+  ach(){[1318.5,1568,2093].forEach((f,i)=>bell(f,i*.08,.5,.08))}
+ }
+})();
+// Игровой прогресс: опыт, серия дней, цель дня, достижения.
+let G={xp:0,ok:0,best:0,days:0,last:"",day:"",done:0,goal:20,ach:[]};
+const LV=["Новичок","Гость чайханы","Любитель чая","Завсегдатай","Знаток","Мастер чая","Чайный гуру","Легенда чайханы"];
+const ACH=[["first","🍵","Первый глоток","Первый верный ответ"],["c5","🔥","Разогрев","Комбо ×5"],["c10","⚡","В ударе","Комбо ×10"],["c25","🌋","Неудержимый","Комбо ×25"],["goal","🎯","Норма дня","Выполнить цель дня"],["ch","📖","Глава закрыта","Пройти главу"],["s3","📅","Три дня","Серия 3 дня"],["s7","🏆","Неделя","Серия 7 дней"],["l10","🧠","Десятка","10 фраз выучено"],["l50","🎓","Полиглот","50 фраз выучено"],["lv5","👑","Мастер чая","5-й уровень"],["lv8","🐉","Легенда","8-й уровень"]];
+const PRAISE=["Отлично!","Супер!","Так держать!","В точку!","Молодец!","Блестяще!","Красота!","Огонь!"],OOPS=["Ничего, повторим","Почти!","Запомним 💪","Вернёмся к ней"];
+const pick=a=>a[Math.random()*a.length|0];
+const lvlOf=xp=>{const l=Math.floor(Math.sqrt(xp/50))+1,a=50*(l-1)**2,b=50*l*l;return{l,a,b,pct:Math.round((xp-a)/(b-a)*100),name:LV[Math.min(l-1,LV.length-1)]}};
+const dayStr=(o=0)=>new Date(Date.now()+o*864e5).toLocaleDateString("en-CA");
+const today=()=>dayStr(0);
+const streak=()=>G.last===today()||G.last===dayStr(-1)?G.days:0;
+const doneToday=()=>G.day===today()?G.done:0;
+const daysWord=d=>d%10===1&&d%100!==11?"день":[2,3,4].includes(d%10)&&![12,13,14].includes(d%100)?"дня":"дней";
+let combo=0,busy=false,sess={n:0,ok:0,xp:0,best:0};
+const newSess=()=>{sess={n:0,ok:0,xp:0,best:0}};
 const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage&&TG.initData?TG.CloudStorage:null;
 if(TG){try{TG.ready();TG.expand();TG.setHeaderColor&&TG.setHeaderColor("#000000");TG.setBackgroundColor&&TG.setBackgroundColor("#000000")}catch(e){}}
 const cget=k=>Promise.race([new Promise(r=>CS.getItem(k,(e,v)=>r(e?"":v||""))),new Promise(r=>setTimeout(()=>r(""),3000))]);
@@ -740,6 +815,7 @@ async function load(){
   }
   if(json){const parsed=JSON.parse(json);if(Array.isArray(parsed))S.cards=parsed}
  }catch(e){console.warn("Could not load saved cards; starting with default deck",e)}
+ try{let gj="";if(CS&&typeof CS.getItem==="function")gj=await cget("md_g");if(!gj)gj=localStorage.getItem("md_g")||"";if(gj)G={...G,...JSON.parse(gj)};if(!Array.isArray(G.ach))G.ach=[]}catch(e){console.warn("Could not load game progress",e)}
  try{const im=JSON.parse(localStorage.getItem("md_imgs")||"{}");S.cards.forEach(c=>{if(im[c.id])c.img=im[c.id]})}catch(e){}
  let sv="";try{sv=localStorage.getItem("md_seedv")||""}catch(e){}
  if(!S.cards.length||sv!=="4"){
@@ -761,6 +837,8 @@ function save(){
  clearTimeout(saveTimer);
  saveTimer=setTimeout(()=>{if(my===saving)cset(o)},120);
 }
+let gTimer=0;
+function saveG(){clearTimeout(gTimer);gTimer=setTimeout(()=>{const j=JSON.stringify(G);try{localStorage.setItem("md_g",j)}catch(_){}if(CS)cset({md_g:j})},150)}
 const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const GR=["#1d3a6b,#0b1c3a","#14503f,#0a2a22","#3b2a6b,#1a1236","#6b3b1d,#2e180a","#1d5a6b,#0a2a33","#6b1d3f,#2e0a1a"];
 const pad=n=>String(n).padStart(2,"0");
@@ -771,19 +849,32 @@ const chCards=k=>[...S.cards].sort((a,b)=>a.id-b.id).slice(k*CH,k*CH+CH);
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 const queue=()=>{if(S.ch>=chCount())S.ch=0;const ids=chCards(S.ch).map(c=>c.id);if(!S.ord||S.ordCh!==S.ch||S.ord.length!==ids.length){S.ord=shuffle(ids);S.ordCh=S.ch}const m=new Map(S.cards.map(c=>[c.id,c]));return S.ord.map(id=>m.get(id)).filter(c=>c&&(S.mode==="dremo"||c.due<=Date.now()))};
 function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/^\s*-\s*/gm,""));u.lang="en-US";u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
-function topBar(){return`<div class="top"><div class="seg"><button data-m="memo" class="${S.mode==="memo"?"on":""}">Memo</button><button data-m="dremo" class="${S.mode==="dremo"?"on":""}">Dremo</button></div><button class="plus" id="add">+</button></div>`}
+const lvRing=(L,up)=>`<div class="lv${up?" up":""}" style="--p:${L.pct}"><span>${L.l}</span></div>`;
+function topBar(){return`<div class="top"><div class="seg"><button data-m="memo" class="${S.mode==="memo"?"on":""}">Memo</button><button data-m="dremo" class="${S.mode==="dremo"?"on":""}">Dremo</button></div>${lvRing(lvlOf(G.xp),S.lvup)}</div>`}
 const IC={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',train:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',decks:'<path d="M12 3l9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/>',music:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',me:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6z"/>'};
 function render(){
 const v=document.getElementById("view");
 document.getElementById("nav").innerHTML=["home","train","decks","music","me"].map(k=>`<button data-t="${k}" class="${S.tab===k?"on":""}"><svg viewBox="0 0 24 24">${IC[k]}</svg></button>`).join("");
 if(S.tab==="home"){
  const n=chCount(),due=chCards(S.ch).filter(c=>c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
- v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Чайхана</h1><p>Английский по ситуациям</p></div><div class="glow"><div class="chip">Глава ${S.ch+1} из ${n}</div><div class="num">${due}</div><div class="lbl">карточек к повторению</div><button class="pill" data-c="${S.ch}">Начать тренировку</button></div><div class="tiles"><button class="tile" data-t="decks"><b>${n}</b><span>Глав по ${CH} карточек</span></button><button class="tile" data-t="me"><b>${learned}</b><span>Выучено</span></button></div><button class="wide" id="add"><i>＋</i><div><b>Добавить карточку</b><small>Своя фраза и фото</small></div></button></div>`;
+ const L=lvlOf(G.xp),st=streak(),dn=doneToday();
+ v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Чайхана</h1><p>Английский по ситуациям</p></div>
+ <div class="hud"><div class="hchip ${st?"hot":""}"><b>🔥 ${st}</b>${daysWord(st)} подряд</div><div class="hchip ${dn>=G.goal?"hot":""}"><b>🎯 ${dn}/${G.goal}</b>цель дня</div><div class="hchip"><b>⚡ ${G.xp}</b>опыт</div></div>
+ ${st&&G.last!==today()?`<div class="nudge">Повтори хотя бы одну карточку — не потеряй серию 🔥</div>`:""}
+ <div class="glow"><div class="chip">Глава ${S.ch+1} из ${n}</div><div class="num">${due}</div><div class="lbl">карточек к повторению</div><button class="pill" data-c="${S.ch}">Начать тренировку</button></div>
+ <button class="wide" data-t="me">${lvRing(L)}<div style="flex:1;text-align:left"><b>${L.name}</b><small>${G.xp-L.a} / ${L.b-L.a} XP до уровня ${L.l+1}</small><div class="bar"><i style="width:${L.pct}%"></i></div></div></button>
+ <div class="tiles"><button class="tile" data-t="decks"><b>${n}</b><span>Глав по ${CH} карточек</span></button><button class="tile" data-t="me"><b>${G.ach.length}/${ACH.length}</b><span>Достижений · выучено ${learned}</span></button></div></div>`;
 }else if(S.tab==="train"){
  const q=queue();if(S.i>=q.length)S.i=0;const c=q[S.i];let h=topBar();
- if(!c){h+=`<main><div class="empty">${S.mode==="memo"?"Глава на сегодня пройдена 🎉<br><br><button class=\"pill\" data-c=\""+((S.ch+1)%chCount())+"\">Следующая глава →</button>":"Колода пуста. Нажмите «+»."}</div></main>`}
+ if(!c){
+  const nx=(S.ch+1)%chCount();
+  if(S.mode!=="memo")h+=`<main><div class="empty">Колода пуста.</div></main>`;
+  else if(sess.n)h+=`<main><div class="win"><div class="big">🏆</div><h2>Глава ${S.ch+1} пройдена!</h2><p>Так держать — продолжай в том же темпе</p><div class="wstats"><div class="hchip"><b>${Math.round(sess.ok/sess.n*100)}%</b>точность</div><div class="hchip"><b>+${sess.xp}</b>XP</div><div class="hchip"><b>×${sess.best}</b>комбо</div></div><button class="pill" data-c="${nx}">Следующая глава →</button></div></main>`;
+  else h+=`<main><div class="empty">Глава на сегодня пройдена 🎉<br><br><button class="pill" data-c="${nx}">Следующая глава →</button></div></main>`;
+ }
  else{
-  h+=`<main><div class="card ${S.flip?"back":"front"}" id="card">`+(S.flip?`${pic(c)}<div class="en">${esc(c.en)}</div><button class="fab l" id="del">⋯</button>`:`${pic(c)}<div class="cap">${esc(c.ru)}</div><button class="fab l" id="del">⋯</button>`)+`</div></main>
+  const cb=S.mode==="memo"&&combo>=2?`<div class="combo${S.bump?" bump":""}${combo>=10?" big":""}">🔥 ×${combo}</div>`:"";
+  h+=`<main>${cb}<div class="card ${S.flip?"back":"front"}" id="card">`+(S.flip?`${pic(c)}<div class="en">${esc(c.en)}</div><button class="fab l" id="snd">🔊</button>`:`${pic(c)}<div class="cap">${esc(c.ru)}</div>`)+`</div></main>
   <div class="prog"><i style="width:${(S.i+1)/q.length*100}%"></i></div><div class="count">Глава ${S.ch+1} · ${S.i+1} из ${q.length}</div>`;
   if(S.mode==="memo"&&S.flip)h+=`<div class="acts"><button class="nok" data-r="0">Не помню</button><button class="ok" data-r="1">Помню</button></div>`;
   else if(S.mode==="dremo")h+=`<div class="acts"><button class="nav" data-n="-1">←</button><button class="nav" data-n="1">→</button></div>`;
@@ -798,7 +889,13 @@ if(S.tab==="home"){
  v.innerHTML=`<div class="scroll"><div style="padding:4px 3px 10px"><div class="deck" style="font-size:24px">Фоновая музыка</div><div class="subdeck">Музыка во время изучения карточек</div></div><section class="music-panel"><div class="music-hero"><div class="music-art">🎧</div><div><div class="music-title" id="musicTrackName">Твой саундтрек</div><div class="music-sub" id="musicTrackStatus">Фоновый трек · background.mp3</div></div></div><div class="music-sub">Трек загружается с сайта автоматически</div><div class="music-control"><div class="music-control-head"><label for="musicVolume">Громкость</label><output id="volumeOut">${Math.round(mv*100)}%</output></div><input id="musicVolume" type="range" min="0" max="100" step="1" value="${Math.round(mv*100)}"></div><div class="music-control"><div class="music-control-head"><label for="musicCutoff">Лоупасс · срез высоких частот</label><output id="cutoffOut">${cutoff>=20000?'Выкл.':cutoff>=1000?(cutoff/1000).toFixed(1)+' кГц':Math.round(cutoff)+' Гц'}</output></div><input id="musicCutoff" type="range" min="200" max="20000" step="100" value="${cutoff}"><div class="music-sub">Меньше значение — более глухой, басовый звук.</div></div><div class="music-actions"><button id="musicPlay">▶︎ Воспроизвести</button><button id="musicStop" class="secondary">■ Стоп</button></div><p class="music-note">Музыка загружается с сайта. Нажми «Воспроизвести»; громкость и лоупасс сохраняются. Автовоспроизведение может блокироваться браузером до нажатия кнопки.</p></section></div>`;
 }else{
  const u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user,nm=(u&&u.first_name)||"Гость",due=S.cards.filter(c=>c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
- v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Профиль</h1></div><div class="wide"><div class="av">${esc(nm[0].toUpperCase())}</div><div><b>${esc(nm)}</b><small>Прогресс сохраняется в Telegram</small></div></div><div class="tiles"><div class="tile"><b>${learned}</b><span>Выучено</span></div><div class="tile"><b>${due}</b><span>К повторению</span></div></div><div class="stat">Memo — вспоминаете фразу и проверяете себя. Dremo — просмотр и прослушивание в своём темпе.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div></div>`;
+ const L=lvlOf(G.xp),st=streak();
+ v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Профиль</h1></div><div class="wide"><div class="av">${esc(nm[0].toUpperCase())}</div><div style="flex:1"><b>${esc(nm)}</b><small>Ур. ${L.l} · ${L.name} · ${G.xp} XP</small><div class="bar"><i style="width:${L.pct}%"></i></div></div></div>
+ <div class="tiles"><div class="tile"><b>${learned}</b><span>Выучено</span></div><div class="tile"><b>${due}</b><span>К повторению</span></div><div class="tile"><b>🔥 ${st}</b><span>${daysWord(st)} подряд</span></div><div class="tile"><b>×${G.best||0}</b><span>Лучшее комбо</span></div></div>
+ <div class="sec">Достижения · ${G.ach.length}/${ACH.length}</div><div class="ach">${ACH.map(([id,ic,t,d])=>`<div class="${G.ach.includes(id)?"on":"off"}"><i>${ic}</i><b>${t}</b><br>${d}</div>`).join("")}</div>
+ <div class="sec">Настройки</div><button class="wide" id="sfxT"><i>${SFX.on?"🔊":"🔇"}</i><div style="text-align:left"><b>Звуки</b><small>${SFX.on?"Включены":"Выключены"}</small></div></button>
+ <div style="color:var(--mute);margin:4px 4px 8px">Цель дня — карточек</div><div class="seg goal">${[10,20,40].map(g=>`<button data-g="${g}" class="${G.goal===g?"on":""}">${g}</button>`).join("")}</div>
+ <div class="stat">Memo — вспоминаете фразу и проверяете себя. Dremo — просмотр и прослушивание в своём темпе.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div></div>`;
 }
 bind();}
 const musicPrefs=(()=>{try{return {volume:Math.max(0,Math.min(1,Number(localStorage.getItem('music_volume')??0.22))),cutoff:Math.max(200,Math.min(20000,Number(localStorage.getItem('music_cutoff')??8500)))}}catch(_){return {volume:.22,cutoff:8500}}})();
@@ -819,15 +916,14 @@ function setupMusicFilter(){
 function bind(){
 const $=s=>document.querySelector(s);
 document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;if(S.tab==="train")S.ord=null;S.i=0;S.flip=false;render()});
-document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.ord=null;S.tab="train";S.i=0;S.flip=false;render()});
-document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{S.ch=+b.dataset.c;S.ord=null;S.tab="train";S.i=0;S.flip=false;render()});
-const a=$("#add");if(a)a.onclick=()=>$("#dlg").showModal();
-const card=$("#card");if(card)card.onclick=e=>{if(e.target.closest(".fab"))return;S.flip=!S.flip;render()};
+document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.ord=null;S.tab="train";S.i=0;S.flip=false;newSess();render()});
+document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{S.ch=+b.dataset.c;S.ord=null;S.tab="train";S.i=0;S.flip=false;newSess();render()});
+const card=$("#card");if(card)card.onclick=e=>{if(busy||e.target.closest(".fab"))return;SFX.flip();S.flip=!S.flip;render()};
 const snd=$("#snd");if(snd)snd.onclick=()=>speak(queue()[S.i].en);
-const del=$("#del");if(del)del.onclick=()=>{if(confirm("Удалить карточку?")){const c=queue()[S.i];S.cards=S.cards.filter(x=>x.id!==c.id);save();S.flip=false;render()}};
-document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const c=queue()[S.i];if(b.dataset.r==="1"){c.box=Math.min(c.box+1,5)}else c.box=0;c.due=Date.now()+GAPS[c.box]*DAY;if(c.box===0)c.due=Date.now()+6e4;save();S.flip=false;render()});
-document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{const n=queue().length;S.i=(S.i+ +b.dataset.n+n)%n;S.flip=false;render()});
-document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{S.cards=S.cards.filter(x=>x.id!==+b.dataset.d);save();render()});
+document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>rate(b,b.dataset.r==="1"));
+document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{const n=queue().length;S.i=(S.i+ +b.dataset.n+n)%n;S.flip=false;SFX.swish();render()});
+const sfxT=$("#sfxT");if(sfxT)sfxT.onclick=()=>{SFX.on=!SFX.on;SFX.tap();render()};
+document.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{G.goal=+b.dataset.g;saveG();render()});
 const rs=$("#reset");if(rs)rs.onclick=()=>{if(confirm("Сбросить весь прогресс?")){S.cards.forEach(c=>{c.box=0;c.due=0});save();S.tab="train";render()}};
 const trackName=$("#musicTrackName");if(trackName)trackName.textContent='Фоновая музыка';const trackStatus=$("#musicTrackStatus");if(trackStatus)trackStatus.textContent='Готово к воспроизведению';
 const vol=$("#musicVolume");if(vol)vol.oninput=()=>{musicPrefs.volume=Number(vol.value)/100;ensureMusicAudio().volume=musicPrefs.volume;try{localStorage.setItem('music_volume',String(musicPrefs.volume))}catch(_){}const out=$("#volumeOut");if(out)out.textContent=vol.value+'%'};
@@ -835,11 +931,60 @@ const cut=$("#musicCutoff");if(cut)cut.oninput=()=>{musicPrefs.cutoff=Number(cut
 const play=$("#musicPlay");if(play)play.onclick=async()=>{const a=ensureMusicAudio();if(!a.src){a.src='./background.mp3';a.load()}setupMusicFilter();try{if(!a.paused){a.pause();return}if(audioCtx&&audioCtx.state==='suspended')await audioCtx.resume();await a.play()}catch(e){const st=$("#musicTrackStatus");if(st)st.textContent='Не удалось запустить файл. Выбери другой аудиофайл.'}};
 const stop=$("#musicStop");if(stop)stop.onclick=()=>{if(musicAudio){musicAudio.pause();musicAudio.currentTime=0}const st=$("#musicTrackStatus");if(st)st.textContent='Остановлено';const b=$("#musicPlay");if(b)b.textContent='▶︎ Воспроизвести'};
 }
-const dlg=document.getElementById("dlg");let imgData="";
-document.getElementById("cancel").onclick=()=>dlg.close();
-document.getElementById("fImg").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,600/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=im.width*k;cv.height=im.height*k;cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);imgData=cv.toDataURL("image/jpeg",.75)};im.src=r.result};r.readAsDataURL(f)};
-document.getElementById("save").onclick=()=>{const ru=fRu.value.trim(),en=fEn.value.trim();if(!ru||!en)return;S.cards.push({id:Date.now(),ru,en,img:imgData,box:0,due:0});save();fRu.value=fEn.value=fImg.value="";imgData="";dlg.close();S.ch=chCount()-1;S.ord=null;S.tab="train";render()};
-document.addEventListener("pointerdown",e=>{if(e.target.closest("button,.card,.row")){try{TG.HapticFeedback.impactOccurred("light")}catch(_){}}});
+const haptic=k=>{try{TG.HapticFeedback.notificationOccurred(k)}catch(_){}};
+function rate(btn,good){
+ if(busy)return;const c=queue()[S.i];if(!c)return;busy=true;
+ const t=today(),ev=[],L0=lvlOf(G.xp).l;
+ if(G.last!==t){G.days=G.last===dayStr(-1)?G.days+1:1;G.last=t}
+ if(G.day!==t){G.day=t;G.done=0}
+ if(++G.done===G.goal)ev.push("goal");
+ let gain=2;
+ if(good){c.box=Math.min(c.box+1,5);combo++;gain=10+2*Math.min(combo-1,10);G.ok=(G.ok||0)+1;sess.ok++}
+ else{c.box=0;combo=0}
+ c.due=Date.now()+GAPS[c.box]*DAY;if(c.box===0)c.due=Date.now()+6e4;
+ G.best=Math.max(G.best||0,combo);G.xp+=gain;sess.best=Math.max(sess.best,combo);sess.n++;sess.xp+=gain;
+ if(lvlOf(G.xp).l>L0)ev.push("lvl");
+ save();saveG();
+ const milestone=good&&combo>=5&&combo%5===0,cardEl=document.getElementById("card");
+ btn.classList.add("hit");if(cardEl)cardEl.classList.add(good?"good":"bad");
+ if(good){SFX.ok(combo);if(milestone)SFX.combo()}else SFX.bad();
+ haptic(good?"success":"error");
+ floatFx(btn,`+${gain} XP`,good?(milestone?`Комбо ×${combo}! 🔥`:pick(PRAISE)):pick(OOPS),!good);
+ setTimeout(()=>{
+  busy=false;S.flip=false;S.bump=good&&combo>=2;S.lvup=ev.includes("lvl");
+  if(S.mode==="memo"&&!queue().length)ev.push("ch");
+  render();S.bump=S.lvup=false;celebrate(ev);
+ },good?450:500);
+}
+function floatFx(el,a,b,neg){const r=el.getBoundingClientRect(),d=document.createElement("div");d.className="fx"+(neg?" neg":"");d.style.left=r.left+r.width/2+"px";d.style.top=r.top+"px";d.innerHTML=`<b>${esc(a)}</b><small>${esc(b)}</small>`;document.body.appendChild(d);setTimeout(()=>d.remove(),1000)}
+function celebrate(ev){
+ if(ev.includes("lvl")||ev.includes("goal")||ev.includes("ch")){SFX.fanfare();confetti()}
+ if(ev.includes("lvl")){const L=lvlOf(G.xp);toast("⭐",`Новый уровень ${L.l}!`,L.name)}
+ if(ev.includes("goal"))toast("🎯","Цель дня выполнена!",`${G.goal} карточек — отличная работа`);
+ if(ev.includes("ch"))unlock("ch");
+ const learned=S.cards.filter(c=>c.box>=4).length,st=streak(),l=lvlOf(G.xp).l;
+ const cond={first:G.ok>=1,c5:G.best>=5,c10:G.best>=10,c25:G.best>=25,goal:doneToday()>=G.goal,s3:st>=3,s7:st>=7,l10:learned>=10,l50:learned>=50,lv5:l>=5,lv8:l>=8};
+ Object.keys(cond).forEach(k=>cond[k]&&unlock(k));
+}
+function unlock(id){if(G.ach.includes(id))return;G.ach.push(id);saveG();const a=ACH.find(x=>x[0]===id);if(a)toast(a[1],"Достижение: "+a[2],a[3],true)}
+const toasts=[];let toasting=false;
+function toast(icon,title,sub,chime){toasts.push([icon,title,sub,chime]);if(!toasting)nextToast()}
+function nextToast(){
+ const t=toasts.shift();if(!t){toasting=false;return}toasting=true;
+ let el=document.getElementById("toast");if(!el){el=document.createElement("div");el.id="toast";document.body.appendChild(el);el.offsetWidth}
+ el.innerHTML=`<i>${t[0]}</i><div><b>${esc(t[1])}</b><small>${esc(t[2])}</small></div>`;
+ if(t[3])SFX.ach();
+ requestAnimationFrame(()=>el.classList.add("show"));
+ setTimeout(()=>{el.classList.remove("show");setTimeout(nextToast,450)},2300);
+}
+function confetti(){
+ const cv=document.createElement("canvas"),W=innerWidth,H=innerHeight,d=devicePixelRatio||1;cv.id="confetti";cv.width=W*d;cv.height=H*d;document.body.appendChild(cv);
+ const x=cv.getContext("2d");x.scale(d,d);
+ const C=["#ffb347","#f2701d","#38d394","#35b6ff","#ff5d8f","#ffd166"];
+ const P=Array.from({length:140},()=>({x:W/2+(Math.random()-.5)*80,y:H*.38,vx:(Math.random()-.5)*14,vy:-Math.random()*15-4,r:Math.random()*6+5,c:pick(C),a:Math.random()*6,va:(Math.random()-.5)*.4}));
+ let f=0;(function step(){x.clearRect(0,0,W,H);x.globalAlpha=Math.max(0,1-f/160);P.forEach(p=>{p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});if(++f<160)requestAnimationFrame(step);else cv.remove()})();
+}
+document.addEventListener("pointerdown",e=>{const t=e.target.closest("button,.card,.row");if(!t)return;try{TG.HapticFeedback.impactOccurred("light")}catch(_){}SFX.unlock();if(t.matches("button")&&!t.matches("[data-r],[data-n]"))SFX.tap()});
 load();
 </script>
 </body>
