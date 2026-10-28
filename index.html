@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Чайхана Английский</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#000;--card:#0d0d0f;--line:rgba(255,255,255,.09);--ink:#fff;--mute:#8b8d96;--chip:#1b1b1f;--ok:#2fbf84;--bad:#e5534b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -49,8 +51,9 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding:6px 0;positi
 .hint{position:absolute;top:16px;left:16px;z-index:2;padding:7px 12px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);font-size:14px;font-weight:600;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .study{padding:14px 16px 76px;gap:12px}
 .study .pic{flex:1;min-height:150px;border-radius:24px;font-size:64px}
-.study .en{padding:0 4px}
-.study .ru{padding-top:12px}
+/* Изучать: сначала русский, под чертой — английский жирным */
+.study .ru{border-top:0;padding:0 4px}
+.study .en{padding:12px 4px 0;border-top:1px solid var(--line)}
 @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
 .pic{position:relative;overflow:hidden;display:grid;place-items:center;font-size:100px}
 .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -80,8 +83,8 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 .stat{padding:18px;margin-bottom:12px;line-height:1.5;color:var(--mute)}
 .av{width:60px;height:60px;border-radius:20px;background:var(--chip);display:grid;place-items:center;font-size:28px;font-weight:700;color:#fff}
 
-.glow::before{background:radial-gradient(ellipse 55% 60% at 50% 30%,#ffc14d 0,#f2701d 42%,transparent 76%) no-repeat;animation:drift 11s ease-in-out infinite}
-@keyframes drift{0%,100%{background-size:100% 100%;background-position:0 0}35%{background-size:68% 68%;background-position:85% 8%}70%{background-size:84% 84%;background-position:10% 45%}}
+.glow::before{background:radial-gradient(ellipse 34% 38% at 50% 32%,#ffc14d 0,#f2701d 40%,transparent 72%) no-repeat;animation:drift 14s ease-in-out infinite}
+@keyframes drift{0%,100%{background-size:100% 100%;background-position:0 0}35%{background-size:88% 88%;background-position:60% 10%}70%{background-size:94% 94%;background-position:40% 30%}}
 .glow .chip{display:inline-block;padding:6px 14px;border-radius:999px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.15);font-size:14px;margin-bottom:12px}
 .prog i{background:linear-gradient(90deg,#f2701d,#ffb347)}
 .back{padding:14px 16px 76px;gap:14px;justify-content:flex-start}
@@ -204,6 +207,37 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 .dots{display:flex;gap:6px;justify-content:center;margin:18px 0}
 .dots i{width:8px;height:8px;border-radius:9px;background:var(--chip);transition:width .3s}
 .dots i.on{width:24px;background:#ffb347}
+
+/* Мультяшная тема: тёплый фиолетовый фон, цветные плитки, мягкие «объёмные» кнопки */
+:root{--bg:#15112a;--card:#211c3b;--chip:#2e2850;--line:rgba(255,255,255,.08);--mute:#a9a3cc}
+body{font-family:"Nunito",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:radial-gradient(60% 40% at 0% 0%,rgba(255,122,171,.16),transparent 70%),radial-gradient(60% 40% at 100% 30%,rgba(110,140,255,.16),transparent 70%),radial-gradient(70% 40% at 50% 100%,rgba(64,214,170,.12),transparent 70%),var(--bg);background-attachment:fixed}
+h1,h2,.hrow h1,.ttl h1{font-weight:900}
+.glow{background:linear-gradient(160deg,#2a2150,#1a1534);border:0;box-shadow:0 8px 0 rgba(0,0,0,.25)}
+.ring::before{background:rgba(26,21,52,.75)}
+.glow .pill,.onb .pill{box-shadow:0 5px 0 #c9c0ee;font-weight:800}
+.glow .pill:active,.onb .pill:active{box-shadow:0 1px 0 #c9c0ee;transform:translateY(4px)}
+.tile,.wide,.stat,.row,.hchip,.ach div,.music-panel,.steps div,.goals button,.spill{border:0;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.tiles .tile:nth-child(4n+1){background:linear-gradient(145deg,#7b5cff,#5a3fd6)}
+.tiles .tile:nth-child(4n+2){background:linear-gradient(145deg,#ff7aa8,#e04f86)}
+.tiles .tile:nth-child(4n+3){background:linear-gradient(145deg,#2fd3a3,#18a37c)}
+.tiles .tile:nth-child(4n+4){background:linear-gradient(145deg,#ffc24d,#f08c1d)}
+.tiles .tile span{color:rgba(255,255,255,.85);font-weight:600}
+.wide i{background:linear-gradient(145deg,#7b5cff,#ff7aa8)}
+.face{background:linear-gradient(180deg,#262043,#1d1836);border:0}
+.pic{border-radius:24px}
+.seg{border:0;background:var(--card)}
+.seg button.on{background:linear-gradient(135deg,#ffb347,#ff7aa8);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+nav{background:rgba(33,28,59,.92);border:0;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+nav button{color:#7d77a3}
+nav button.on{background:linear-gradient(135deg,#7b5cff,#ff7aa8);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.prog,.mini,.bar{background:var(--chip)}
+.prog i,.mini i{background:linear-gradient(90deg,#ff7aa8,#ffb347,#ffd166)}
+.acts button{box-shadow:0 5px 0 rgba(0,0,0,.3);font-weight:800}
+.acts button:active{box-shadow:0 1px 0 rgba(0,0,0,.3);transform:translateY(4px)}
+.nav{background:var(--chip);border:0}
+.nok{background:linear-gradient(180deg,#ff7a73,#e5534b)}
+.lv::before{background:var(--bg)}
+.fab{background:rgba(46,40,80,.85);border:0}
 </style>
 </head>
 <body>
@@ -854,7 +888,7 @@ const daysWord=d=>d%10===1&&d%100!==11?"день":[2,3,4].includes(d%10)&&![12,1
 let combo=0,busy=false,sess={n:0,ok:0,xp:0,best:0};
 const newSess=()=>{sess={n:0,ok:0,xp:0,best:0}};
 const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage&&TG.initData?TG.CloudStorage:null;
-if(TG){try{TG.ready();TG.expand();TG.setHeaderColor&&TG.setHeaderColor("#000000");TG.setBackgroundColor&&TG.setBackgroundColor("#000000")}catch(e){}}
+if(TG){try{TG.ready();TG.expand();TG.setHeaderColor&&TG.setHeaderColor("#15112a");TG.setBackgroundColor&&TG.setBackgroundColor("#15112a")}catch(e){}}
 const cget=k=>Promise.race([new Promise(r=>CS.getItem(k,(e,v)=>r(e?"":v||""))),new Promise(r=>setTimeout(()=>r(""),3000))]);
 // Telegram WebApp CloudStorage has setItem, not setItems.
 const cset=async o=>{
@@ -977,7 +1011,7 @@ if(S.tab==="home"){
   const memo=S.mode==="memo",cb=memo&&combo>=2?`<div class="combo${S.bump?" bump":""}${combo>=10?" big":""}">🔥 ×${combo}</div>`:"";
   const inner=memo
    ?`<div class="inner${S.flip?" flipped":""}"><div class="face front">${pic(c)}<div class="hint">🗣 Скажи по-английски</div><div class="cap">${esc(c.ru)}</div></div><div class="face back">${pic(c)}<div class="en">${esc(c.en)}</div><button class="fab l" id="snd">🔊</button></div></div>`
-   :`<div class="inner"><div class="face study">${pic(c)}<div class="en">${esc(c.en)}</div><div class="ru">${esc(c.ru)}</div><button class="fab l" id="snd">🔊</button></div></div>`;
+   :`<div class="inner"><div class="face study">${pic(c)}<div class="ru">${esc(c.ru)}</div><div class="en">${esc(c.en)}</div><button class="fab l" id="snd">🔊</button></div></div>`;
   h+=`<main>${cb}<div class="card${memo?"":" still"}" id="card">${inner}</div></main>
   <div class="prog"><i style="width:${(S.i+1)/q.length*100}%"></i></div><div class="count">Глава ${S.ch+1} · ${S.i+1} из ${q.length}</div><div id="actsBox">${actsHtml(q)}</div>`;
  }
