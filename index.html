@@ -982,9 +982,9 @@ if(S.tab==="home"){
  <div class="tiles"><div class="tile"><b>${learned}</b><span>Выучено</span></div><div class="tile"><b>${due}</b><span>К повторению</span></div><div class="tile"><b>🔥 ${st}</b><span>${daysWord(st)} подряд</span></div><div class="tile"><b>×${G.best||0}</b><span>Лучшее комбо</span></div></div>
  <div class="sec">Достижения · ${G.ach.length}/${ACH.length}</div><div class="ach">${ACH.map(([id,ic,t,d])=>`<div class="${G.ach.includes(id)?"on":"off"}"><i>${ic}</i><b>${t}</b><br>${d}</div>`).join("")}</div>
  <div class="sec">Настройки</div><button class="wide" id="sfxT"><i>${SFX.on?"🔊":"🔇"}</i><div style="text-align:left"><b>Звуки</b><small>${SFX.on?"Включены":"Выключены"}</small></div></button>
- ${HS==="unsupported"?"":HS==="added"?`<div class="wide"><i>📲</i><div><b>Главный экран</b><small>✓ Чайхана уже добавлена</small></div></div>`:`<button class="wide" id="hsAdd"><i>📲</i><div style="text-align:left"><b>Добавить на главный экран</b><small>Значок приложения на телефоне</small></div></button>`}
+ ${HS==="unsupported"?(TG&&TG.initData?`<div class="wide"><i>📲</i><div><b>Главный экран</b><small>${/tdesktop|macos|web/.test(TG.platform||"")?"Доступно только в Telegram на телефоне":"Обнови Telegram, чтобы добавить значок"}</small></div></div>`:""):HS==="added"?`<div class="wide"><i>📲</i><div><b>Главный экран</b><small>✓ Чайхана уже добавлена</small></div></div>`:`<button class="wide" id="hsAdd"><i>📲</i><div style="text-align:left"><b>Добавить на главный экран</b><small>Значок приложения на телефоне</small></div></button>`}
  <div style="color:var(--mute);margin:4px 4px 8px">Цель дня — карточек</div><div class="seg goal">${[10,20,40].map(g=>`<button data-g="${g}" class="${G.goal===g?"on":""}">${g}</button>`).join("")}</div>
- <div class="stat">Вспоминать — достаёшь фразу из памяти, говоришь вслух и честно отмечаешь результат. Изучать — спокойно смотришь и слушаешь фразы главы перед тренировкой.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div></div>`;
+ <div class="stat">Вспоминать — достаёшь фразу из памяти, говоришь вслух и честно отмечаешь результат. Изучать — спокойно смотришь и слушаешь фразы главы перед тренировкой.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div><div style="text-align:center;color:#55575e;font-size:12px;margin:6px 0 4px">Версия ${APPV} · Telegram ${TG&&TG.version||"—"} · ${TG&&TG.platform||"браузер"} · ${HS}</div></div>`;
 }
 bind();}
 const musicPrefs=(()=>{try{return {volume:Math.max(0,Math.min(1,Number(localStorage.getItem('music_volume')??0.22))),cutoff:Math.max(200,Math.min(20000,Number(localStorage.getItem('music_cutoff')??8500)))}}catch(_){return {volume:.22,cutoff:8500}}})();
@@ -1031,7 +1031,9 @@ const stop=$("#musicStop");if(stop)stop.onclick=()=>{if(musicAudio){musicAudio.p
 const haptic=k=>{try{TG.HapticFeedback.notificationOccurred(k)}catch(_){}};
 // Ярлык на главном экране телефона (Telegram Bot API 8.0+). Статусы: unsupported, unknown, added, missed.
 let HS="unsupported";
-function checkHS(){try{if(TG&&TG.isVersionAtLeast&&TG.isVersionAtLeast("8.0")&&TG.checkHomeScreenStatus)TG.checkHomeScreenStatus(s=>{HS=s||"unknown";render()})}catch(_){}}
+// Кнопку показываем сразу по версии Telegram: на части клиентов checkHomeScreenStatus не вызывает колбэк.
+function checkHS(){try{if(TG&&TG.isVersionAtLeast&&TG.isVersionAtLeast("8.0")&&TG.addToHomeScreen){HS="unknown";render();if(TG.checkHomeScreenStatus)TG.checkHomeScreenStatus(s=>{if(s&&s!=="unsupported")HS=s;render()})}}catch(_){}}
+const APPV=5;
 function addHS(){try{TG.addToHomeScreen()}catch(_){}}
 try{TG&&TG.onEvent&&TG.onEvent("homeScreenAdded",()=>{HS="added";toast("📲","Чайхана на главном экране","Теперь открывается в одно касание",true);render()})}catch(_){}
 const canAddHS=()=>HS==="missed"||HS==="unknown";
