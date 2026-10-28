@@ -908,6 +908,19 @@ function save(){
  saveTimer=setTimeout(()=>{if(my===saving)cset(o)},120);
 }
 let gTimer=0;
+// Supabase: события для напоминаний и статистики. Пока адрес не заполнен — ничего не отправляется.
+const API_URL="https://llafvivdbtycuoqbwnbf.supabase.co/functions/v1/track";
+const API={q:[],t:0,
+ on:()=>!API_URL.includes("PROJECT_REF")&&!!(TG&&TG.initData),
+ push(e){if(!this.on())return;this.q.push(e);clearTimeout(this.t);this.t=setTimeout(()=>this.flush(),4000)},
+ flush(extra={}){
+  if(!this.on())return;clearTimeout(this.t);
+  const body={initData:TG.initData,tz:-new Date().getTimezoneOffset(),platform:TG.platform,stats:{streak:streak(),last:G.last,xp:G.xp,goal:G.goal,done:doneToday()},events:this.q.splice(0,50),notify:G.notify!==false,...extra};
+  fetch(API_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body),keepalive:true}).catch(()=>{});
+ }};
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&API.q.length)API.flush()});
+// Разрешение боту писать в личку (нужно, если человек открыл приложение, не нажав /start).
+function askWrite(){try{if(TG&&TG.isVersionAtLeast&&TG.isVersionAtLeast("6.9")&&TG.requestWriteAccess)TG.requestWriteAccess(ok=>{if(ok)API.flush({canWrite:true,notify:true})})}catch(_){}}
 function saveG(){clearTimeout(gTimer);gTimer=setTimeout(()=>{const j=JSON.stringify(G);try{localStorage.setItem("md_g",j)}catch(_){}if(CS)cset({md_g:j})},150)}
 const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const GR=["#1d3a6b,#0b1c3a","#14503f,#0a2a22","#3b2a6b,#1a1236","#6b3b1d,#2e180a","#1d5a6b,#0a2a33","#6b1d3f,#2e0a1a"];
@@ -982,6 +995,7 @@ if(S.tab==="home"){
  <div class="tiles"><div class="tile"><b>${learned}</b><span>Выучено</span></div><div class="tile"><b>${due}</b><span>К повторению</span></div><div class="tile"><b>🔥 ${st}</b><span>${daysWord(st)} подряд</span></div><div class="tile"><b>×${G.best||0}</b><span>Лучшее комбо</span></div></div>
  <div class="sec">Достижения · ${G.ach.length}/${ACH.length}</div><div class="ach">${ACH.map(([id,ic,t,d])=>`<div class="${G.ach.includes(id)?"on":"off"}"><i>${ic}</i><b>${t}</b><br>${d}</div>`).join("")}</div>
  <div class="sec">Настройки</div><button class="wide" id="sfxT"><i>${SFX.on?"🔊":"🔇"}</i><div style="text-align:left"><b>Звуки</b><small>${SFX.on?"Включены":"Выключены"}</small></div></button>
+ ${API.on()?`<button class="wide" id="ntfT"><i>${G.notify!==false?"🔔":"🔕"}</i><div style="text-align:left"><b>Напоминания о серии</b><small>${G.notify!==false?"Бот напишет вечером, если серия под угрозой":"Выключены"}</small></div></button>`:""}
  ${HS==="unsupported"?(TG&&TG.initData?`<div class="wide"><i>📲</i><div><b>Главный экран</b><small>${/tdesktop|macos|web/.test(TG.platform||"")?"Доступно только в Telegram на телефоне":"Обнови Telegram, чтобы добавить значок"}</small></div></div>`:""):HS==="added"?`<div class="wide"><i>📲</i><div><b>Главный экран</b><small>✓ Чайхана уже добавлена</small></div></div>`:`<button class="wide" id="hsAdd"><i>📲</i><div style="text-align:left"><b>Добавить на главный экран</b><small>Значок приложения на телефоне</small></div></button>`}
  <div style="color:var(--mute);margin:4px 4px 8px">Цель дня — карточек</div><div class="seg goal">${[10,20,40].map(g=>`<button data-g="${g}" class="${G.goal===g?"on":""}">${g}</button>`).join("")}</div>
  <div class="stat">Вспоминать — достаёшь фразу из памяти, говоришь вслух и честно отмечаешь результат. Изучать — спокойно смотришь и слушаешь фразы главы перед тренировкой.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div><div style="text-align:center;color:#55575e;font-size:12px;margin:6px 0 4px">Версия ${APPV} · Telegram ${TG&&TG.version||"—"} · ${TG&&TG.platform||"браузер"} · ${HS}</div></div>`;
@@ -1019,6 +1033,7 @@ const hsA=$("#hsAdd");if(hsA)hsA.onclick=addHS;
 const hsX=$("#hsX");if(hsX)hsX.onclick=()=>{G.hsHide=1;saveG();render()};
 const oS=$("#oSkip");if(oS)oS.onclick=()=>finishOnb(false);
 document.querySelectorAll("[data-og]").forEach(b=>b.onclick=()=>{G.goal=+b.dataset.og;render()});
+const ntfT=$("#ntfT");if(ntfT)ntfT.onclick=()=>{G.notify=G.notify===false;saveG();if(G.notify)askWrite();API.flush({notify:G.notify});render()};
 const sfxT=$("#sfxT");if(sfxT)sfxT.onclick=()=>{SFX.on=!SFX.on;SFX.tap();render()};
 document.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{G.goal=+b.dataset.g;saveG();render()});
 const rs=$("#reset");if(rs)rs.onclick=()=>{if(confirm("Сбросить весь прогресс?")){S.cards.forEach(c=>{c.box=0;c.due=0});save();S.tab="train";render()}};
@@ -1037,7 +1052,7 @@ const APPV=5;
 function addHS(){try{TG.addToHomeScreen()}catch(_){}}
 try{TG&&TG.onEvent&&TG.onEvent("homeScreenAdded",()=>{HS="added";toast("📲","Чайхана на главном экране","Теперь открывается в одно касание",true);render()})}catch(_){}
 const canAddHS=()=>HS==="missed"||HS==="unknown";
-function finishOnb(start){G.onb=1;saveG();if(start){S.tab="train";S.mode="memo";S.ch=0;S.ord=null;S.i=0;S.flip=false;newSess()}render()}
+function finishOnb(start){G.onb=1;saveG();askWrite();if(start){S.tab="train";S.mode="memo";S.ch=0;S.ord=null;S.i=0;S.flip=false;newSess()}render()}
 function rate(btn,good){
  if(busy)return;const c=queue()[S.i];if(!c)return;busy=true;
  const t=today(),ev=[],L0=lvlOf(G.xp).l;
@@ -1050,7 +1065,7 @@ function rate(btn,good){
  c.due=Date.now()+GAPS[c.box]*DAY;if(c.box===0)c.due=Date.now()+6e4;
  G.best=Math.max(G.best||0,combo);G.xp+=gain;sess.best=Math.max(sess.best,combo);sess.n++;sess.xp+=gain;
  if(lvlOf(G.xp).l>L0)ev.push("lvl");
- save();saveG();
+ save();saveG();API.push({type:"rate",card:c.id,good,chapter:S.ch});
  const milestone=good&&combo>=5&&combo%5===0,cardEl=document.getElementById("card");
  btn.classList.add("hit");if(cardEl)cardEl.classList.add(good?"good":"bad");
  if(good){SFX.ok(combo);if(milestone)SFX.combo()}else SFX.bad();
@@ -1091,7 +1106,7 @@ function confetti(){
  let f=0;(function step(){x.clearRect(0,0,W,H);x.globalAlpha=Math.max(0,1-f/160);P.forEach(p=>{p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});if(++f<160)requestAnimationFrame(step);else cv.remove()})();
 }
 document.addEventListener("pointerdown",e=>{const t=e.target.closest("button,.card,.row");if(!t)return;try{TG.HapticFeedback.impactOccurred("light")}catch(_){}SFX.unlock();if(t.matches("button")&&!t.matches("[data-r],[data-n]"))SFX.tap()});
-load().then(checkHS);
+load().then(()=>{checkHS();API.q.push({type:"open"});API.flush()});
 </script>
 </body>
 </html>
