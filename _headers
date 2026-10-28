@@ -1,0 +1,9 @@
+# Netlify / Cloudflare Pages: страницу не кэшировать, чтобы Telegram всегда брал свежую версию.
+/
+  Cache-Control: no-cache, must-revalidate
+/index.html
+  Cache-Control: no-cache, must-revalidate
+/img/*
+  Cache-Control: public, max-age=604800
+/background.mp3
+  Cache-Control: public, max-age=604800
