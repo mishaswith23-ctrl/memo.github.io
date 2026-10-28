@@ -152,6 +152,10 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 .seg.goal{margin-bottom:12px;flex:none}
 .acts.hintline{min-height:66px;color:var(--mute);justify-content:center;align-items:center;text-align:center;font-size:15px}
 .acts .go{flex:2;color:#000}
+.hsb{gap:12px;padding:12px 12px 12px 14px;animation:pop .4s both}
+.hsb b{font-size:16px}.hsb small{font-size:14px}
+.hsgo{padding:11px 16px;border-radius:999px;background:linear-gradient(135deg,#ffb347,#f2701d);color:#000;font-weight:700;font-size:15px;flex:none}
+.hsx{color:var(--mute);padding:8px;font-size:16px;flex:none}
 
 /* Главная: строка серии и кольцо цели дня */
 .hrow{display:flex;align-items:center;gap:10px;padding:12px 4px 0}
@@ -946,6 +950,7 @@ if(S.tab==="home"){
  ${st&&G.last!==today()?`<div class="nudge">Повтори хотя бы одну карточку — не потеряй серию 🔥</div>`:""}
  <div class="glow"><div class="ring${full?" full":""}"><svg viewBox="0 0 180 180"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd166"/><stop offset="1" stop-color="#f2701d"/></linearGradient></defs><circle class="bgc" cx="90" cy="90" r="80"/><circle class="fgc" cx="90" cy="90" r="80" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg><div class="mid">${full?`<b>✓</b><small>цель дня выполнена</small>`:`<b>${dn}<span>/${G.goal}</span></b><small>цель дня</small>`}</div></div>
  <button class="pill" data-c="${tc}">${dn?"Продолжить":"Начать"} · Глава ${tc+1}</button><div class="lbl">${due?`${due} ${cardsWord(due)} к повторению`:"Всё повторено — можно взять новую главу"}</div></div>
+ ${canAddHS()&&!G.hsHide&&G.ok>=1?`<div class="wide hsb"><i>📲</i><div style="flex:1;min-width:0"><b>На главный экран</b><small>Вход в одно касание</small></div><button class="hsgo" id="hsAdd">Добавить</button><button class="hsx" id="hsX" aria-label="Скрыть">✕</button></div>`:""}
  <div class="tiles"><button class="tile" data-t="decks"><b>${n}</b><span>Глав по ${CH} карточек</span></button><button class="tile" data-t="me"><b>${G.ach.length}/${ACH.length}</b><span>Достижений · выучено ${learned}</span></button></div></div>`;
 }else if(S.tab==="train"){
  const q=queue();if(S.i>=q.length)S.i=0;const c=q[S.i];let h=topBar();
@@ -977,6 +982,7 @@ if(S.tab==="home"){
  <div class="tiles"><div class="tile"><b>${learned}</b><span>Выучено</span></div><div class="tile"><b>${due}</b><span>К повторению</span></div><div class="tile"><b>🔥 ${st}</b><span>${daysWord(st)} подряд</span></div><div class="tile"><b>×${G.best||0}</b><span>Лучшее комбо</span></div></div>
  <div class="sec">Достижения · ${G.ach.length}/${ACH.length}</div><div class="ach">${ACH.map(([id,ic,t,d])=>`<div class="${G.ach.includes(id)?"on":"off"}"><i>${ic}</i><b>${t}</b><br>${d}</div>`).join("")}</div>
  <div class="sec">Настройки</div><button class="wide" id="sfxT"><i>${SFX.on?"🔊":"🔇"}</i><div style="text-align:left"><b>Звуки</b><small>${SFX.on?"Включены":"Выключены"}</small></div></button>
+ ${HS==="unsupported"?"":HS==="added"?`<div class="wide"><i>📲</i><div><b>Главный экран</b><small>✓ Чайхана уже добавлена</small></div></div>`:`<button class="wide" id="hsAdd"><i>📲</i><div style="text-align:left"><b>Добавить на главный экран</b><small>Значок приложения на телефоне</small></div></button>`}
  <div style="color:var(--mute);margin:4px 4px 8px">Цель дня — карточек</div><div class="seg goal">${[10,20,40].map(g=>`<button data-g="${g}" class="${G.goal===g?"on":""}">${g}</button>`).join("")}</div>
  <div class="stat">Вспоминать — достаёшь фразу из памяти, говоришь вслух и честно отмечаешь результат. Изучать — спокойно смотришь и слушаешь фразы главы перед тренировкой.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div></div>`;
 }
@@ -1009,6 +1015,8 @@ const go=d=>{const n=queue().length;if(S.i+d<0||S.i+d>=n)return;S.i+=d;S.flip=fa
 document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>go(+b.dataset.n));
 const mainEl=$("main");if(mainEl&&card&&S.mode!=="memo"){let x0=null;mainEl.ontouchstart=e=>{x0=e.touches[0].clientX};mainEl.ontouchend=e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>50)go(dx<0?1:-1)}}
 const oN=$("#oNext");if(oN)oN.onclick=()=>{if((S.onb||0)<2){S.onb=(S.onb||0)+1;render()}else finishOnb(true)};
+const hsA=$("#hsAdd");if(hsA)hsA.onclick=addHS;
+const hsX=$("#hsX");if(hsX)hsX.onclick=()=>{G.hsHide=1;saveG();render()};
 const oS=$("#oSkip");if(oS)oS.onclick=()=>finishOnb(false);
 document.querySelectorAll("[data-og]").forEach(b=>b.onclick=()=>{G.goal=+b.dataset.og;render()});
 const sfxT=$("#sfxT");if(sfxT)sfxT.onclick=()=>{SFX.on=!SFX.on;SFX.tap();render()};
@@ -1021,6 +1029,12 @@ const play=$("#musicPlay");if(play)play.onclick=async()=>{const a=ensureMusicAud
 const stop=$("#musicStop");if(stop)stop.onclick=()=>{if(musicAudio){musicAudio.pause();musicAudio.currentTime=0}const st=$("#musicTrackStatus");if(st)st.textContent='Остановлено';const b=$("#musicPlay");if(b)b.textContent='▶︎ Воспроизвести'};
 }
 const haptic=k=>{try{TG.HapticFeedback.notificationOccurred(k)}catch(_){}};
+// Ярлык на главном экране телефона (Telegram Bot API 8.0+). Статусы: unsupported, unknown, added, missed.
+let HS="unsupported";
+function checkHS(){try{if(TG&&TG.isVersionAtLeast&&TG.isVersionAtLeast("8.0")&&TG.checkHomeScreenStatus)TG.checkHomeScreenStatus(s=>{HS=s||"unknown";render()})}catch(_){}}
+function addHS(){try{TG.addToHomeScreen()}catch(_){}}
+try{TG&&TG.onEvent&&TG.onEvent("homeScreenAdded",()=>{HS="added";toast("📲","Чайхана на главном экране","Теперь открывается в одно касание",true);render()})}catch(_){}
+const canAddHS=()=>HS==="missed"||HS==="unknown";
 function finishOnb(start){G.onb=1;saveG();if(start){S.tab="train";S.mode="memo";S.ch=0;S.ord=null;S.i=0;S.flip=false;newSess()}render()}
 function rate(btn,good){
  if(busy)return;const c=queue()[S.i];if(!c)return;busy=true;
@@ -1075,7 +1089,7 @@ function confetti(){
  let f=0;(function step(){x.clearRect(0,0,W,H);x.globalAlpha=Math.max(0,1-f/160);P.forEach(p=>{p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});if(++f<160)requestAnimationFrame(step);else cv.remove()})();
 }
 document.addEventListener("pointerdown",e=>{const t=e.target.closest("button,.card,.row");if(!t)return;try{TG.HapticFeedback.impactOccurred("light")}catch(_){}SFX.unlock();if(t.matches("button")&&!t.matches("[data-r],[data-n]"))SFX.tap()});
-load();
+load().then(checkHS);
 </script>
 </body>
 </html>
