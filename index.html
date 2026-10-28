@@ -35,11 +35,23 @@ button:active,.row:active{transform:scale(.95);filter:brightness(1.25)}
 .seg button{flex:1;padding:11px;border-radius:999px;font-weight:600;color:var(--mute)}
 .seg button.on{background:#fff;color:#000}
 main{flex:1;min-height:0;display:flex;flex-direction:column;padding:6px 0;position:relative}
-.card{flex:1;min-height:0;border-radius:34px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);cursor:pointer}
-.card.front{animation:pop .4s cubic-bezier(.2,.9,.3,1.1)}
-.card.back{animation:flipin .45s cubic-bezier(.2,.9,.3,1)}
+/* Карточка с настоящим 3D-переворотом: обе стороны в DOM, крутится .inner */
+.card{flex:1;min-height:0;position:relative;border-radius:34px;perspective:1400px;cursor:pointer;animation:pop .4s cubic-bezier(.2,.9,.3,1.1)}
+.inner{position:absolute;inset:0;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .6s cubic-bezier(.25,.9,.3,1.12)}
+.inner.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:34px;overflow:hidden;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:border-color .2s}
+.face.back{transform:rotateY(180deg)}
+.inner:not(.flipped) .back,.inner.flipped .front{pointer-events:none}
+/* iOS Safari игнорирует backface-visibility у детей с backdrop-filter — прячем невидимую сторону целиком на середине поворота */
+.face{transition:border-color .2s,visibility 0s .12s}
+.inner:not(.flipped) .back,.inner.flipped .front{visibility:hidden}
+.card.still{cursor:default}
+.hint{position:absolute;top:16px;left:16px;z-index:2;padding:7px 12px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);font-size:14px;font-weight:600;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.study{padding:14px 16px 76px;gap:12px}
+.study .pic{flex:1;min-height:150px;border-radius:24px;font-size:64px}
+.study .en{padding:0 4px}
+.study .ru{padding-top:12px}
 @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
-@keyframes flipin{from{opacity:.2;transform:perspective(900px) rotateY(-80deg)}to{opacity:1;transform:none}}
 .pic{position:relative;overflow:hidden;display:grid;place-items:center;font-size:100px}
 .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .front .pic{flex:1}
@@ -107,10 +119,12 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 .acts .ok.hit{animation:okhit .45s ease-out;box-shadow:0 0 0 5px rgba(47,191,132,.3),0 0 44px rgba(56,211,148,.9);filter:brightness(1.2)}
 .acts .nok.hit{animation:shake .4s;filter:brightness(1.15)}
 @keyframes okhit{30%{transform:scale(1.07)}}
-.card::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s}
-.card.good{animation:goodout .45s ease-in forwards;border-color:var(--ok);box-shadow:0 0 0 2px var(--ok),0 0 50px rgba(47,191,132,.5)}
+.card::after{content:"";position:absolute;inset:0;z-index:2;border-radius:34px;pointer-events:none;opacity:0;transition:opacity .2s}
+.card.good{animation:goodout .45s ease-in forwards;box-shadow:0 0 0 2px var(--ok),0 0 50px rgba(47,191,132,.5)}
+.card.good .face{border-color:var(--ok)}
 .card.good::after{background:radial-gradient(circle at 50% 60%,rgba(47,191,132,.45),transparent 70%);opacity:1}
-.card.bad{animation:shake .45s;border-color:var(--bad);box-shadow:0 0 0 2px var(--bad)}
+.card.bad{animation:shake .45s;box-shadow:0 0 0 2px var(--bad)}
+.card.bad .face{border-color:var(--bad)}
 .card.bad::after{background:radial-gradient(circle at 50% 60%,rgba(229,83,75,.4),transparent 70%);opacity:1}
 @keyframes goodout{35%{transform:scale(1.03)}100%{transform:translateY(-40px) scale(.94);opacity:0}}
 @keyframes shake{20%{transform:translateX(-10px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(3px)}}
@@ -136,6 +150,56 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 .ach .off i{filter:grayscale(1);opacity:.3}
 .ach .on{border-color:rgba(255,179,71,.45);color:#fff}
 .seg.goal{margin-bottom:12px;flex:none}
+.acts.hintline{min-height:66px;color:var(--mute);justify-content:center;align-items:center;text-align:center;font-size:15px}
+.acts .go{flex:2;color:#000}
+
+/* Главная: строка серии и кольцо цели дня */
+.hrow{display:flex;align-items:center;gap:10px;padding:12px 4px 0}
+.hrow h1{flex:1;font-size:36px;letter-spacing:-1px;margin:0;line-height:1.05}
+.spill{display:flex;align-items:center;height:50px;padding:0 16px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:800;font-size:18px;white-space:nowrap}
+.spill.hot{color:#ffb347;border-color:rgba(255,179,71,.4)}
+.sub{margin:4px 4px 14px;color:var(--mute);font-size:16px}
+.ring{width:190px;height:190px;margin:0 auto 20px}
+.ring::before{content:"";position:absolute;inset:16px;border-radius:50%;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:13}
+.ring .bgc{stroke:rgba(255,255,255,.13)}
+.ring .fgc{stroke:url(#rg);stroke-linecap:round;transition:stroke-dashoffset .8s}
+.ring .mid{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.ring .mid b{font-size:58px;letter-spacing:-2px;line-height:1}
+.ring .mid b span{font-size:24px;letter-spacing:0;color:#d9c8b0}
+.ring .mid small{color:#d9c8b0;font-size:15px;margin-top:6px}
+.ring.full{filter:drop-shadow(0 0 18px rgba(255,179,71,.6))}
+.glow .pill{background:#fff;color:#000;border:0}
+.glow .lbl{margin:12px 0 0;font-size:14px}
+
+/* Вводный экран */
+.onb{flex:1;min-height:0;display:flex;flex-direction:column;padding:8px 4px 20px}
+.onb .skip{align-self:flex-end;color:var(--mute);padding:10px 4px;font-size:16px}
+.onb .stage{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;text-align:center;animation:pop .45s cubic-bezier(.2,.9,.3,1.1)}
+.onb .stage::before,.onb .stage::after{content:"";flex:1} /* центрирует, но не обрезает верх на маленьких экранах */
+.onb .art{font-size:96px;margin-bottom:18px}
+.onb h2{font-size:32px;letter-spacing:-.8px;margin:0 0 12px;line-height:1.1}
+.onb p{color:var(--mute);font-size:17px;line-height:1.5;margin:0 auto;max-width:330px}
+.onb .pill{background:#fff;color:#000;border:0}
+.steps{text-align:left;margin:14px auto 0;max-width:340px;width:100%;display:grid;gap:10px}
+.steps div{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:18px;background:var(--card);border:1px solid var(--line);font-size:16px}
+.steps i{font-style:normal;font-size:22px}
+.steps .em{border-color:rgba(255,179,71,.45);color:#ffb347;font-weight:600}
+.demo{width:220px;height:124px;margin:0 auto;perspective:800px}
+.demo>div{position:relative;width:100%;height:100%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;animation:demo 4.5s ease-in-out infinite}
+.demo span{position:absolute;inset:0;display:grid;place-items:center;padding:12px;border-radius:22px;background:linear-gradient(145deg,#6b3b1d,#2e180a);border:1px solid var(--line);font-weight:700;font-size:16px;line-height:1.35;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.demo span+span{transform:rotateY(180deg);background:linear-gradient(145deg,#14503f,#0a2a22)}
+@keyframes demo{0%,35%{transform:none}50%,85%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}
+.goals{display:grid;gap:10px;margin:22px auto 0;max-width:340px;width:100%}
+.goals button{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-radius:22px;background:var(--card);border:1px solid var(--line);text-align:left}
+.goals button.on{border-color:#ffb347;background:rgba(242,112,29,.14)}
+.goals .t{display:block;font-size:18px;font-weight:700}.goals small{color:var(--mute);font-size:14px}
+.goals .n{font-size:30px;font-weight:800}
+.goals .on .n{color:#ffb347}
+.dots{display:flex;gap:6px;justify-content:center;margin:18px 0}
+.dots i{width:8px;height:8px;border-radius:9px;background:var(--chip);transition:width .3s}
+.dots i.on{width:24px;background:#ffb347}
 </style>
 </head>
 <body>
@@ -816,6 +880,8 @@ async function load(){
   if(json){const parsed=JSON.parse(json);if(Array.isArray(parsed))S.cards=parsed}
  }catch(e){console.warn("Could not load saved cards; starting with default deck",e)}
  try{let gj="";if(CS&&typeof CS.getItem==="function")gj=await cget("md_g");if(!gj)gj=localStorage.getItem("md_g")||"";if(gj)G={...G,...JSON.parse(gj)};if(!Array.isArray(G.ach))G.ach=[]}catch(e){console.warn("Could not load game progress",e)}
+ // Вводный экран только для новичков: у кого уже есть опыт или прогресс по карточкам, его не видят.
+ if(G.xp>0||S.cards.some(c=>c.box>0||c.due>0))G.onb=1;
  try{const im=JSON.parse(localStorage.getItem("md_imgs")||"{}");S.cards.forEach(c=>{if(im[c.id])c.img=im[c.id]})}catch(e){}
  let sv="";try{sv=localStorage.getItem("md_seedv")||""}catch(e){}
  if(!S.cards.length||sv!=="4"){
@@ -850,19 +916,36 @@ function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Ma
 const queue=()=>{if(S.ch>=chCount())S.ch=0;const ids=chCards(S.ch).map(c=>c.id);if(!S.ord||S.ordCh!==S.ch||S.ord.length!==ids.length){S.ord=shuffle(ids);S.ordCh=S.ch}const m=new Map(S.cards.map(c=>[c.id,c]));return S.ord.map(id=>m.get(id)).filter(c=>c&&(S.mode==="dremo"||c.due<=Date.now()))};
 function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/^\s*-\s*/gm,""));u.lang="en-US";u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
 const lvRing=(L,up)=>`<div class="lv${up?" up":""}" style="--p:${L.pct}"><span>${L.l}</span></div>`;
-function topBar(){return`<div class="top"><div class="seg"><button data-m="memo" class="${S.mode==="memo"?"on":""}">Memo</button><button data-m="dremo" class="${S.mode==="dremo"?"on":""}">Dremo</button></div>${lvRing(lvlOf(G.xp),S.lvup)}</div>`}
+function topBar(){return`<div class="top"><div class="seg"><button data-m="memo" class="${S.mode==="memo"?"on":""}">Вспоминать</button><button data-m="dremo" class="${S.mode==="dremo"?"on":""}">Изучать</button></div>${lvRing(lvlOf(G.xp),S.lvup)}</div>`}
+const cardsWord=d=>d%10===1&&d%100!==11?"карточка":[2,3,4].includes(d%10)&&![12,13,14].includes(d%100)?"карточки":"карточек";
+function actsHtml(q){
+ if(S.mode!=="memo")return`<div class="acts"><button class="nav" data-n="-1">←</button>${S.i>=q.length-1?`<button class="ok go" data-m="memo">Теперь вспомни →</button>`:`<button class="nav" data-n="1">→</button>`}</div>`;
+ if(S.flip)return`<div class="acts"><button class="nok" data-r="0">Не помню</button><button class="ok" data-r="1">Помню</button></div>`;
+ return`<div class="acts hintline">Скажи фразу вслух — потом нажми на карточку</div>`;
+}
+function onbView(){
+ const k=S.onb||0,st=[
+  `<div class="art">🧠</div><h2>Вспоминай,<br>а не узнавай</h2><p>Когда достаёшь фразу из памяти, а не читаешь подсказку, мозг укрепляет связь. Так фраза запоминается в разы крепче, чем при простом чтении.</p>`,
+  `<div class="demo"><div><span>Можно счёт,<br>пожалуйста?</span><span>Could I have<br>the bill, please?</span></div></div><h2 style="margin-top:18px">Как заниматься</h2><div class="steps"><div><i>👀</i>Посмотри на ситуацию</div><div class="em"><i>🗣</i>Скажи фразу вслух по-английски</div><div><i>👆</i>Переверни карточку</div><div><i>✅</i>Честно отметь: помню или нет</div></div>`,
+  `<div class="art" style="font-size:72px">🎯</div><h2>Сколько карточек<br>в день?</h2><p>Цель можно поменять в профиле</p><div class="goals">${[[10,"Лёгкий темп","≈ 5 минут"],[20,"Нормальный","≈ 10 минут"],[40,"Интенсив","≈ 20 минут"]].map(([g,t,m])=>`<button data-og="${g}" class="${G.goal===g?"on":""}"><div><span class="t">${t}</span><small>${m}</small></div><span class="n">${g}</span></button>`).join("")}</div>`
+ ];
+ return`<div class="onb"><button class="skip" id="oSkip">Пропустить</button><div class="stage">${st[k]}</div><div class="dots">${st.map((_,i)=>`<i class="${i===k?"on":""}"></i>`).join("")}</div><button class="pill" id="oNext">${k<2?"Далее":"Начать"}</button></div>`;
+}
 const IC={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',train:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',decks:'<path d="M12 3l9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/>',music:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',me:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6z"/>'};
 function render(){
 const v=document.getElementById("view");
-document.getElementById("nav").innerHTML=["home","train","decks","music","me"].map(k=>`<button data-t="${k}" class="${S.tab===k?"on":""}"><svg viewBox="0 0 24 24">${IC[k]}</svg></button>`).join("");
+const navEl=document.getElementById("nav");
+navEl.innerHTML=["home","train","decks","music","me"].map(k=>`<button data-t="${k}" class="${S.tab===k?"on":""}"><svg viewBox="0 0 24 24">${IC[k]}</svg></button>`).join("");
+navEl.style.display=G.onb?"":"none";
+if(!G.onb){v.innerHTML=onbView();bind();return}
 if(S.tab==="home"){
- const n=chCount(),due=chCards(S.ch).filter(c=>c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
- const L=lvlOf(G.xp),st=streak(),dn=doneToday();
- v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Чайхана</h1><p>Английский по ситуациям</p></div>
- <div class="hud"><div class="hchip ${st?"hot":""}"><b>🔥 ${st}</b>${daysWord(st)} подряд</div><div class="hchip ${dn>=G.goal?"hot":""}"><b>🎯 ${dn}/${G.goal}</b>цель дня</div><div class="hchip"><b>⚡ ${G.xp}</b>опыт</div></div>
+ const n=chCount(),learned=S.cards.filter(c=>c.box>=4).length,dueIn=k=>chCards(k).filter(c=>c.due<=Date.now()).length;
+ let tc=S.ch;for(let j=0;j<n;j++){const k=(S.ch+j)%n;if(dueIn(k)){tc=k;break}} // ближайшая глава, где есть что повторять
+ const due=dueIn(tc),L=lvlOf(G.xp),st=streak(),dn=doneToday(),full=dn>=G.goal,C=502.65,off=C*(1-Math.min(1,dn/G.goal));
+ v.innerHTML=`<div class="scroll"><div class="hrow"><h1>Чайхана</h1><div class="spill ${st?"hot":""}">🔥 ${st}</div><button data-t="me" style="padding:0">${lvRing(L)}</button></div><div class="sub">Английский по ситуациям</div>
  ${st&&G.last!==today()?`<div class="nudge">Повтори хотя бы одну карточку — не потеряй серию 🔥</div>`:""}
- <div class="glow"><div class="chip">Глава ${S.ch+1} из ${n}</div><div class="num">${due}</div><div class="lbl">карточек к повторению</div><button class="pill" data-c="${S.ch}">Начать тренировку</button></div>
- <button class="wide" data-t="me">${lvRing(L)}<div style="flex:1;text-align:left"><b>${L.name}</b><small>${G.xp-L.a} / ${L.b-L.a} XP до уровня ${L.l+1}</small><div class="bar"><i style="width:${L.pct}%"></i></div></div></button>
+ <div class="glow"><div class="ring${full?" full":""}"><svg viewBox="0 0 180 180"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd166"/><stop offset="1" stop-color="#f2701d"/></linearGradient></defs><circle class="bgc" cx="90" cy="90" r="80"/><circle class="fgc" cx="90" cy="90" r="80" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg><div class="mid">${full?`<b>✓</b><small>цель дня выполнена</small>`:`<b>${dn}<span>/${G.goal}</span></b><small>цель дня</small>`}</div></div>
+ <button class="pill" data-c="${tc}">${dn?"Продолжить":"Начать"} · Глава ${tc+1}</button><div class="lbl">${due?`${due} ${cardsWord(due)} к повторению`:"Всё повторено — можно взять новую главу"}</div></div>
  <div class="tiles"><button class="tile" data-t="decks"><b>${n}</b><span>Глав по ${CH} карточек</span></button><button class="tile" data-t="me"><b>${G.ach.length}/${ACH.length}</b><span>Достижений · выучено ${learned}</span></button></div></div>`;
 }else if(S.tab==="train"){
  const q=queue();if(S.i>=q.length)S.i=0;const c=q[S.i];let h=topBar();
@@ -873,12 +956,12 @@ if(S.tab==="home"){
   else h+=`<main><div class="empty">Глава на сегодня пройдена 🎉<br><br><button class="pill" data-c="${nx}">Следующая глава →</button></div></main>`;
  }
  else{
-  const cb=S.mode==="memo"&&combo>=2?`<div class="combo${S.bump?" bump":""}${combo>=10?" big":""}">🔥 ×${combo}</div>`:"";
-  h+=`<main>${cb}<div class="card ${S.flip?"back":"front"}" id="card">`+(S.flip?`${pic(c)}<div class="en">${esc(c.en)}</div><button class="fab l" id="snd">🔊</button>`:`${pic(c)}<div class="cap">${esc(c.ru)}</div>`)+`</div></main>
-  <div class="prog"><i style="width:${(S.i+1)/q.length*100}%"></i></div><div class="count">Глава ${S.ch+1} · ${S.i+1} из ${q.length}</div>`;
-  if(S.mode==="memo"&&S.flip)h+=`<div class="acts"><button class="nok" data-r="0">Не помню</button><button class="ok" data-r="1">Помню</button></div>`;
-  else if(S.mode==="dremo")h+=`<div class="acts"><button class="nav" data-n="-1">←</button><button class="nav" data-n="1">→</button></div>`;
-  else h+=`<div class="acts" style="color:var(--mute);justify-content:center;padding-bottom:12px">Вспомните английский вариант и нажмите на карточку</div>`;
+  const memo=S.mode==="memo",cb=memo&&combo>=2?`<div class="combo${S.bump?" bump":""}${combo>=10?" big":""}">🔥 ×${combo}</div>`:"";
+  const inner=memo
+   ?`<div class="inner${S.flip?" flipped":""}"><div class="face front">${pic(c)}<div class="hint">🗣 Скажи по-английски</div><div class="cap">${esc(c.ru)}</div></div><div class="face back">${pic(c)}<div class="en">${esc(c.en)}</div><button class="fab l" id="snd">🔊</button></div></div>`
+   :`<div class="inner"><div class="face study">${pic(c)}<div class="en">${esc(c.en)}</div><div class="ru">${esc(c.ru)}</div><button class="fab l" id="snd">🔊</button></div></div>`;
+  h+=`<main>${cb}<div class="card${memo?"":" still"}" id="card">${inner}</div></main>
+  <div class="prog"><i style="width:${(S.i+1)/q.length*100}%"></i></div><div class="count">Глава ${S.ch+1} · ${S.i+1} из ${q.length}</div><div id="actsBox">${actsHtml(q)}</div>`;
  }
  v.innerHTML=h;
 }else if(S.tab==="decks"){
@@ -895,7 +978,7 @@ if(S.tab==="home"){
  <div class="sec">Достижения · ${G.ach.length}/${ACH.length}</div><div class="ach">${ACH.map(([id,ic,t,d])=>`<div class="${G.ach.includes(id)?"on":"off"}"><i>${ic}</i><b>${t}</b><br>${d}</div>`).join("")}</div>
  <div class="sec">Настройки</div><button class="wide" id="sfxT"><i>${SFX.on?"🔊":"🔇"}</i><div style="text-align:left"><b>Звуки</b><small>${SFX.on?"Включены":"Выключены"}</small></div></button>
  <div style="color:var(--mute);margin:4px 4px 8px">Цель дня — карточек</div><div class="seg goal">${[10,20,40].map(g=>`<button data-g="${g}" class="${G.goal===g?"on":""}">${g}</button>`).join("")}</div>
- <div class="stat">Memo — вспоминаете фразу и проверяете себя. Dremo — просмотр и прослушивание в своём темпе.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div></div>`;
+ <div class="stat">Вспоминать — достаёшь фразу из памяти, говоришь вслух и честно отмечаешь результат. Изучать — спокойно смотришь и слушаешь фразы главы перед тренировкой.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div></div>`;
 }
 bind();}
 const musicPrefs=(()=>{try{return {volume:Math.max(0,Math.min(1,Number(localStorage.getItem('music_volume')??0.22))),cutoff:Math.max(200,Math.min(20000,Number(localStorage.getItem('music_cutoff')??8500)))}}catch(_){return {volume:.22,cutoff:8500}}})();
@@ -918,10 +1001,16 @@ const $=s=>document.querySelector(s);
 document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;if(S.tab==="train")S.ord=null;S.i=0;S.flip=false;render()});
 document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;S.ord=null;S.tab="train";S.i=0;S.flip=false;newSess();render()});
 document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{S.ch=+b.dataset.c;S.ord=null;S.tab="train";S.i=0;S.flip=false;newSess();render()});
-const card=$("#card");if(card)card.onclick=e=>{if(busy||e.target.closest(".fab"))return;SFX.flip();S.flip=!S.flip;render()};
+// Переворот без полной перерисовки, чтобы сработала CSS-анимация поворота.
+const card=$("#card");if(card)card.onclick=e=>{if(busy||S.mode!=="memo"||e.target.closest(".fab"))return;SFX.flip();S.flip=!S.flip;card.querySelector(".inner").classList.toggle("flipped",S.flip);$("#actsBox").innerHTML=actsHtml(queue());bind()};
 const snd=$("#snd");if(snd)snd.onclick=()=>speak(queue()[S.i].en);
 document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>rate(b,b.dataset.r==="1"));
-document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{const n=queue().length;S.i=(S.i+ +b.dataset.n+n)%n;S.flip=false;SFX.swish();render()});
+const go=d=>{const n=queue().length;if(S.i+d<0||S.i+d>=n)return;S.i+=d;S.flip=false;SFX.swish();render()};
+document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>go(+b.dataset.n));
+const mainEl=$("main");if(mainEl&&card&&S.mode!=="memo"){let x0=null;mainEl.ontouchstart=e=>{x0=e.touches[0].clientX};mainEl.ontouchend=e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>50)go(dx<0?1:-1)}}
+const oN=$("#oNext");if(oN)oN.onclick=()=>{if((S.onb||0)<2){S.onb=(S.onb||0)+1;render()}else finishOnb(true)};
+const oS=$("#oSkip");if(oS)oS.onclick=()=>finishOnb(false);
+document.querySelectorAll("[data-og]").forEach(b=>b.onclick=()=>{G.goal=+b.dataset.og;render()});
 const sfxT=$("#sfxT");if(sfxT)sfxT.onclick=()=>{SFX.on=!SFX.on;SFX.tap();render()};
 document.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{G.goal=+b.dataset.g;saveG();render()});
 const rs=$("#reset");if(rs)rs.onclick=()=>{if(confirm("Сбросить весь прогресс?")){S.cards.forEach(c=>{c.box=0;c.due=0});save();S.tab="train";render()}};
@@ -932,6 +1021,7 @@ const play=$("#musicPlay");if(play)play.onclick=async()=>{const a=ensureMusicAud
 const stop=$("#musicStop");if(stop)stop.onclick=()=>{if(musicAudio){musicAudio.pause();musicAudio.currentTime=0}const st=$("#musicTrackStatus");if(st)st.textContent='Остановлено';const b=$("#musicPlay");if(b)b.textContent='▶︎ Воспроизвести'};
 }
 const haptic=k=>{try{TG.HapticFeedback.notificationOccurred(k)}catch(_){}};
+function finishOnb(start){G.onb=1;saveG();if(start){S.tab="train";S.mode="memo";S.ch=0;S.ord=null;S.i=0;S.flip=false;newSess()}render()}
 function rate(btn,good){
  if(busy)return;const c=queue()[S.i];if(!c)return;busy=true;
  const t=today(),ev=[],L0=lvlOf(G.xp).l;
