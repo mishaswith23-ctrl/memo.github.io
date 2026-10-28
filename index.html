@@ -250,7 +250,7 @@ function showErr(m){try{const v=document.getElementById("view");v.textContent="�
 window.addEventListener("error",e=>showErr(e.message+" (строка "+e.lineno+")"));
 window.addEventListener("unhandledrejection",e=>showErr(String(e.reason)));
 const DAY=864e5, GAPS=[0,1,3,7,16,35];
-const SEED=[{"ru": "- Можно я возьму эту чашку?\n- Да, конечно. Похоже, это моя.", "en": "- Can I use this cup?\n- Yes, of course. It looks like mine.", "e": "☕"}, {"ru": "- Сколько это стоит?\n- Десять евро.", "en": "- How much is this?\n- It’s ten euros.", "e": "🛍️"}, {"ru": "- Вы не подскажете, где остановка?\n- Прямо и налево.", "en": "- Could you tell me where the bus stop is?\n- Straight ahead, then left.", "e": "🚌"}, {"ru": "- У вас есть столик на двоих?\n- Да, пройдите, пожалуйста.", "en": "- Do you have a table for two?\n- Yes, please follow me.", "e": "🍽️"}, {"ru": "- Извините, я опоздал.\n- Ничего страшного.", "en": "- Sorry I’m late.\n- No worries.", "e": "⏰"}, {"ru": "- Вам помочь?\n- Нет, спасибо, я просто смотрю.", "en": "- Can I help you?\n- No, thanks, I’m just looking.", "e": "👀"}, {"ru": "- Можно счёт, пожалуйста?\n- Конечно, сейчас принесу.", "en": "- Could I have the bill, please?\n- Sure, I’ll bring it right away.", "e": "🧾"}, {"ru": "- Как добраться до вокзала?\n- Сядьте на седьмой автобус.", "en": "- How do I get to the station?\n- Take bus number seven.", "e": "🚉"}, {"ru": "- Вы говорите по-английски?\n- Немного.", "en": "- Do you speak English?\n- A little.", "e": "🗣️"}, {"ru": "- Я забронировал номер на имя Иванов.\n- Одну минуту, проверю.", "en": "- I have a reservation under Ivanov.\n- One moment, let me check.", "e": "🏨"}, {"ru": "- Какая сегодня погода?\n- Солнечно, но ветрено.", "en": "- What’s the weather like today?\n- Sunny, but windy.", "e": "🌤️"}, {"ru": "- Что вы закажете?\n- Мне, пожалуйста, чай с лимоном.", "en": "- What would you like?\n- Tea with lemon, please.", "e": "🍵"}, {"ru": "- Вы не могли бы повторить?\n- Конечно, я скажу медленнее.", "en": "- Could you repeat that?\n- Sure, I’ll say it more slowly.", "e": "🔁"}, {"ru": "- Где здесь туалет?\n- В конце коридора.", "en": "- Where is the restroom?\n- At the end of the hall.", "e": "🚻"}, {"ru": "- Во сколько отправляется поезд?\n- В половине девятого.", "en": "- What time does the train leave?\n- At half past eight.", "e": "🚆"}, {"ru": "- Мне нужен врач.\n- Присаживайтесь, он скоро придёт.", "en": "- I need a doctor.\n- Please sit down, he’ll be here soon.", "e": "🩺"}, {"ru": "- Можно оплатить картой?\n- Да, вот терминал.", "en": "- Can I pay by card?\n- Yes, here’s the terminal.", "e": "💳"}, {"ru": "- Это место свободно?\n- Да, садитесь.", "en": "- Is this seat taken?\n- No, go ahead.", "e": "💺"}, {"ru": "- Как вас зовут?\n- Меня зовут Анна, приятно познакомиться.", "en": "- What’s your name?\n- My name is Anna, nice to meet you.", "e": "🤝"}, {"ru": "- Вы давно здесь живёте?\n- Уже три года.", "en": "- Have you lived here long?\n- For three years now.", "e": "🏠"}, {"ru": "- Можно мне ещё воды?\n- Конечно, сейчас налью.", "en": "- Could I have some more water?\n- Of course, I’ll pour it now.", "e": "💧"}, {"ru": "- Я потерял ключи.\n- Давайте поищем вместе.", "en": "- I’ve lost my keys.\n- Let’s look for them together.", "e": "🔑"}, {"ru": "- Какой у вас размер?\n- Средний, пожалуйста.", "en": "- What size are you?\n- Medium, please.", "e": "👕"}, {"ru": "- Что вы делаете по выходным?\n- Обычно гуляю в парке.", "en": "- What do you do at weekends?\n- I usually walk in the park.", "e": "🌳"}, {"ru": "- Спасибо за помощь!\n- Не за что.", "en": "- Thanks for your help!\n- You’re welcome.", "e": "🙏"}];
+const SEED=[{"ru": "- Можно взять эту чашку?\n- Да, конечно. Она похожа на мою.", "en": "- Can I use this cup?\n- Yes, of course. It looks like mine.", "e": "☕"}, {"ru": "- Сколько это стоит?\n- Десять евро.", "en": "- How much is this?\n- It’s ten euros.", "e": "🛍️"}, {"ru": "- Вы не подскажете, где остановка?\n- Прямо и налево.", "en": "- Could you tell me where the bus stop is?\n- Straight ahead, then left.", "e": "🚌"}, {"ru": "- У вас есть столик на двоих?\n- Да, пройдёмте за мной.", "en": "- Do you have a table for two?\n- Yes, please follow me.", "e": "🍽️"}, {"ru": "- Извините, я опоздал.\n- Ничего страшного.", "en": "- Sorry I’m late.\n- No worries.", "e": "⏰"}, {"ru": "- Вам помочь?\n- Нет, спасибо, я просто смотрю.", "en": "- Can I help you?\n- No, thanks, I’m just looking.", "e": "👀"}, {"ru": "- Можно счёт, пожалуйста?\n- Конечно, сейчас принесу.", "en": "- Could I have the bill, please?\n- Sure, I’ll bring it right away.", "e": "🧾"}, {"ru": "- Как добраться до вокзала?\n- Сядьте на седьмой автобус.", "en": "- How do I get to the station?\n- Take bus number seven.", "e": "🚉"}, {"ru": "- Вы говорите по-английски?\n- Немного.", "en": "- Do you speak English?\n- A little.", "e": "🗣️"}, {"ru": "- У меня бронь на имя Иванова.\n- Одну минуту, проверю.", "en": "- I have a reservation under Ivanov.\n- One moment, let me check.", "e": "🏨"}, {"ru": "- Какая сегодня погода?\n- Солнечно, но ветрено.", "en": "- What’s the weather like today?\n- Sunny, but windy.", "e": "🌤️"}, {"ru": "- Что вы закажете?\n- Мне, пожалуйста, чай с лимоном.", "en": "- What would you like?\n- Tea with lemon, please.", "e": "🍵"}, {"ru": "- Вы не могли бы повторить?\n- Конечно, я скажу медленнее.", "en": "- Could you repeat that?\n- Sure, I’ll say it more slowly.", "e": "🔁"}, {"ru": "- Где здесь туалет?\n- В конце коридора.", "en": "- Where is the restroom?\n- At the end of the hall.", "e": "🚻"}, {"ru": "- Во сколько отправляется поезд?\n- В половине девятого.", "en": "- What time does the train leave?\n- At half past eight.", "e": "🚆"}, {"ru": "- Мне нужен врач.\n- Присаживайтесь, он скоро придёт.", "en": "- I need a doctor.\n- Please sit down, he’ll be here soon.", "e": "🩺"}, {"ru": "- Можно оплатить картой?\n- Да, вот терминал.", "en": "- Can I pay by card?\n- Yes, here’s the terminal.", "e": "💳"}, {"ru": "- Это место занято?\n- Нет, садитесь.", "en": "- Is this seat taken?\n- No, go ahead.", "e": "💺"}, {"ru": "- Как вас зовут?\n- Меня зовут Анна, приятно познакомиться.", "en": "- What’s your name?\n- My name is Anna, nice to meet you.", "e": "🤝"}, {"ru": "- Вы давно здесь живёте?\n- Уже три года.", "en": "- Have you lived here long?\n- For three years now.", "e": "🏠"}, {"ru": "- Можно мне ещё воды?\n- Конечно, сейчас налью.", "en": "- Could I have some more water?\n- Of course, I’ll pour it now.", "e": "💧"}, {"ru": "- Я потерял ключи.\n- Давайте поищем вместе.", "en": "- I’ve lost my keys.\n- Let’s look for them together.", "e": "🔑"}, {"ru": "- Какой у вас размер?\n- Средний, пожалуйста.", "en": "- What size are you?\n- Medium, please.", "e": "👕"}, {"ru": "- Что вы делаете по выходным?\n- Обычно гуляю в парке.", "en": "- What do you do at weekends?\n- I usually walk in the park.", "e": "🌳"}, {"ru": "- Спасибо за помощь!\n- Не за что.", "en": "- Thanks for your help!\n- You’re welcome.", "e": "🙏"}];
 
 const MORE_SEED = [
   {
@@ -259,7 +259,7 @@ const MORE_SEED = [
     "e": "🌅"
   },
   {
-    "ru": "- Как прошёл твой день?\n- Довольно хорошо, спасибо.",
+    "ru": "- Как прошёл твой день?\n- Неплохо, спасибо.",
     "en": "- How was your day?\n- Pretty good, thanks.",
     "e": "🙂"
   },
@@ -294,7 +294,7 @@ const MORE_SEED = [
     "e": "⌚"
   },
   {
-    "ru": "- Можем перенести встречу?\n- Конечно, когда тебе удобно?",
+    "ru": "- Можно перенести встречу?\n- Конечно, когда тебе удобно?",
     "en": "- Can we reschedule the meeting?\n- Of course. What time works for you?",
     "e": "📅"
   },
@@ -344,7 +344,7 @@ const MORE_SEED = [
     "e": "⏳"
   },
   {
-    "ru": "- Я скоро вернусь.\n- Хорошо, увидимся позже.",
+    "ru": "- Я сейчас вернусь.\n- Хорошо, увидимся позже.",
     "en": "- I’ll be right back.\n- Okay, see you later.",
     "e": "🚶"
   },
@@ -389,12 +389,12 @@ const MORE_SEED = [
     "e": "🛫"
   },
   {
-    "ru": "- Где багажная лента?\n- В зале прилёта, номер четыре.",
+    "ru": "- Где выдача багажа?\n- В зале прилёта, лента номер четыре.",
     "en": "- Where is the baggage claim?\n- In arrivals, belt number four.",
     "e": "🧳"
   },
   {
-    "ru": "- Можно посмотреть меню?\n- Конечно, вот оно.",
+    "ru": "- Можно меню, пожалуйста?\n- Конечно, вот оно.",
     "en": "- Could I see the menu, please?\n- Of course, here you are.",
     "e": "📋"
   },
@@ -539,12 +539,12 @@ const MORE_SEED = [
     "e": "📞"
   },
   {
-    "ru": "- Ты меня слышишь?\n- Да, теперь хорошо.",
+    "ru": "- Ты меня слышишь?\n- Да, теперь хорошо слышно.",
     "en": "- Can you hear me?\n- Yes, I can hear you clearly now.",
     "e": "🎧"
   },
   {
-    "ru": "- У меня разрядился телефон.\n- Можешь воспользоваться моим зарядным устройством.",
+    "ru": "- У меня разрядился телефон.\n- Можешь взять мою зарядку.",
     "en": "- My phone battery is dead.\n- You can use my charger.",
     "e": "🔋"
   },
@@ -569,7 +569,7 @@ const MORE_SEED = [
     "e": "🗒️"
   },
   {
-    "ru": "- Я проверю и вернусь с ответом.\n- Спасибо, буду ждать.",
+    "ru": "- Я проверю и сообщу тебе.\n- Спасибо, буду ждать.",
     "en": "- I’ll check and get back to you.\n- Thanks, I’ll wait to hear from you.",
     "e": "🔁"
   },
@@ -579,7 +579,7 @@ const MORE_SEED = [
     "e": "🚨"
   },
   {
-    "ru": "- Я занят прямо сейчас.\n- Когда тебе будет удобно?",
+    "ru": "- Я сейчас занят.\n- Когда тебе будет удобно?",
     "en": "- I’m busy right now.\n- When would be a good time for you?",
     "e": "🗓️"
   },
@@ -599,12 +599,12 @@ const MORE_SEED = [
     "e": "🗣️"
   },
   {
-    "ru": "- Я забыл это слово.\n- Ничего, оно сейчас вспомнится.",
+    "ru": "- Я забыл это слово.\n- Не переживай, ещё вспомнится.",
     "en": "- I’ve forgotten that word.\n- Don’t worry, it’ll come back to you.",
     "e": "🧠"
   },
   {
-    "ru": "- Я допустил ошибку.\n- Ошибки помогают учиться.",
+    "ru": "- Я ошибся.\n- Ошибки помогают учиться.",
     "en": "- I made a mistake.\n- Mistakes help you learn.",
     "e": "🌱"
   },
@@ -684,12 +684,12 @@ const MORE_SEED = [
     "e": "🤍"
   },
   {
-    "ru": "- Это звучит здорово.\n- Тогда договорились!",
+    "ru": "- Звучит здорово.\n- Тогда договорились!",
     "en": "- That sounds great.\n- Then it’s a deal!",
     "e": "🙌"
   },
   {
-    "ru": "- Я подумаю об этом.\n- Хорошо, дай мне знать.",
+    "ru": "- Я подумаю.\n- Хорошо, дай знать.",
     "en": "- I’ll think about it.\n- Okay, let me know.",
     "e": "💡"
   },
@@ -714,7 +714,7 @@ const MORE_SEED = [
     "e": "🌤️"
   },
   {
-    "ru": "- Что случилось?\n- Я просто уронил стакан.",
+    "ru": "- Что случилось?\n- Я только что уронил стакан.",
     "en": "- What happened?\n- I just dropped a glass.",
     "e": "🥛"
   },
@@ -774,7 +774,7 @@ const MORE_SEED = [
     "e": "🏙️"
   },
   {
-    "ru": "- Ты можешь порекомендовать хорошее место?\n- Попробуй кафе на соседней улице.",
+    "ru": "- Можешь посоветовать хорошее место?\n- Попробуй кафе на соседней улице.",
     "en": "- Can you recommend a good place?\n- Try the café on the next street.",
     "e": "📍"
   },
@@ -844,7 +844,7 @@ const MORE_SEED = [
     "e": "🎊"
   },
   {
-    "ru": "- С днём рождения!\n- Спасибо, очень приятно.",
+    "ru": "- С днём рождения!\n- Спасибо, очень мило с твоей стороны.",
     "en": "- Happy birthday!\n- Thank you, that’s so nice of you.",
     "e": "🎂"
   }
@@ -922,11 +922,13 @@ async function load(){
  if(G.xp>0||S.cards.some(c=>c.box>0||c.due>0))G.onb=1;
  try{const im=JSON.parse(localStorage.getItem("md_imgs")||"{}");S.cards.forEach(c=>{if(im[c.id])c.img=im[c.id]})}catch(e){}
  let sv="";try{sv=localStorage.getItem("md_seedv")||""}catch(e){}
- if(!S.cards.length||sv!=="4"){
+ if(!S.cards.length||sv!=="6"){
+  // обновляем текст встроенных карточек (исправленные переводы), прогресс box/due сохраняется
+  S.cards.forEach(c=>{const s=SEED[c.id-1];if(s&&Number.isInteger(c.id)){c.ru=s.ru;c.en=s.en}});
   const have=new Set(S.cards.map(c=>c.id));
   SEED.forEach((c,k)=>{if(!have.has(k+1))S.cards.push({id:k+1,...c,box:0,due:0})});
   S.cards.sort((a,b)=>Number(a.id)-Number(b.id));
-  try{localStorage.setItem("md_seedv","4")}catch(e){}
+  try{localStorage.setItem("md_seedv","6")}catch(e){}
   save();
  }
  try{render()}catch(e){console.error(e);showErr("Не удалось отобразить приложение: "+(e&&e.message?e.message:String(e)))}
