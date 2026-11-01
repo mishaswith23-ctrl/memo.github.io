@@ -6,7 +6,7 @@
 <title>Чайхана Английский</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 :root{--bg:#000;--card:#0d0d0f;--line:rgba(255,255,255,.09);--ink:#fff;--mute:#8b8d96;--chip:#1b1b1f;--ok:#2fbf84;--bad:#e5534b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -14,7 +14,8 @@ html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
 #app{max-width:480px;height:100%;margin:0 auto;display:flex;flex-direction:column}
 #view{flex:1;min-height:0;display:flex;flex-direction:column;padding:0 16px}
-.scroll{flex:1;overflow:auto;padding-bottom:12px}
+.scroll{flex:1;overflow:auto;padding-bottom:12px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
 .ttl{padding:12px 4px 14px}.ttl h1{font-size:38px;letter-spacing:-1px;margin:0;line-height:1.05}.ttl p{margin:6px 0 0;color:var(--mute);font-size:17px}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;transition:transform .22s cubic-bezier(.3,1.5,.5,1),filter .2s,background .25s,color .25s}
 button:active,.row:active{transform:scale(.95);filter:brightness(1.25)}
@@ -45,26 +46,27 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding:6px 0;positi
 .face.back{transform:rotateY(180deg)}
 .inner:not(.flipped) .back,.inner.flipped .front{pointer-events:none}
 /* iOS Safari игнорирует backface-visibility у детей с backdrop-filter — прячем невидимую сторону целиком на середине поворота */
-.face{transition:border-color .2s,visibility 0s .12s}
+.face{transition:visibility 0s .085s}
 .inner:not(.flipped) .back,.inner.flipped .front{visibility:hidden}
 .card.still{cursor:default}
-.hint{position:absolute;top:16px;left:16px;z-index:2;padding:7px 12px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);font-size:14px;font-weight:600;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.study{padding:14px 16px 76px;gap:12px}
-.study .pic{flex:1;min-height:150px;border-radius:24px;font-size:64px}
-/* Изучать: сначала русский, под чертой — английский жирным */
-.study .ru{border-top:0;padding:0 4px}
-.study .en{padding:12px 4px 0;border-top:1px solid var(--line)}
+.hint{position:absolute;top:10px;left:10px;z-index:2;padding:7px 12px;border-radius:999px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);font-size:14px;font-weight:600;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+/* Все стороны карточки устроены одинаково: картинка на месте, под ней сначала русский, под чертой — английский жирным */
+.front,.back,.study{padding:12px 12px 16px;gap:12px}
+.media{position:relative;flex:1 1 0;min-height:64px;border-radius:24px;overflow:hidden}
+.media .pic{position:absolute;inset:0;font-size:64px}
+.txt{flex:0 1 auto;min-height:0;overflow-y:auto;scrollbar-width:none;padding:0 6px}
+.txt::-webkit-scrollbar{display:none}
+.dlg span{display:block;position:relative;padding-left:.95em}
+.dlg span+span{margin-top:.25em}
+.dlg span::before{content:"–";position:absolute;left:0;opacity:.45}
+.ask{font-weight:600;font-size:clamp(19px,5.6vw,22px);line-height:1.35}
 @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
 .pic{position:relative;overflow:hidden;display:grid;place-items:center;font-size:100px}
 .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.front .pic{flex:1}
-.front .cap{position:absolute;left:0;right:0;bottom:0;padding:70px 20px 26px;text-align:center;font-weight:600;font-size:21px;line-height:1.35;white-space:pre-line;background:linear-gradient(transparent,rgba(0,0,0,.9) 60%)}
-.back{padding:14px 16px 76px;gap:16px}
-.back .pic{height:38%;min-height:130px;border-radius:24px;flex:none;font-size:64px}
-.en{font-weight:700;font-size:23px;line-height:1.4;text-align:center;white-space:pre-line;letter-spacing:-.3px}
-.ru{color:var(--mute);font-size:17px;text-align:center;line-height:1.4;border-top:1px solid var(--line);padding-top:14px;white-space:pre-line}
-.fab{position:absolute;bottom:14px;width:48px;height:48px;border-radius:50%;background:rgba(30,30,34,.75);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:20px;color:#fff}
-.l{left:14px}.r{right:14px}
+.en{font-weight:650;font-size:clamp(19px,5.8vw,23px);line-height:1.35;letter-spacing:-.2px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.ru{color:var(--mute);font-size:clamp(14px,4.2vw,16px);line-height:1.4}
+.fab{position:absolute;right:10px;bottom:10px;z-index:2;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#fff}
+.fab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
 .prog{height:5px;margin:8px 30px 0;border-radius:9px;background:var(--chip);overflow:hidden}
 .prog i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#2a8cff,#35b6ff);transition:width .4s}
 .count{text-align:center;color:var(--mute);padding:8px 0 6px;font-size:15px}
@@ -87,9 +89,6 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 @keyframes drift{0%,100%{background-size:100% 100%;background-position:0 0}35%{background-size:88% 88%;background-position:60% 10%}70%{background-size:94% 94%;background-position:40% 30%}}
 .glow .chip{display:inline-block;padding:6px 14px;border-radius:999px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.15);font-size:14px;margin-bottom:12px}
 .prog i{background:linear-gradient(90deg,#2f7bff,#5aa9ff)}
-.back{padding:14px 16px 76px;gap:14px;justify-content:flex-start}
-.back .pic{height:auto;flex:1;min-height:180px}
-.back .en{padding:6px 4px 28px}
 .chap{width:100%;color:var(--ink);font:inherit}.chap .go{color:var(--mute);font-size:26px;padding-right:6px}
 .mini{height:4px;border-radius:9px;background:var(--chip);margin-top:8px;overflow:hidden}.mini i{display:block;height:100%;background:#2f7bff}
 .music-panel{padding:20px;border-radius:28px;background:var(--card);border:1px solid var(--line)}
@@ -97,9 +96,10 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 .music-art{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;font-size:31px;background:linear-gradient(145deg,#5aa9ff,#1f5fe0)}
 .music-title{font-size:17px;font-weight:700}.music-sub{font-size:13px;color:var(--mute);margin-top:4px}
 .music-control{margin:18px 0}.music-control-head{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:10px}.music-control output{color:var(--mute)}
-.music-control input{width:100%;accent-color:#2f7bff}
+.music-control input{width:100%;height:6px;margin:8px 0;border-radius:3px;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,#2f7bff var(--v),rgba(255,255,255,.12) var(--v))}
+.music-control input::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.music-control input::-moz-range-thumb{width:22px;height:22px;border:0;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.5)}
 .music-actions{display:flex;gap:10px}.music-actions button{flex:1;border-radius:999px;padding:15px;font-weight:600;background:#2f7bff;color:#000}.music-actions .secondary{background:var(--chip);color:#fff}
-.music-note{font-size:12px;color:var(--mute);line-height:1.5}
 
 /* Игровые элементы: уровень, комбо, награды */
 .lv{width:50px;height:50px;border-radius:50%;flex:none;display:grid;place-items:center;position:relative;font-weight:800;font-size:17px;background:conic-gradient(#5aa9ff calc(var(--p)*1%),#26262b 0)}
@@ -153,7 +153,6 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 .ach .off i{filter:grayscale(1);opacity:.3}
 .ach .on{border-color:rgba(90,169,255,.45);color:#fff}
 .seg.goal{margin-bottom:12px;flex:none}
-.acts.hintline{min-height:66px;color:var(--mute);justify-content:center;align-items:center;text-align:center;font-size:15px}
 .acts .go{flex:2;color:#000}
 .hsb{gap:12px;padding:12px 12px 12px 14px;animation:pop .4s both}
 .hsb b{font-size:16px}.hsb small{font-size:14px}
@@ -178,7 +177,7 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 .ring .mid small{color:#a9b4cc;font-size:15px;margin-top:6px}
 .ring.full{filter:drop-shadow(0 0 18px rgba(90,169,255,.6))}
 .glow .pill{background:#fff;color:#000;border:0}
-.glow .lbl{margin:12px 0 0;font-size:14px}
+.glow .lbl{margin:12px 0 0;font-size:14px;text-wrap:balance}
 
 /* Вводный экран */
 .onb{flex:1;min-height:0;display:flex;flex-direction:column;padding:8px 4px 20px}
@@ -209,36 +208,39 @@ nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stro
 .dots i.on{width:24px;background:#5aa9ff}
 
 /* Премиальная тёмная тема: синий акцент, мягкие тени, лёгкая 3D-перспектива */
-:root{--bg:#070b14;--card:#141b29;--chip:#1f2a3d;--line:rgba(255,255,255,.07);--ink:#f3f6fb;--mute:#93a0b8;--accent:#5aa9ff;--lift:0 1px 0 rgba(255,255,255,.07) inset,0 18px 40px -14px rgba(0,0,0,.85),0 4px 12px rgba(0,0,0,.4)}
-body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:radial-gradient(90% 45% at 50% -8%,#16294a 0,transparent 70%),var(--bg);background-attachment:fixed}
+:root{color-scheme:dark;--bg:#070b14;--card:#141b29;--chip:#1f2a3d;--line:rgba(255,255,255,.07);--ink:#f3f6fb;--mute:#93a0b8;--accent:#5aa9ff;--lift:0 1px 0 rgba(255,255,255,.07) inset,0 18px 40px -14px rgba(0,0,0,.85),0 4px 12px rgba(0,0,0,.4)}
+body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:radial-gradient(80% 34% at 50% 24%,rgba(30,58,107,.55) 0,transparent 100%),var(--bg)}
 h1,h2,.hrow h1,.ttl h1{font-weight:700;letter-spacing:-.8px}
 button{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s,background .3s,color .3s}
 button:active,.row:active{transform:scale(.97);filter:none}
 .glow,.tile,.wide,.stat,.row,.hchip,.ach div,.music-panel,.steps div,.goals button,.spill,.seg,nav{background:linear-gradient(165deg,#1a2334,#111723);border:0;box-shadow:var(--lift)}
-.glow{border-radius:30px;transform:perspective(1100px) rotateX(2.5deg);transform-origin:50% 100%}
+/* Наклон только у подложки: текст поверх неё остаётся ровным и чётким */
+.glow{border-radius:30px;background:none;box-shadow:none;overflow:visible;isolation:isolate}
+.glow::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:30px;background:linear-gradient(165deg,#1a2334,#111723);box-shadow:var(--lift);transform:perspective(1100px) rotateX(2.5deg);transform-origin:50% 100%}
 .glow::before{background:radial-gradient(ellipse 42% 46% at 50% 32%,rgba(47,123,255,.5) 0,transparent 72%) no-repeat;-webkit-mask:none;mask:none;animation:breathe 7s ease-in-out infinite}
 .ring::before{inset:-24px;background:radial-gradient(circle closest-side,#0d1320 0,#0d1320 64%,rgba(13,19,32,.82) 74%,rgba(13,19,32,.38) 87%,transparent 100%);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
-.glow>canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.glow>canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:30px;pointer-events:none}
 .ring .bgc{stroke:rgba(255,255,255,.06)}
 .ring .mid b span,.ring .mid small{color:var(--mute)}
 .pill,.glow .pill,.onb .pill,.win .pill,.empty .pill,.hsgo{background:linear-gradient(180deg,#4d97ff,#2467e8);color:#fff;border:0;box-shadow:0 12px 26px -10px rgba(47,123,255,.8),inset 0 1px 0 rgba(255,255,255,.25);font-weight:600}
-.tiles{perspective:1000px}
-.tile{border-radius:24px}
-.tiles .tile:nth-child(odd){transform:rotateY(-3deg) rotateX(1.5deg);transform-origin:100% 50%}
-.tiles .tile:nth-child(even){transform:rotateY(3deg) rotateX(1.5deg);transform-origin:0 50%}
-.tiles .tile:nth-child(n):active{transform:scale(.97)}
+.tile{position:relative;border-radius:24px;background:none;box-shadow:none;isolation:isolate}
+.tile::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:24px;background:linear-gradient(165deg,#1a2334,#111723);box-shadow:var(--lift)}
+.tile:nth-child(odd)::before{transform:perspective(1000px) rotateY(-3deg) rotateX(1.5deg);transform-origin:100% 50%}
+.tile:nth-child(even)::before{transform:perspective(1000px) rotateY(3deg) rotateX(1.5deg);transform-origin:0 50%}
 .tile span{color:var(--mute);font-size:14px;line-height:1.35}
 .wide i,.av{background:var(--chip);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-.card{transform:perspective(1400px) rotateX(1.5deg);transform-origin:50% 100%;box-shadow:0 26px 50px -20px rgba(0,0,0,.9);animation:premiumIn .6s cubic-bezier(.22,1,.36,1)}
-@keyframes premiumIn{from{opacity:0;transform:perspective(1400px) rotateX(8deg) translateY(18px) scale(.97)}to{opacity:1;transform:perspective(1400px) rotateX(1.5deg)}}
+/* Карточка в покое без наклона, чтобы текст был чётким: перспектива живёт в появлении и перевороте */
+.card{box-shadow:0 26px 50px -20px rgba(0,0,0,.9);animation:premiumIn .38s cubic-bezier(.22,1,.36,1)}
+@keyframes premiumIn{from{opacity:0;transform:perspective(1400px) rotateX(6deg) translateY(14px) scale(.98)}to{opacity:1;transform:none}}
 .face{background:linear-gradient(170deg,#182133,#0f1420);border:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
-.inner{transition:transform .75s cubic-bezier(.22,1,.36,1)}
-.en{font-weight:650;letter-spacing:-.2px}
+.inner{transition:transform .5s cubic-bezier(.3,.9,.3,1)}
 .seg button{color:var(--mute);font-weight:500}
-.seg button.on{background:linear-gradient(180deg,#4d97ff,#2467e8);color:#fff;box-shadow:0 6px 14px -6px rgba(47,123,255,.8);font-weight:600}
+.seg button.on{background:#2a3b5a;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.1);font-weight:600}
 nav{background:rgba(17,23,35,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-nav button{color:#67738a}
-nav button.on{background:linear-gradient(180deg,#2c5cb8,#1f4590);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+nav{gap:2px;padding:6px;border-radius:26px}
+nav button{height:52px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#7f8ba3;font-size:11px;font-weight:500;min-width:0}
+nav svg{width:22px;height:22px}
+nav button.on{background:rgba(90,169,255,.14);color:#a9cfff}
 .prog,.mini,.bar{background:rgba(255,255,255,.07)}
 .prog i,.mini i,.bar i{background:linear-gradient(90deg,#2f7bff,#8fd0ff)}
 .acts button{box-shadow:var(--lift);font-weight:600}
@@ -253,6 +255,44 @@ nav button.on{background:linear-gradient(180deg,#2c5cb8,#1f4590);color:#fff;box-
 .lv::before{background:#111723}
 .fab{background:rgba(31,42,61,.85);border:0;box-shadow:0 8px 18px -8px rgba(0,0,0,.9)}
 .spill.hot{color:var(--accent)}
+.nudge{animation:none}
+/* Плитки на главной: прогресс вместо статичных цифр */
+.tile b small{font-size:18px;font-weight:600;letter-spacing:0;color:var(--mute);margin-left:2px}
+.tile .mini{margin-top:10px;width:100%}
+/* Ответ «Не помню» не наказывает: честная оценка важнее серии, поэтому карточка просто спокойно уходит */
+.card.good{box-shadow:0 0 0 2px #4d97ff,0 0 50px rgba(77,151,255,.5)}
+.card.good::after{background:radial-gradient(circle at 50% 60%,rgba(77,151,255,.35),transparent 70%)}
+.card.bad{animation:softout .45s ease-in forwards;box-shadow:0 26px 50px -20px rgba(0,0,0,.9)}
+.card.bad::after{background:rgba(7,11,20,.45)}
+@keyframes softout{100%{transform:translateY(12px) scale(.97);opacity:0}}
+.acts .nok.hit{animation:none;filter:none;background:var(--chip)}
+.fx b{color:#a9cfff}.fx.neg b{color:#b8c4d8}
+.nav:disabled{opacity:.35;cursor:default}
+/* Спокойный индикатор цели дня под карточкой: без бегущих цифр, чтобы не отвлекать от вспоминания */
+.dayt{display:inline-block;width:14px;height:14px;margin-left:6px;vertical-align:-2px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),rgba(255,255,255,.14) 0);-webkit-mask:radial-gradient(circle,transparent 3.5px,#000 4px);mask:radial-gradient(circle,transparent 3.5px,#000 4px)}
+/* Список глав */
+.chap b{font-size:16px;margin-bottom:2px}.chap small{font-size:13px}
+.chap .due{flex:none;min-width:26px;height:26px;padding:0 7px;margin-right:6px;border-radius:13px;display:grid;place-items:center;background:#2467e8;color:#fff;font-size:13px;font-weight:700}
+/* Профиль и музыка */
+.note{color:var(--mute);margin:0 4px 8px;font-size:15px}
+.ver{text-align:center;color:var(--mute);opacity:.7;font-size:12px;margin:6px 0 4px}
+#reset{color:#ffa39c}
+.music-actions button{white-space:nowrap}
+.demo span+span{background:linear-gradient(145deg,#2467e8,#173f8f)}
+/* Низкие экраны: Telegram забирает часть высоты, а карточке нужно место */
+@media (max-height:640px){
+ .top{padding:4px 0}
+ .lv{width:42px;height:42px;font-size:15px}
+ .seg button{padding:8px}
+ main{padding:4px 0}
+ .prog{margin-top:4px}
+ .count{padding:5px 0 4px;font-size:13px}
+ .acts{padding-bottom:6px}
+ .acts button{padding:13px}
+ nav{margin:2px 16px 8px}
+ nav button{height:46px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -976,22 +1016,28 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden&&API.q.leng
 function askWrite(){try{if(TG&&TG.isVersionAtLeast&&TG.isVersionAtLeast("6.9")&&TG.requestWriteAccess)TG.requestWriteAccess(ok=>{if(ok)API.flush({canWrite:true,notify:true})})}catch(_){}}
 function saveG(){clearTimeout(gTimer);gTimer=setTimeout(()=>{const j=JSON.stringify(G);try{localStorage.setItem("md_g",j)}catch(_){}if(CS)cset({md_g:j})},150)}
 const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// Реплики диалога: каждая отдельной строкой, тире рисует CSS, чтобы переносы шли ровно под текстом.
+const dlg=t=>esc(t).split("\n").map(l=>`<span>${l.replace(/^\s*-\s*/,"")}</span>`).join("");
 const GR=["#1d3a6b,#0b1c3a","#14503f,#0a2a22","#3b2a6b,#1a1236","#1d3f7a,#0c1b3a","#1d5a6b,#0a2a33","#6b1d3f,#2e0a1a"];
 const pad=n=>String(n).padStart(2,"0");
 const pic=(c,cls="")=>{const src=c.img||(c.id<=SEED.length?`img/${pad(c.id)}.webp`:"");return `<div class="pic ${cls}" style="background-image:linear-gradient(145deg,${GR[(+c.id||0)%GR.length]})"><span>${c.e||"💬"}</span>${src?`<img src="${src}" alt="" onerror="this.remove()">`:""}</div>`};
 const CH=12;
+const CH_NAMES=["Первые фразы","Самое нужное","Общение","Разговор и дорога","В пути и в кафе","Магазин и отель","Здоровье, деньги, связь","Работа и учёба","Дома и досуг","Чувства и поддержка","Город и погода","Встречи и праздники"];
+const chName=k=>CH_NAMES[k]||`Глава ${k+1}`;
 const chCount=()=>Math.max(1,Math.ceil(S.cards.length/CH));
 const chCards=k=>[...S.cards].sort((a,b)=>a.id-b.id).slice(k*CH,k*CH+CH);
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 const queue=()=>{if(S.ch>=chCount())S.ch=0;const ids=chCards(S.ch).map(c=>c.id);if(!S.ord||S.ordCh!==S.ch||S.ord.length!==ids.length){S.ord=shuffle(ids);S.ordCh=S.ch}const m=new Map(S.cards.map(c=>[c.id,c]));return S.ord.map(id=>m.get(id)).filter(c=>c&&(S.mode==="dremo"||c.due<=Date.now()))};
+// В Telegram на Android (WebView) озвучки в браузере нет, поэтому нерабочую кнопку не показываем.
+const canSpeak="speechSynthesis" in window;
+const sndBtn=()=>canSpeak?`<button class="fab" id="snd" aria-label="Послушать"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>`:"";
 function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/^\s*-\s*/gm,""));u.lang="en-US";u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
 const lvRing=(L,up)=>`<div class="lv${up?" up":""}" style="--p:${L.pct}"><span>${L.l}</span></div>`;
 function topBar(){return`<div class="top"><div class="seg"><button data-m="memo" class="${S.mode==="memo"?"on":""}">Вспоминать</button><button data-m="dremo" class="${S.mode==="dremo"?"on":""}">Изучать</button></div>${lvRing(lvlOf(G.xp),S.lvup)}</div>`}
-const cardsWord=d=>d%10===1&&d%100!==11?"карточка":[2,3,4].includes(d%10)&&![12,13,14].includes(d%100)?"карточки":"карточек";
 function actsHtml(q){
- if(S.mode!=="memo")return`<div class="acts"><button class="nav" data-n="-1">←</button>${S.i>=q.length-1?`<button class="ok go" data-m="memo">Теперь вспомни →</button>`:`<button class="nav" data-n="1">→</button>`}</div>`;
+ if(S.mode!=="memo")return`<div class="acts"><button class="nav" data-n="-1" aria-label="Назад"${S.i?"":" disabled"}>←</button>${S.i>=q.length-1?`<button class="ok go" data-m="memo">Теперь вспомни →</button>`:`<button class="nav" data-n="1" aria-label="Дальше">→</button>`}</div>`;
  if(S.flip)return`<div class="acts"><button class="nok" data-r="0">Не помню</button><button class="ok" data-r="1">Помню</button></div>`;
- return`<div class="acts hintline">Скажи фразу вслух — потом нажми на карточку</div>`;
+ return`<div class="acts"><button class="ok" id="reveal">Показать ответ</button></div>`;
 }
 function onbView(){
  const k=S.onb||0,st=[
@@ -1001,23 +1047,24 @@ function onbView(){
  ];
  return`<div class="onb"><button class="skip" id="oSkip">Пропустить</button><div class="stage">${st[k]}</div><div class="dots">${st.map((_,i)=>`<i class="${i===k?"on":""}"></i>`).join("")}</div><button class="pill" id="oNext">${k<2?"Далее":"Начать"}</button></div>`;
 }
+const NAV={home:"Главная",train:"Учить",decks:"Главы",music:"Музыка",me:"Профиль"};
 const IC={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',train:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',decks:'<path d="M12 3l9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/>',music:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',me:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6z"/>'};
 function render(){
 const v=document.getElementById("view");
 const navEl=document.getElementById("nav");
-navEl.innerHTML=["home","train","decks","music","me"].map(k=>`<button data-t="${k}" class="${S.tab===k?"on":""}"><svg viewBox="0 0 24 24">${IC[k]}</svg></button>`).join("");
+navEl.innerHTML=["home","train","decks","music","me"].map(k=>`<button data-t="${k}" class="${S.tab===k?"on":""}"${S.tab===k?' aria-current="page"':""}><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg><span>${NAV[k]}</span></button>`).join("");
 navEl.style.display=G.onb?"":"none";
 if(!G.onb){v.innerHTML=onbView();bind();return}
 if(S.tab==="home"){
  const n=chCount(),learned=S.cards.filter(c=>c.box>=4).length,dueIn=k=>chCards(k).filter(c=>c.due<=Date.now()).length;
  let tc=S.ch;for(let j=0;j<n;j++){const k=(S.ch+j)%n;if(dueIn(k)){tc=k;break}} // ближайшая глава, где есть что повторять
- const due=dueIn(tc),L=lvlOf(G.xp),st=streak(),dn=secsToday(),full=dn>=G.mins*60,C=502.65,off=C*(1-Math.min(1,dn/(G.mins*60)));
+ const due=dueIn(tc),nNew=chCards(tc).filter(c=>!c.box&&!c.due).length,nRev=due-nNew,L=lvlOf(G.xp),st=streak(),dn=secsToday(),full=dn>=G.mins*60,C=502.65,off=C*(1-Math.min(1,dn/(G.mins*60)));
  v.innerHTML=`<div class="scroll"><div class="hrow"><h1>Чайхана</h1><div class="spill ${st?"hot":""}">🔥 ${st}</div><button data-t="me" style="padding:0">${lvRing(L)}</button></div><div class="sub">Английский по ситуациям</div>
  ${st&&G.last!==today()?`<div class="nudge">Повтори хотя бы одну карточку — не потеряй серию 🔥</div>`:""}
- <div class="glow"><canvas id="orb"></canvas><div class="ring${full?" full":""}"><svg viewBox="0 0 180 180"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fd0ff"/><stop offset="1" stop-color="#2f7bff"/></linearGradient></defs><circle class="bgc" cx="90" cy="90" r="80"/><circle class="fgc" cx="90" cy="90" r="80" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg><div class="mid">${full?`<b>✓</b>`:`<b>${clock(dn)}</b><small>из ${G.mins} минут сегодня</small>`}</div></div>
- <button class="pill" data-c="${tc}">${dn?"Продолжить":"Начать"} · Глава ${tc+1}</button><div class="lbl">${due?`${due} ${cardsWord(due)} к повторению`:"Всё повторено — можно взять новую главу"}</div></div>
+ <div class="glow"><canvas id="orb"></canvas><div class="ring${full?" full":""}"><svg viewBox="0 0 180 180"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fd0ff"/><stop offset="1" stop-color="#2f7bff"/></linearGradient></defs><circle class="bgc" cx="90" cy="90" r="80"/><circle class="fgc" cx="90" cy="90" r="80" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg><div class="mid">${full?`<b>✓</b>`:`<b>${clock(dn)}</b><small>из ${G.mins} минут</small>`}</div></div>
+ <button class="pill" data-c="${tc}">${dn?"Продолжить":"Начать"} · Глава ${tc+1}</button><div class="lbl">${due?`${chName(tc)} · ${[nRev&&`повторить ${nRev}`,nNew&&`новых ${nNew}`].filter(Boolean).join(", ")}`:"Всё повторено — можно взять новую главу"}</div></div>
  ${canAddHS()&&!G.hsHide&&G.ok>=1?`<div class="wide hsb"><i>📲</i><div style="flex:1;min-width:0"><b>На главный экран</b><small>Вход в одно касание</small></div><button class="hsgo" id="hsAdd">Добавить</button><button class="hsx" id="hsX" aria-label="Скрыть">✕</button></div>`:""}
- <div class="tiles"><button class="tile" data-t="decks"><b>${n}</b><span>Глав по ${CH} карточек</span></button><button class="tile" data-t="me"><b>${G.ach.length}/${ACH.length}</b><span>Достижений · выучено ${learned}</span></button></div></div>`;
+ <div class="tiles"><button class="tile" data-t="decks"><b>${learned}<small>/${S.cards.length}</small></b><span>фраз выучено</span><div class="mini"><i style="width:${learned/S.cards.length*100}%"></i></div></button><button class="tile" data-t="me"><b>${G.ach.length}<small>/${ACH.length}</small></b><span>достижений</span><div class="mini"><i style="width:${G.ach.length/ACH.length*100}%"></i></div></button></div></div>`;
  orb();
 }else if(S.tab==="train"){
  const q=queue();if(S.i>=q.length)S.i=0;const c=q[S.i];let h=topBar();
@@ -1029,36 +1076,36 @@ if(S.tab==="home"){
  }
  else{
   const memo=S.mode==="memo",cb=memo&&combo>=2?`<div class="combo${S.bump?" bump":""}${combo>=10?" big":""}">🔥 ×${combo}</div>`:"";
+  const answer=`<div class="media">${pic(c)}${sndBtn()}</div><div class="txt"><div class="ru dlg">${dlg(c.ru)}</div><div class="en dlg">${dlg(c.en)}</div></div>`;
   const inner=memo
-   ?`<div class="inner${S.flip?" flipped":""}"><div class="face front">${pic(c)}<div class="hint">🗣 Скажи по-английски</div><div class="cap">${esc(c.ru)}</div></div><div class="face back">${pic(c)}<div class="en">${esc(c.en)}</div><button class="fab l" id="snd">🔊</button></div></div>`
-   :`<div class="inner"><div class="face study">${pic(c)}<div class="ru">${esc(c.ru)}</div><div class="en">${esc(c.en)}</div><button class="fab l" id="snd">🔊</button></div></div>`;
+   ?`<div class="inner${S.flip?" flipped":""}"><div class="face front"><div class="media">${pic(c)}<div class="hint">Скажи вслух по-английски</div></div><div class="txt ask dlg">${dlg(c.ru)}</div></div><div class="face back">${answer}</div></div>`
+   :`<div class="inner"><div class="face study">${answer}</div></div>`;
   h+=`<main>${cb}<div class="card${memo?"":" still"}" id="card">${inner}</div></main>
-  <div class="prog"><i style="width:${(S.i+1)/q.length*100}%"></i></div><div class="count">Глава ${S.ch+1} · ${S.i+1} из ${q.length} · <span id="dayT">${dayTimer()}</span></div><div id="actsBox">${actsHtml(q)}</div>`;
+  <div class="prog"><i style="width:${(S.i+1)/q.length*100}%"></i></div><div class="count">Глава ${S.ch+1} · ${S.i+1} из ${q.length}<span class="dayt" id="dayT" style="--p:${dayPct()}" title="Цель дня"></span></div><div id="actsBox">${actsHtml(q)}</div>`;
  }
  v.innerHTML=h;
 }else if(S.tab==="decks"){
  const n=chCount();
- v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Главы</h1><p>${S.cards.length} ситуаций · по ${CH} в главе</p></div>`+Array.from({length:n},(_,k)=>{const cs=chCards(k),L=cs.filter(c=>c.box>=4).length;return `<button class="row chap" data-c="${k}">${cs[0]?pic(cs[0]):""}<div class="t"><b>Глава ${k+1}${k===S.ch?" · текущая":""}</b><small>${cs.length} карточек · выучено ${L}</small><div class="mini"><i style="width:${cs.length?L/cs.length*100:0}%"></i></div></div><span class="go">›</span></button>`}).join("")+`</div>`;
+ v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Главы</h1><p>${S.cards.length} ситуаций · по ${CH} в главе</p></div>`+Array.from({length:n},(_,k)=>{const cs=chCards(k),L=cs.filter(c=>c.box>=4).length,rev=cs.filter(c=>c.due&&c.due<=Date.now()).length;return `<button class="row chap" data-c="${k}">${cs[0]?pic(cs[0]):""}<div class="t"><b>${chName(k)}</b><small>Глава ${k+1} · выучено ${L} из ${cs.length}</small><div class="mini"><i style="width:${cs.length?L/cs.length*100:0}%"></i></div></div>${rev?`<span class="due" aria-label="На повторение: ${rev}">${rev}</span>`:`<span class="go">›</span>`}</button>`}).join("")+`</div>`;
 }else if(S.tab==="music"){
  const mv=musicPrefs.volume, cutoff=musicPrefs.cutoff;
- v.innerHTML=`<div class="scroll"><div style="padding:4px 3px 10px"><div class="deck" style="font-size:24px">Фоновая музыка</div><div class="subdeck">Музыка во время изучения карточек</div></div><section class="music-panel"><div class="music-hero"><div class="music-art">🎧</div><div><div class="music-title" id="musicTrackName">Твой саундтрек</div><div class="music-sub" id="musicTrackStatus">Фоновый трек · background.mp3</div></div></div><div class="music-sub">Трек загружается с сайта автоматически</div><div class="music-control"><div class="music-control-head"><label for="musicVolume">Громкость</label><output id="volumeOut">${Math.round(mv*100)}%</output></div><input id="musicVolume" type="range" min="0" max="100" step="1" value="${Math.round(mv*100)}"></div><div class="music-control"><div class="music-control-head"><label for="musicCutoff">Лоупасс · срез высоких частот</label><output id="cutoffOut">${cutoff>=20000?'Выкл.':cutoff>=1000?(cutoff/1000).toFixed(1)+' кГц':Math.round(cutoff)+' Гц'}</output></div><input id="musicCutoff" type="range" min="200" max="20000" step="100" value="${cutoff}"><div class="music-sub">Меньше значение — более глухой, басовый звук.</div></div><div class="music-actions"><button id="musicPlay">▶︎ Воспроизвести</button><button id="musicStop" class="secondary">■ Стоп</button></div><p class="music-note">Музыка загружается с сайта. Нажми «Воспроизвести»; громкость и лоупасс сохраняются. Автовоспроизведение может блокироваться браузером до нажатия кнопки.</p></section></div>`;
+ v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Музыка</h1><p>Спокойный фон для занятий</p></div><section class="music-panel"><div class="music-hero"><div class="music-art">🎧</div><div><div class="music-title">Фоновая музыка</div><div class="music-sub" id="musicTrackStatus">${musicAudio&&!musicAudio.paused?"Сейчас играет":"Готово к воспроизведению"}</div></div></div><div class="music-control"><div class="music-control-head"><label for="musicVolume">Громкость</label><output id="volumeOut">${Math.round(mv*100)}%</output></div><input id="musicVolume" type="range" min="0" max="100" step="1" value="${Math.round(mv*100)}" style="--v:${Math.round(mv*100)}%"></div><div class="music-control"><div class="music-control-head"><label for="musicCutoff">Яркость звука</label><output id="cutoffOut">${cutoff>=20000?'Выкл.':cutoff>=1000?(cutoff/1000).toFixed(1)+' кГц':Math.round(cutoff)+' Гц'}</output></div><input id="musicCutoff" type="range" min="200" max="20000" step="100" value="${cutoff}" style="--v:${(cutoff-200)/198}%"><div class="music-sub">Левее — мягче и глуше, правее — ярче.</div></div><div class="music-actions"><button id="musicPlay">${musicAudio&&!musicAudio.paused?"Ⅱ Пауза":"▶︎ Включить"}</button><button id="musicStop" class="secondary">■ Стоп</button></div></section></div>`;
 }else{
- const u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user,nm=(u&&u.first_name)||"Гость",due=S.cards.filter(c=>c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
+ const u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user,nm=(u&&u.first_name)||"Гость",due=S.cards.filter(c=>c.due&&c.due<=Date.now()).length,learned=S.cards.filter(c=>c.box>=4).length;
  const L=lvlOf(G.xp),st=streak();
  v.innerHTML=`<div class="scroll"><div class="ttl"><h1>Профиль</h1></div><div class="wide"><div class="av">${esc(nm[0].toUpperCase())}</div><div style="flex:1"><b>${esc(nm)}</b><small>Ур. ${L.l} · ${L.name} · ${G.xp} XP</small><div class="bar"><i style="width:${L.pct}%"></i></div></div></div>
  <div class="tiles"><div class="tile"><b>${learned}</b><span>Выучено</span></div><div class="tile"><b>${due}</b><span>К повторению</span></div><div class="tile"><b>🔥 ${st}</b><span>${daysWord(st)} подряд</span></div><div class="tile"><b>×${G.best||0}</b><span>Лучшее комбо</span></div></div>
  <div class="sec">Достижения · ${G.ach.length}/${ACH.length}</div><div class="ach">${ACH.map(([id,ic,t,d])=>`<div class="${G.ach.includes(id)?"on":"off"}"><i>${ic}</i><b>${t}</b><br>${d}</div>`).join("")}</div>
- <div class="sec">Настройки</div><button class="wide" id="sfxT"><i>${SFX.on?"🔊":"🔇"}</i><div style="text-align:left"><b>Звуки</b><small>${SFX.on?"Включены":"Выключены"}</small></div></button>
+ <div class="sec">Настройки</div><div class="note">Цель дня, минут</div><div class="seg goal">${[3,5,10].map(g=>`<button data-g="${g}" class="${G.mins===g?"on":""}">${g}</button>`).join("")}</div><button class="wide" id="sfxT"><i>${SFX.on?"🔊":"🔇"}</i><div style="text-align:left"><b>Звуки</b><small>${SFX.on?"Включены":"Выключены"}</small></div></button>
  ${API.on()?`<button class="wide" id="ntfT"><i>${G.notify!==false?"🔔":"🔕"}</i><div style="text-align:left"><b>Напоминания о серии</b><small>${G.notify!==false?"Бот напишет вечером, если серия под угрозой":"Выключены"}</small></div></button>`:""}
  ${HS==="unsupported"?(TG&&TG.initData?`<div class="wide"><i>📲</i><div><b>Главный экран</b><small>${/tdesktop|macos|web/.test(TG.platform||"")?"Доступно только в Telegram на телефоне":"Обнови Telegram, чтобы добавить значок"}</small></div></div>`:""):HS==="added"?`<div class="wide"><i>📲</i><div><b>Главный экран</b><small>✓ Чайхана уже добавлена</small></div></div>`:`<button class="wide" id="hsAdd"><i>📲</i><div style="text-align:left"><b>Добавить на главный экран</b><small>Значок приложения на телефоне</small></div></button>`}
- <div style="color:var(--mute);margin:4px 4px 8px">Цель дня — минут</div><div class="seg goal">${[3,5,10].map(g=>`<button data-g="${g}" class="${G.mins===g?"on":""}">${g}</button>`).join("")}</div>
- <div class="stat">Вспоминать — достаёшь фразу из памяти, говоришь вслух и честно отмечаешь результат. Изучать — спокойно смотришь и слушаешь фразы главы перед тренировкой.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div><div style="text-align:center;color:#55575e;font-size:12px;margin:6px 0 4px">Версия ${APPV} · Telegram ${TG&&TG.version||"—"} · ${TG&&TG.platform||"браузер"} · ${HS}</div></div>`;
+ <div class="stat">Вспоминать — достаёшь фразу из памяти, говоришь вслух и честно отмечаешь результат. Изучать — спокойно смотришь и слушаешь фразы главы перед тренировкой.</div><div class="acts"><button class="nok" id="reset">Сбросить прогресс</button></div><div class="ver">Версия ${APPV} · Telegram ${TG&&TG.version||"—"}</div></div>`;
 }
 bind();}
 const musicPrefs=(()=>{try{return {volume:Math.max(0,Math.min(1,Number(localStorage.getItem('music_volume')??0.22))),cutoff:Math.max(200,Math.min(20000,Number(localStorage.getItem('music_cutoff')??8500)))}}catch(_){return {volume:.22,cutoff:8500}}})();
 let musicAudio=null,musicUrl=null,audioCtx=null,lowpassNode=null,mediaSource=null,musicReady=false;
 function ensureMusicAudio(){
- if(!musicAudio){musicAudio=new Audio('./background.mp3');musicAudio.loop=true;musicAudio.preload='metadata';musicAudio.volume=musicPrefs.volume;musicAudio.addEventListener('error',()=>{const st=document.getElementById('musicTrackStatus');if(st)st.textContent='Не удалось прочитать аудиофайл. Попробуй MP3 или M4A.'});musicAudio.addEventListener('play',()=>{const st=document.getElementById('musicTrackStatus');if(st)st.textContent='Сейчас играет · фоновый режим';const b=document.getElementById('musicPlay');if(b)b.textContent='Ⅱ Пауза'});musicAudio.addEventListener('pause',()=>{const b=document.getElementById('musicPlay');if(b)b.textContent='▶︎ Воспроизвести'});musicAudio.addEventListener('ended',()=>{const b=document.getElementById('musicPlay');if(b)b.textContent='▶︎ Воспроизвести'});}
+ if(!musicAudio){musicAudio=new Audio('./background.mp3');musicAudio.loop=true;musicAudio.preload='metadata';musicAudio.volume=musicPrefs.volume;musicAudio.addEventListener('error',()=>{const st=document.getElementById('musicTrackStatus');if(st)st.textContent='Не удалось загрузить музыку'});musicAudio.addEventListener('play',()=>{const st=document.getElementById('musicTrackStatus');if(st)st.textContent='Сейчас играет';const b=document.getElementById('musicPlay');if(b)b.textContent='Ⅱ Пауза'});musicAudio.addEventListener('pause',()=>{const b=document.getElementById('musicPlay');if(b)b.textContent='▶︎ Включить'});musicAudio.addEventListener('ended',()=>{const b=document.getElementById('musicPlay');if(b)b.textContent='▶︎ Включить'});}
  return musicAudio;
 }
 function setupMusicFilter(){
@@ -1077,6 +1124,7 @@ document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{S.mode=b.dataset
 document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{S.ch=+b.dataset.c;S.ord=null;S.tab="train";S.i=0;S.flip=false;newSess();render()});
 // Переворот без полной перерисовки, чтобы сработала CSS-анимация поворота.
 const card=$("#card");if(card)card.onclick=e=>{if(busy||S.mode!=="memo"||e.target.closest(".fab"))return;SFX.flip();S.flip=!S.flip;card.querySelector(".inner").classList.toggle("flipped",S.flip);$("#actsBox").innerHTML=actsHtml(queue());bind()};
+const rev=$("#reveal");if(rev)rev.onclick=()=>card&&card.click();
 const snd=$("#snd");if(snd)snd.onclick=()=>speak(queue()[S.i].en);
 document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>rate(b,b.dataset.r==="1"));
 const go=d=>{const n=queue().length;if(S.i+d<0||S.i+d>=n)return;S.i+=d;S.flip=false;SFX.swish();render()};
@@ -1091,18 +1139,17 @@ const ntfT=$("#ntfT");if(ntfT)ntfT.onclick=()=>{G.notify=G.notify===false;saveG(
 const sfxT=$("#sfxT");if(sfxT)sfxT.onclick=()=>{SFX.on=!SFX.on;SFX.tap();render()};
 document.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{G.mins=+b.dataset.g;saveG();render()});
 const rs=$("#reset");if(rs)rs.onclick=()=>{if(confirm("Сбросить весь прогресс?")){S.cards.forEach(c=>{c.box=0;c.due=0});save();S.tab="train";render()}};
-const trackName=$("#musicTrackName");if(trackName)trackName.textContent='Фоновая музыка';const trackStatus=$("#musicTrackStatus");if(trackStatus)trackStatus.textContent='Готово к воспроизведению';
-const vol=$("#musicVolume");if(vol)vol.oninput=()=>{musicPrefs.volume=Number(vol.value)/100;ensureMusicAudio().volume=musicPrefs.volume;try{localStorage.setItem('music_volume',String(musicPrefs.volume))}catch(_){}const out=$("#volumeOut");if(out)out.textContent=vol.value+'%'};
-const cut=$("#musicCutoff");if(cut)cut.oninput=()=>{musicPrefs.cutoff=Number(cut.value);if(lowpassNode)lowpassNode.frequency.setTargetAtTime(musicPrefs.cutoff,audioCtx.currentTime,.03);try{localStorage.setItem('music_cutoff',String(musicPrefs.cutoff))}catch(_){}const out=$("#cutoffOut");if(out)out.textContent=musicPrefs.cutoff>=20000?'Выкл.':musicPrefs.cutoff>=1000?(musicPrefs.cutoff/1000).toFixed(1)+' кГц':Math.round(musicPrefs.cutoff)+' Гц'};
-const play=$("#musicPlay");if(play)play.onclick=async()=>{const a=ensureMusicAudio();if(!a.src){a.src='./background.mp3';a.load()}setupMusicFilter();try{if(!a.paused){a.pause();return}if(audioCtx&&audioCtx.state==='suspended')await audioCtx.resume();await a.play()}catch(e){const st=$("#musicTrackStatus");if(st)st.textContent='Не удалось запустить файл. Выбери другой аудиофайл.'}};
-const stop=$("#musicStop");if(stop)stop.onclick=()=>{if(musicAudio){musicAudio.pause();musicAudio.currentTime=0}const st=$("#musicTrackStatus");if(st)st.textContent='Остановлено';const b=$("#musicPlay");if(b)b.textContent='▶︎ Воспроизвести'};
+const vol=$("#musicVolume");if(vol)vol.oninput=()=>{vol.style.setProperty('--v',vol.value+'%');musicPrefs.volume=Number(vol.value)/100;ensureMusicAudio().volume=musicPrefs.volume;try{localStorage.setItem('music_volume',String(musicPrefs.volume))}catch(_){}const out=$("#volumeOut");if(out)out.textContent=vol.value+'%'};
+const cut=$("#musicCutoff");if(cut)cut.oninput=()=>{cut.style.setProperty('--v',(cut.value-200)/198+'%');musicPrefs.cutoff=Number(cut.value);if(lowpassNode)lowpassNode.frequency.setTargetAtTime(musicPrefs.cutoff,audioCtx.currentTime,.03);try{localStorage.setItem('music_cutoff',String(musicPrefs.cutoff))}catch(_){}const out=$("#cutoffOut");if(out)out.textContent=musicPrefs.cutoff>=20000?'Выкл.':musicPrefs.cutoff>=1000?(musicPrefs.cutoff/1000).toFixed(1)+' кГц':Math.round(musicPrefs.cutoff)+' Гц'};
+const play=$("#musicPlay");if(play)play.onclick=async()=>{const a=ensureMusicAudio();if(!a.src){a.src='./background.mp3';a.load()}setupMusicFilter();try{if(!a.paused){a.pause();return}if(audioCtx&&audioCtx.state==='suspended')await audioCtx.resume();await a.play()}catch(e){const st=$("#musicTrackStatus");if(st)st.textContent='Не удалось запустить музыку, попробуй ещё раз'}};
+const stop=$("#musicStop");if(stop)stop.onclick=()=>{if(musicAudio){musicAudio.pause();musicAudio.currentTime=0}const st=$("#musicTrackStatus");if(st)st.textContent='Остановлено';const b=$("#musicPlay");if(b)b.textContent='▶︎ Включить'};
 }
 const haptic=k=>{try{TG.HapticFeedback.notificationOccurred(k)}catch(_){}};
 // Ярлык на главном экране телефона (Telegram Bot API 8.0+). Статусы: unsupported, unknown, added, missed.
 let HS="unsupported";
 // Кнопку показываем сразу по версии Telegram: на части клиентов checkHomeScreenStatus не вызывает колбэк.
 function checkHS(){try{if(TG&&TG.isVersionAtLeast&&TG.isVersionAtLeast("8.0")&&TG.addToHomeScreen){HS="unknown";render();if(TG.checkHomeScreenStatus)TG.checkHomeScreenStatus(s=>{if(s&&s!=="unsupported")HS=s;render()})}}catch(_){}}
-const APPV=5;
+const APPV=6;
 function addHS(){try{TG.addToHomeScreen()}catch(_){}}
 try{TG&&TG.onEvent&&TG.onEvent("homeScreenAdded",()=>{HS="added";toast("📲","Чайхана на главном экране","Теперь открывается в одно касание",true);render()})}catch(_){}
 const canAddHS=()=>HS==="missed"||HS==="unknown";
@@ -1131,7 +1178,7 @@ function rate(btn,good){
 }
 // Цель дня в минутах: время идёт только на карточках, при открытом приложении и пока человек что-то нажимает.
 const IDLE_MS=45e3;let lastAct=Date.now();
-const dayTimer=()=>secsToday()>=G.mins*60?`✓ ${G.mins} мин`:`⏱ ${clock(secsToday())} / ${G.mins}:00`;
+const dayPct=()=>Math.min(100,secsToday()/(G.mins*60)*100);
 document.addEventListener("pointerdown",()=>{lastAct=Date.now()},true);
 document.addEventListener("visibilitychange",()=>{if(document.hidden)saveG();else lastAct=Date.now()});
 setInterval(()=>{
@@ -1139,7 +1186,7 @@ setInterval(()=>{
  const t=today();if(G.day!==t){G.day=t;G.secs=0}
  const goal=G.mins*60,was=G.secs||0;G.secs=was+1;
  if(G.secs%15===0)saveG();
- const el=document.getElementById("dayT");if(el)el.textContent=dayTimer();
+ const el=document.getElementById("dayT");if(el)el.style.setProperty("--p",dayPct());
  if(was<goal&&G.secs>=goal){saveG();celebrate(["goal"])}
 },1000);
 function floatFx(el,a,b,neg){const r=el.getBoundingClientRect(),d=document.createElement("div");d.className="fx"+(neg?" neg":"");d.style.left=r.left+r.width/2+"px";d.style.top=r.top+"px";d.innerHTML=`<b>${esc(a)}</b><small>${esc(b)}</small>`;document.body.appendChild(d);setTimeout(()=>d.remove(),1000)}
@@ -1202,7 +1249,7 @@ function confetti(){
  const P=Array.from({length:140},()=>({x:W/2+(Math.random()-.5)*80,y:H*.38,vx:(Math.random()-.5)*14,vy:-Math.random()*15-4,r:Math.random()*6+5,c:pick(C),a:Math.random()*6,va:(Math.random()-.5)*.4}));
  let f=0;(function step(){x.clearRect(0,0,W,H);x.globalAlpha=Math.max(0,1-f/160);P.forEach(p=>{p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});if(++f<160)requestAnimationFrame(step);else cv.remove()})();
 }
-document.addEventListener("pointerdown",e=>{const t=e.target.closest("button,.card,.row");if(!t)return;try{TG.HapticFeedback.impactOccurred("light")}catch(_){}SFX.unlock();if(t.matches("button")&&!t.matches("[data-r],[data-n]"))SFX.tap()});
+document.addEventListener("pointerdown",e=>{const t=e.target.closest("button,.card,.row");if(!t)return;try{TG.HapticFeedback.impactOccurred("light")}catch(_){}SFX.unlock();if(t.matches("button")&&!t.matches("[data-r],[data-n],#reveal"))SFX.tap()});
 load().then(()=>{checkHS();API.q.push({type:"open"});API.flush()});
 </script>
 </body>
