@@ -908,10 +908,17 @@ const MORE_SEED = [
 ];
 SEED.push(...MORE_SEED);
 let S={ch:0,ord:null,cards:[],mode:"memo",tab:"home",i:0,flip:false,run:null,runN:0,retry:new Set()};
-// Звуки синтезируются через Web Audio — никаких файлов грузить не нужно.
+// Звуки из папки sfx: файлы скачиваются при запуске, а декодируются после первого касания (раньше iOS не даёт играть звук).
+// Пока файл грузится, звука нет; если загрузить не удалось, играет прежний синтезированный вариант.
 const SFX=(()=>{
- let ctx=null,out=null,nb=null,on=true;try{on=localStorage.getItem("md_sfx")!=="0"}catch(_){}
- const ac=()=>{if(!on)return null;try{if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ctx=new AC();const comp=ctx.createDynamicsCompressor();out=ctx.createGain();out.gain.value=.8;out.connect(comp);comp.connect(ctx.destination)}if(ctx.state==="suspended")ctx.resume().catch(()=>{});return ctx}catch(_){return null}};
+ let ctx=null,out=null,dry=null,nb=null,on=true;try{on=localStorage.getItem("md_sfx")!=="0"}catch(_){}
+ const NAMES=["tap","flip","swish","ok","bad","bing","ping"],raw={},buf={},miss={};
+ NAMES.forEach(k=>{raw[k]=fetch(`sfx/${k}.wav`).then(r=>r.ok?r.arrayBuffer():Promise.reject()).catch(()=>{miss[k]=1;return null})});
+ const decode=c=>NAMES.forEach(k=>raw[k].then(ab=>{if(ab)c.decodeAudioData(ab.slice(0),b=>{buf[k]=b},()=>{miss[k]=1})}));
+ const ac=()=>{if(!on)return null;try{if(!ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ctx=new AC();const comp=ctx.createDynamicsCompressor();out=ctx.createGain();out.gain.value=.8;out.connect(comp);comp.connect(ctx.destination);dry=ctx.createGain();dry.gain.value=.9;dry.connect(ctx.destination);decode(ctx)}if(ctx.state==="suspended")ctx.resume().catch(()=>{});return ctx}catch(_){return null}};
+ // Файлы уже выровнены по громкости, поэтому идут мимо компрессора, который нужен только синтезу.
+ const play=(k,at=0,rate=1,vol=1)=>{const c=ac();if(!c||!buf[k])return false;const s=c.createBufferSource(),g=c.createGain();s.buffer=buf[k];s.playbackRate.value=rate;g.gain.value=vol;s.connect(g);g.connect(dry);s.start(c.currentTime+at);return true};
+ const st=n=>Math.pow(2,n/12);
  const tone=(f,at,dur,o={})=>{const c=ac();if(!c)return;const t=c.currentTime+at,os=c.createOscillator(),g=c.createGain();os.type=o.type||"sine";os.frequency.setValueAtTime(f,t);if(o.to)os.frequency.exponentialRampToValueAtTime(o.to,t+dur);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(o.vol||.15,t+(o.att||.005));g.gain.exponentialRampToValueAtTime(1e-4,t+dur);os.connect(g);g.connect(out);os.start(t);os.stop(t+dur+.05)};
  const bell=(f,at,dur,vol=.14)=>{tone(f,at,dur,{vol});tone(f*2,at,dur*.6,{vol:vol*.35});tone(f*3,at,dur*.3,{vol:vol*.12,type:"triangle"})};
  const noise=(at,dur,f1,f2,vol=.1)=>{const c=ac();if(!c)return;if(!nb){nb=c.createBuffer(1,c.sampleRate*.5,c.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}const t=c.currentTime+at,s=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain();s.buffer=nb;bp.type="bandpass";bp.Q.value=1.2;bp.frequency.setValueAtTime(f1,t);bp.frequency.exponentialRampToValueAtTime(f2,t+dur);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+dur*.3);g.gain.exponentialRampToValueAtTime(1e-4,t+dur);s.connect(bp);bp.connect(g);g.connect(out);s.start(t);s.stop(t+dur+.05)};
@@ -920,14 +927,15 @@ const SFX=(()=>{
   get on(){return on},
   set on(v){on=!!v;try{localStorage.setItem("md_sfx",on?"1":"0")}catch(_){}},
   unlock:ac,
-  tap(){tone(1500,0,.045,{type:"triangle",vol:.05,to:900})},
-  flip(){noise(0,.17,700,3200,.09);tone(620,.11,.07,{type:"triangle",vol:.06,to:1050})},
-  swish(){noise(0,.14,1800,600,.07)},
-  ok(n=1){const b=587.33*Math.pow(2,STEP[Math.min(n-1,STEP.length-1)]/12);bell(b,0,.3,.12);bell(b*1.5,.09,.7,.15)},
-  bad(){tone(330,0,.28,{vol:.16,to:165});tone(165,0,.2,{type:"triangle",vol:.08,to:110})},
-  combo(){[0,4,7,12].forEach((s,i)=>bell(1046.5*Math.pow(2,s/12),.22+i*.06,.25,.07))},
-  fanfare(){const N=[523.25,659.25,783.99,1046.5];N.forEach((f,i)=>{tone(f,i*.11,.35,{type:"triangle",vol:.12});bell(f,i*.11,.4,.06)});N.forEach(f=>tone(f,.5,1.1,{type:"triangle",vol:.07,att:.02}))},
-  ach(){[1318.5,1568,2093].forEach((f,i)=>bell(f,i*.08,.5,.08))}
+  tap(){play("tap")||miss.tap&&tone(1500,0,.045,{type:"triangle",vol:.05,to:900})},
+  flip(){play("flip")||miss.flip&&(noise(0,.17,700,3200,.09),tone(620,.11,.07,{type:"triangle",vol:.06,to:1050}))},
+  swish(){play("swish")||miss.swish&&noise(0,.14,1800,600,.07)},
+  ok(n=1){const s=STEP[Math.min(n-1,STEP.length-1)];if(!play("ok",0,st(s))&&miss.ok){const b=587.33*st(s);bell(b,0,.3,.12);bell(b*1.5,.09,.7,.15)}},
+  bad(){play("bad")||miss.bad&&(tone(330,0,.28,{vol:.16,to:165}),tone(165,0,.2,{type:"triangle",vol:.08,to:110}))},
+  combo(){play("bing",.16)||miss.bing&&[0,4,7,12].forEach((s,i)=>bell(1046.5*st(s),.22+i*.06,.25,.07))},
+  // Праздник: тот же «дзинь» аккордом до-ми-соль-до и глубокий пинг следом
+  fanfare(){if(buf.ok){[0,4,7,12].forEach((s,i)=>play("ok",i*.11,st(s),.8));play("ping",.34,1,.7)}else if(miss.ok){const N=[523.25,659.25,783.99,1046.5];N.forEach((f,i)=>{tone(f,i*.11,.35,{type:"triangle",vol:.12});bell(f,i*.11,.4,.06)});N.forEach(f=>tone(f,.5,1.1,{type:"triangle",vol:.07,att:.02}))}},
+  ach(){play("ping")||miss.ping&&[1318.5,1568,2093].forEach((f,i)=>bell(f,i*.08,.5,.08))}
  }
 })();
 // Игровой прогресс: опыт, серия дней, цель дня, достижения.
@@ -1158,7 +1166,7 @@ const haptic=k=>{try{TG.HapticFeedback.notificationOccurred(k)}catch(_){}};
 let HS="unsupported";
 // Кнопку показываем сразу по версии Telegram: на части клиентов checkHomeScreenStatus не вызывает колбэк.
 function checkHS(){try{if(TG&&TG.isVersionAtLeast&&TG.isVersionAtLeast("8.0")&&TG.addToHomeScreen){HS="unknown";render();if(TG.checkHomeScreenStatus)TG.checkHomeScreenStatus(s=>{if(s&&s!=="unsupported")HS=s;render()})}}catch(_){}}
-const APPV=7;
+const APPV=8;
 function addHS(){try{TG.addToHomeScreen()}catch(_){}}
 try{TG&&TG.onEvent&&TG.onEvent("homeScreenAdded",()=>{HS="added";toast("📲","Чайхана на главном экране","Теперь открывается в одно касание",true);render()})}catch(_){}
 const canAddHS=()=>HS==="missed"||HS==="unknown";
